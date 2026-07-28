@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Anuncios para Google Classroom - Pediatría UBA</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; background: #f8f9fa; color: #202124; }
+        h1 { color: #1a73e8; border-bottom: 2px solid #1a73e8; padding-bottom: 10px; }
+        h2 { color: #3c4043; margin-top: 30px; }
+        .card { background: white; border: 1px solid #dadce0; border-radius: 8px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        textarea { width: 100%; height: 260px; font-family: inherit; font-size: 15px; border: 1px solid #c6c6c6; border-radius: 4px; padding: 12px; box-sizing: border-box; line-height: 1.6; white-space: pre-wrap; }
+        button { background: #1a73e8; color: white; border: none; padding: 10px 18px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #1557b0; }
+        .copied { background: #1e8e3e !important; }
+    </style>
+</head>
+<body>
+
+    <h1>📢 Anuncios para Google Classroom - Pediatría UBA</h1>
+    <p>Hacé clic en el botón <strong>"Copiar Texto"</strong> de cada anuncio y pegalo directamente en el Tablón de Google Classroom.</p>
+
+    <div class="card">
+        <h2>1. Mensaje de Bienvenida</h2>
+        <textarea id="txt1" readonly>¡Bienvenidos/as a la Cursada de Pediatría 2026!
+
+Les damos la bienvenida a la cursada de Pediatría de la Facultad de Medicina (UBA).
+
+HORARIOS Y DINÁMICA DIARIA (Lunes a Viernes):
+• 08:30 a 10:00 hs: Clase Teórica / Discusión de Casos Clínicos (para todos los alumnos).
+• 10:30 a 12:00 hs: Práctica Hospitalaria (grupos rotativos de 2 a 4 alumnos por día).
+
+REPOSITORIO DE CLASES Y MATERIALES:
+En la pestaña "Trabajo de Clase" y en la carpeta de Google Drive asociada encontrarán las presentaciones en PowerPoint de cada clase dictada por nuestros docentes.
+
+¡Les deseamos un excelente comienzo de cursada!
+
+Equipo Docente de Pediatría - UBA</textarea>
+        <button onclick="copiar('txt1', this)">Copiar Texto</button>
+    </div>
+
+    <div class="card">
+        <h2>2. Anuncio de la Semana 1 (03/08 al 07/08)</h2>
+        <textarea id="txt2" readonly>🗓️ CRONOGRAMA Y DISTRIBUCIÓN - SEMANA 1 (03 al 07 de Agosto)
+
+Estimados/as estudiantes, les compartimos la agenda de clases teóricas y la distribución de la práctica hospitalaria para esta primera semana:
+
+📚 CLASES TEÓRICAS (08:30 a 10:00 hs)
+• Lunes 03/08: Presentación de la Cursada / Introducción y Historia Clínica (Docente: Diego S.)
+• Martes 04/08: Antropometría y Auxología (Docente: Diego Piñeyro)
+• Miércoles 05/08: Alimentación Complementaria y Lactancia (Docente: Lucía di Nobili) *Atención: inicia 10:00 hs*
+• Jueves 06/08: Inmunizaciones / Vacunas (Docente: Carolina)
+• Viernes 07/08: Cardiopatías Congénitas (Docente: Diego Steinberg)
+
+🏥 PRÁCTICA HOSPITALARIA (10:30 a 12:00 hs)
+Concurren únicamente los alumnos asignados a cada día:
+• Lunes 03/08: Acuña Leyla y Barilaro Canela
+• Martes 04/08: Caruso, Castro, Damiani y Delgado Pabia
+• Miércoles 05/08: Díaz Moreno, García, Gentile y Guerreiro
+• Jueves 06/08: (A confirmar en clase)
+• Viernes 07/08: (A confirmar en clase)
+
+Las presentaciones de las clases se irán subiendo al repositorio en la pestaña "Trabajo de Clase".
+
+Saludos,
+Equipo Docente de Pediatría</textarea>
+        <button onclick="copiar('txt2', this)">Copiar Texto</button>
+    </div>
+
+    <div class="card">
+        <h2>3. Anuncio de la Semana 2 (10/08 al 14/08)</h2>
+        <textarea id="txt3" readonly>🗓️ CRONOGRAMA Y DISTRIBUCIÓN - SEMANA 2 (10 al 14 de Agosto)
+
+Estimados/as estudiantes, les compartimos la agenda de la Semana 2, enfocada en Neonatología y Desarrollo Madurativo:
+
+📚 CLASES TEÓRICAS (08:30 a 10:00 hs)
+• Lunes 10/08: Prematurez (Docente: Diego Steinberg)
+• Martes 11/08: Desarrollo Madurativo - Primer Año (Docente: Fernanda Nisimura)
+• Miércoles 12/08: Desarrollo de 12 a 36 meses (Docente: Carolina Abraldes)
+• Jueves 13/08: Desarrollo de 3 a 10 años (Docente: Carolina Abraldes)
+• Viernes 14/08: Cardiopatías Congénitas (Docente: Diego Steinberg)
+
+🏥 PRÁCTICA HOSPITALARIA (10:30 a 12:00 hs)
+Concurren únicamente los alumnos asignados a cada día:
+• Lunes 10/08: Quispe y Rojas
+• Martes 11/08: Teixeira Cruz, Tellias y Gallioto
+• Miércoles 12/08: Leguizamón y Márquez
+• Jueves 13/08: Méndez y Olmos
+• Viernes 14/08: (A confirmar en clase)
+
+Saludos,
+Equipo Docente de Pediatría</textarea>
+        <button onclick="copiar('txt3', this)">Copiar Texto</button>
+    </div>
+
+    <script>
+        function copiar(id, btn) {
+            var copyText = document.getElementById(id);
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            btn.innerText = "¡Copiado!";
+            btn.classList.add("copied");
+            setTimeout(function(){
+                btn.innerText = "Copiar Texto";
+                btn.classList.remove("copied");
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
