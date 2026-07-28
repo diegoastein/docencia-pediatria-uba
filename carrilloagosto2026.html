@@ -1042,6 +1042,10 @@ Equipo Docente de Pediatría</textarea>
             document.querySelectorAll('#tab-efu .card').forEach((card) => {
                 let badge = card.querySelector('.badge') ? card.querySelector('.badge').innerText : 'Taller EFU';
                 let title = card.querySelector('h2') ? card.querySelector('h2').innerText : '';
+                
+                // Limpiar el título quitando los paréntesis finales con la patología/pistas para no dar spoilers en clase
+                title = title.replace(/\s*\(.*?\)\s*$/, '');
+                
                 let vignette = card.querySelector('.efu-vignette') ? card.querySelector('.efu-vignette').innerHTML : '';
                 
                 let options = [];
