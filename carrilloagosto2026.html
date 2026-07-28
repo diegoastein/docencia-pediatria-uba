@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docencia Pediatría UBA - Anuncios y Talleres EFU</title>
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #202124;
+            --text-secondary: #5f6368;
+            --border: #dadce0;
+            --success: #1e8e3e;
+            --success-bg: #e6f4ea;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.3rem;
+            border-bottom: 1px solid #f1f3f4;
+            padding-bottom: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 240px;
+            font-family: inherit;
+            font-size: 14px;
+            border: 1px solid #c6c6c6;
+            border-radius: 6px;
+            padding: 14px;
+            box-sizing: border-box;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            background: #fafafa;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: background 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .copy-btn.copied {
+            background: var(--success) !important;
+        }
+
+        /* EFU Styling */
+        .efu-vignette {
+            background: #f1f3f4;
+            padding: 16px;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            font-size: 0.98rem;
+            margin-bottom: 15px;
+        }
+
+        .efu-options {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .efu-options li {
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .reveal-btn {
+            background: #f1f3f4;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .reveal-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .answer-box {
+            display: none;
+            margin-top: 15px;
+            padding: 16px;
+            background: var(--success-bg);
+            border: 1px solid #ceead6;
+            border-radius: 6px;
+            color: #137333;
+        }
+
+        .answer-box.visible {
+            display: block;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e8f0fe;
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* ==========================================================================
+           PRESENTATION MODE STYLES (Optimized for Classrooms / Projectors)
+           ========================================================================== */
+        #presentation-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10000;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 20px 30px;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden; /* Desactivar scroll vertical de la ventana completa */
+        }
+
+        #presentation-overlay.active {
+            display: flex;
+        }
+
+        /* Themes (High Contrast for Projectors) */
+        .projector-theme-light {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        
+        .projector-theme-dark {
+            background-color: #0a0b0d;
+            color: #ffffff;
+        }
+
+        .pres-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(128,128,128,0.25);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            /* Transiciones de ocultación y colapso */
+            transition: opacity 0.5s ease, transform 0.5s ease, max-height 0.5s ease, margin-bottom 0.5s ease, padding-bottom 0.5s ease, border-bottom-color 0.5s ease;
+            max-height: 80px;
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        .hide-controls .pres-header {
+            opacity: 0;
+            transform: translateY(-20px);
+            max-height: 0;
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom-color: transparent;
+            pointer-events: none;
+        }
+
+        .pres-title-group h2 {
+            margin: 4px 0 0 0;
+            font-size: 2.1rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .projector-theme-light .pres-title-group h2 {
+            color: var(--primary);
+        }
+
+        .projector-theme-dark .pres-title-group h2 {
+            color: #8ab4f8;
+        }
+
+        .pres-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .projector-theme-light .pres-badge {
+            background: #e8f0fe;
+            color: var(--primary);
+        }
+
+        .projector-theme-dark .pres-badge {
+            background: #182a4d;
+            color: #8ab4f8;
+        }
+
+        .pres-controls-top {
+            display: flex;
+            gap: 12px;
+        }
+
+        .pres-btn-top {
+            background: rgba(128, 128, 128, 0.12);
+            border: 2px solid rgba(128, 128, 128, 0.25);
+            color: inherit;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .pres-btn-top:hover {
+            background: rgba(128, 128, 128, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .pres-content {
+            display: grid;
+            grid-template-columns: 1.35fr 0.65fr;
+            gap: 30px;
+            flex-grow: 1;
+            align-items: stretch;
+            min-height: 0;
+            height: calc(100vh - 170px); /* Altura estándar con controles */
+            overflow: hidden;
+            padding: 5px 0;
+            /* Transición suave para expandirse cuando se ocultan controles */
+            transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hide-controls .pres-content {
+            height: calc(100vh - 40px); /* Altura completa menos padding del overlay */
+        }
+
+        @media (max-width: 1024px) {
+            .pres-content {
+                grid-template-columns: 1fr;
+                height: auto;
+                overflow: auto;
+            }
+            .hide-controls .pres-content {
+                height: auto;
+            }
+        }
+
+        .pres-left {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%;
+            overflow-y: auto; /* Scroll independiente para el caso/justificación */
+            padding-right: 8px;
+        }
+
+        .pres-vignette-box {
+            font-size: 1.75rem; /* Más preponderante y grande para lectura en aula */
+            line-height: 1.55;
+            padding: 22px 28px;
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-left: 12px solid var(--primary);
+        }
+
+        .projector-theme-light .pres-vignette-box {
+            background-color: #f1f3f4;
+            color: #1a1c1e;
+        }
+
+        .projector-theme-dark .pres-vignette-box {
+            background-color: #1e2025;
+            border-left-color: #8ab4f8;
+            color: #f1f3f4;
+        }
+
+        .pres-explanation-box {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: display 0.4s, opacity 0.4s ease-out, transform 0.4s ease-out;
+            transition-behavior: allow-discrete;
+            padding: 20px 24px;
+            border-radius: 14px;
+            font-size: 1.25rem;
+            line-height: 1.5;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .pres-explanation-box.visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @starting-style {
+            .pres-explanation-box.visible {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+
+        .projector-theme-light .pres-explanation-box {
+            background-color: var(--success-bg);
+            border: 2px solid #ceead6;
+            color: #137333;
+        }
+
+        .projector-theme-dark .pres-explanation-box {
+            background-color: #113c23;
+            border: 2px solid #34a853;
+            color: #e6f4ea;
+        }
+
+        .pres-explanation-box strong {
+            font-size: 1.4rem;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .pres-right {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100%;
+            overflow-y: auto; /* Scroll independiente para las opciones */
+            padding-right: 8px;
+        }
+
+        .pres-instructions-bar {
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 10px 16px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .projector-theme-light .pres-instructions-bar {
+            background: #fdf2e9;
+            color: #b06000;
+            border: 2px solid #fedcbf;
+        }
+
+        .projector-theme-dark .pres-instructions-bar {
+            background: #2e1c0d;
+            color: #ffbc75;
+            border: 2px solid #5c3c1e;
+        }
+
+        .pres-options-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pres-option-item {
+            padding: 12px 18px; /* Ajustado para evitar desborde vertical */
+            border-radius: 10px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            line-height: 1.35;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            user-select: none;
+        }
+
+        .pres-option-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 1.15rem;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        /* Option states - Light Theme */
+        .projector-theme-light .pres-option-item {
+            background-color: #f8f9fa;
+            border: 2px solid var(--border);
+            color: #202124;
+        }
+        .projector-theme-light .pres-option-item:hover {
+            border-color: #70757a;
+            background-color: #f1f3f4;
+            transform: scale(1.01);
+        }
+        .projector-theme-light .pres-option-badge {
+            background: #e8eaed;
+            color: #5f6368;
+            border: 1px solid #dadce0;
+        }
+
+        .projector-theme-light .pres-option-item.voted {
+            border-color: var(--primary);
+            background-color: #e8f0fe;
+            box-shadow: 0 0 15px rgba(26, 115, 232, 0.25);
+        }
+        .projector-theme-light .pres-option-item.voted .pres-option-badge {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .projector-theme-light .pres-option-item.correct {
+            border-color: var(--success);
+            background-color: #e6f4ea;
+            color: #137333;
+            box-shadow: 0 0 10px rgba(30, 142, 62, 0.15);
+        }
+        .projector-theme-light .pres-option-item.correct .pres-option-badge {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .projector-theme-light .pres-option-item.incorrect-voted {
+            border-color: #d93025;
+            background-color: #fce8e6;
+            color: #c5221f;
+            box-shadow: 0 0 10px rgba(217, 48, 37, 0.15);
+        }
+        .projector-theme-light .pres-option-item.incorrect-voted .pres-option-badge {
+            background: #d93025;
+            color: white;
+            border-color: #d93025;
+        }
+
+        .projector-theme-light .pres-option-item.muted {
+            opacity: 0.3;
+            transform: scale(0.98);
+        }
+
+        /* Option states - Dark Theme */
+        .projector-theme-dark .pres-option-item {
+            background-color: #1e2025;
+            border: 2px solid #3c4043;
+            color: #f1f3f4;
+        }
+        .projector-theme-dark .pres-option-item:hover {
+            border-color: #80868b;
+            background-color: #2b2e35;
+            transform: scale(1.01);
+        }
+        .projector-theme-dark .pres-option-badge {
+            background: #3c4043;
+            color: #e8eaed;
+            border: 1px solid #4f5357;
+        }
+
+        .projector-theme-dark .pres-option-item.voted {
+            border-color: #8ab4f8;
+            background-color: #182a4d;
+            box-shadow: 0 0 15px rgba(138, 180, 248, 0.35);
+        }
+        .projector-theme-dark .pres-option-item.voted .pres-option-badge {
+            background: #8ab4f8;
+            color: #0c0d0f;
+            border-color: #8ab4f8;
+        }
+
+        .projector-theme-dark .pres-option-item.correct {
+            border-color: #81c995;
+            background-color: #133220;
+            color: #e6f4ea;
+            box-shadow: 0 0 10px rgba(129, 201, 149, 0.2);
+        }
+        .projector-theme-dark .pres-option-item.correct .pres-option-badge {
+            background: #81c995;
+            color: #0c0d0f;
+            border-color: #81c995;
+        }
+
+        .projector-theme-dark .pres-option-item.incorrect-voted {
+            border-color: #f28b82;
+            background-color: #3b1816;
+            color: #fce8e6;
+            box-shadow: 0 0 10px rgba(242, 139, 130, 0.2);
+        }
+        .projector-theme-dark .pres-option-item.incorrect-voted .pres-option-badge {
+            background: #f28b82;
+            color: #0c0d0f;
+            border-color: #f28b82;
+        }
+
+        .projector-theme-dark .pres-option-item.muted {
+            opacity: 0.25;
+            transform: scale(0.98);
+        }
+
+        .pres-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid rgba(128,128,128,0.25);
+            padding-top: 18px;
+            margin-top: 25px;
+            /* Transiciones de ocultación y colapso */
+            transition: opacity 0.5s ease, transform 0.5s ease, max-height 0.5s ease, margin-top 0.5s ease, padding-top 0.5s ease, border-top-color 0.5s ease;
+            max-height: 80px;
+            opacity: 1;
+            overflow: hidden;
+        }
+
+        .hide-controls .pres-footer {
+            opacity: 0;
+            transform: translateY(20px);
+            max-height: 0;
+            margin-top: 0;
+            padding-top: 0;
+            border-top-color: transparent;
+            pointer-events: none;
+        }
+
+        .pres-btn-footer {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .pres-btn-footer:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .projector-theme-dark .pres-btn-footer {
+            background: #8ab4f8;
+            color: #0c0d0f;
+        }
+        
+        .projector-theme-dark .pres-btn-footer:hover {
+            background: #aecbfa;
+        }
+
+        .pres-btn-footer:disabled {
+            background: rgba(128, 128, 128, 0.15) !important;
+            color: rgba(128, 128, 128, 0.45) !important;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .pres-progress-indicator {
+            font-size: 1.35rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .pres-start-global-btn {
+            background: linear-gradient(135deg, #1a73e8, #1557b0);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(26, 115, 232, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .pres-start-global-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(26, 115, 232, 0.35);
+        }
+
+        /* View Transition Animations */
+        ::view-transition-group(root) {
+            animation-duration: 0.35s;
+        }
+
+        @keyframes slide-to-left {
+            to { transform: translateX(-100%); opacity: 0; }
+        }
+        @keyframes slide-from-right {
+            from { transform: translateX(100%); opacity: 0; }
+        }
+        @keyframes slide-to-right {
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        @keyframes slide-from-left {
+            from { transform: translateX(-100%); opacity: 0; }
+        }
+
+        html:active-view-transition-type(forward)::view-transition-old(root) {
+            animation-name: slide-to-left;
+        }
+        html:active-view-transition-type(forward)::view-transition-new(root) {
+            animation-name: slide-from-right;
+        }
+
+        html:active-view-transition-type(backward)::view-transition-old(root) {
+            animation-name: slide-to-right;
+        }
+        html:active-view-transition-type(backward)::view-transition-new(root) {
+            animation-name: slide-from-left;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏥 Cátedra de Pediatría UBA</h1>
+        <div class="subtitle">Hospital Ramón Carrillo — Portal de Anuncios y Ejercitación EFU</div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('tab-anuncios', this)">📢 Anuncios Classroom</button>
+        <button class="tab-btn" onclick="switchTab('tab-efu', this)">📝 Talleres EFU (Viernes)</button>
+    </div>
+
+    <!-- TAB 1: ANUNCIOS CLASSROOM -->
+    <div id="tab-anuncios" class="tab-content active">
+
+        <div class="card">
+            <h2>1. Mensaje de Bienvenida</h2>
+            <textarea id="txt1" readonly>¡Bienvenidos/as a la Cursada de Pediatría 2026!
+
+Les damos la bienvenida a la cursada de Pediatría de la Facultad de Medicina (UBA).
+
+HORARIOS Y DINÁMICA DIARIA (Lunes a Viernes):
+• 08:30 a 10:00 hs: Clase Teórica / Discusión de Casos Clínicos (para todos los alumnos).
+• 10:30 a 12:00 hs: Práctica Hospitalaria (grupos rotativos de 2 a 4 alumnos por día).
+
+REPOSITORIO DE CLASES Y MATERIALES:
+En la pestaña "Trabajo de Clase" y en la carpeta de Google Drive asociada encontrarán las presentaciones en PowerPoint de cada clase dictada por nuestros docentes.
+
+¡Les deseamos un excelente comienzo de cursada!
+
+Equipo Docente de Pediatría - UBA</textarea>
+            <button class="copy-btn" onclick="copiar('txt1', this)">Copiar Anuncio</button>
+        </div>
+
+        <div class="card">
+            <h2>2. Anuncio de la Semana 1 (03/08 al 07/08)</h2>
+            <textarea id="txt2" readonly>🗓️ CRONOGRAMA Y DISTRIBUCIÓN - SEMANA 1 (03 al 07 de Agosto)
+
+Estimados/as estudiantes, les compartimos la agenda de clases teóricas y la distribución de la práctica hospitalaria para esta primera semana:
+
+📚 CLASES TEÓRICAS (08:30 a 10:00 hs)
+• Lunes 03/08: Presentación de la Cursada / Introducción y Historia Clínica (Docente: Diego S.)
+• Martes 04/08: Antropometría y Auxología (Docente: Diego Piñeyro)
+• Miércoles 05/08: Alimentación Complementaria y Lactancia (Docente: Lucía di Nobili) *Atención: inicia 10:00 hs*
+• Jueves 06/08: Inmunizaciones / Vacunas (Docente: Carolina)
+• Viernes 07/08: Cardiopatías Congénitas (Docente: Diego Steinberg)
+
+🏥 PRÁCTICA HOSPITALARIA (10:30 a 12:00 hs)
+Concurren únicamente los alumnos asignados a cada día:
+• Lunes 03/08: Acuña Leyla y Barilaro Canela
+• Martes 04/08: Caruso, Castro, Damiani y Delgado Pabia
+• Miércoles 05/08: Díaz Moreno, García, Gentile y Guerreiro
+• Jueves 06/08: (A confirmar en clase)
+• Viernes 07/08: (A confirmar en clase)
+
+Las presentaciones de las clases se irán subiendo al repositorio en la pestaña "Trabajo de Clase".
+
+Saludos,
+Equipo Docente de Pediatría</textarea>
+            <button class="copy-btn" onclick="copiar('txt2', this)">Copiar Anuncio</button>
+        </div>
+
+        <div class="card">
+            <h2>3. Anuncio de la Semana 2 (10/08 al 14/08)</h2>
+            <textarea id="txt3" readonly>🗓️ CRONOGRAMA Y DISTRIBUCIÓN - SEMANA 2 (10 al 14 de Agosto)
+
+Estimados/as estudiantes, les compartimos la agenda de la Semana 2, enfocada en Neonatología y Desarrollo Madurativo:
+
+📚 CLASES TEÓRICAS (08:30 a 10:00 hs)
+• Lunes 10/08: Prematurez (Docente: Diego Steinberg)
+• Martes 11/08: Desarrollo Madurativo - Primer Año (Docente: Fernanda Nisimura)
+• Miércoles 12/08: Desarrollo de 12 a 36 meses (Docente: Carolina Abraldes)
+• Jueves 13/08: Desarrollo de 3 a 10 años (Docente: Carolina Abraldes)
+• Viernes 14/08: Cardiopatías Congénitas (Docente: Diego Steinberg)
+
+🏥 PRÁCTICA HOSPITALARIA (10:30 a 12:00 hs)
+Concurren únicamente los alumnos asignados a cada día:
+• Lunes 10/08: Quispe y Rojas
+• Martes 11/08: Teixeira Cruz, Tellias y Gallioto
+• Miércoles 12/08: Leguizamón y Márquez
+• Jueves 13/08: Méndez y Olmos
+• Viernes 14/08: (A confirmar en clase)
+
+Saludos,
+Equipo Docente de Pediatría</textarea>
+            <button class="copy-btn" onclick="copiar('txt3', this)">Copiar Anuncio</button>
+        </div>
+
+    </div>
+
+    <!-- TAB 2: TALLERES EFU (VIERNES) -->
+    <div id="tab-efu" class="tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; background: #e8f0fe; padding: 18px 24px; border-radius: 12px; border: 1px solid #d2e3fc;">
+            <p style="margin: 0; font-size: 1.1rem; color: #1967d2; font-weight: 500;">
+                🏫 <strong>Ejercitación EFU:</strong> Usa el Modo Presentación interactivo para debatir y repasar los casos en clase con los alumnos.
+            </p>
+            <button class="pres-start-global-btn" onclick="startPresentation()">📺 Iniciar Modo Presentación</button>
+        </div>
+
+        <div class="card">
+            <span class="badge">Viernes 07 de Agosto — Semana 1</span>
+            <h2>Caso EFU 1: Neonato Pablo (Lactancia / Peso)</h2>
+            
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial UBA:</strong><br>
+                Ud. atiende en su consultorio a Pablo un neonato de 14 días de vida que concurre para control. Es un nacido de término, de un embarazo controlado y sin patologías del embarazo. Pesó 2800 grs al nacer y fue dado de alta al 3° día con 2600 grs. Las vacunas están completas. Se alimenta con lactancia materna exclusiva. Presenta deposiciones diarias color amarillo oro y la diuresis está conservada. Al examen físico se encuentra vigoroso, con ictericia en cara, no se auscultan soplos cardíacos, el abdomen es blando y sin visceromegalias. El peso actual es de 2780 grs.
+                <br><br>
+                <strong>Pregunta:</strong> ¿Cuáles son las conductas más adecuadas? <em>(Marque hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li><strong>A.</strong> Suplementar con fórmula de inicio.</li>
+                <li><strong>B.</strong> Solicitar orina completa y urocultivo.</li>
+                <li><strong>C.</strong> Solicitar serologías.</li>
+                <li data-correct="true"><strong>D.</strong> Citar a control de peso.</li>
+                <li data-correct="true"><strong>E.</strong> Promover la lactancia materna exclusiva.</li>
+                <li><strong>F.</strong> Suplementar con sulfato ferroso.</li>
+                <li><strong>G.</strong> Solicitar dosaje de bilirrubina.</li>
+                <li data-correct="true"><strong>H.</strong> Evaluar técnica de amamantamiento.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans1')">Ver Respuestas Correctas y Explicación</button>
+            
+            <div id="ans1" class="answer-box">
+                <strong>✅ Respuestas Correctas: D, E, H</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>D (Citar a control de peso):</strong> Neonato próximo a recuperar su peso de nacimiento (2800g) a los 14 días (peso actual 2780g). Citar en 48-72 hs para verificar curva ascendente.<br>
+                • <strong>E (Promover lactancia materna exclusiva):** Paciente vigoroso, normohidratado, catarsis y diuresis normales.<br>
+                • <strong>H (Evaluar técnica de amamantamiento):** Supervisión fundamental en el primer mes de vida.
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="badge">Viernes 07 de Agosto — Semana 1</span>
+            <h2>Caso EFU 2: Neonato Ián (Vacunas / SMSL)</h2>
+            
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial UBA:</strong><br>
+                Ud. se encuentra otorgando el alta de Ián, un recién nacido de 39 semanas de edad gestacional, que pesó 2500 gr al nacer, peso actual 2400 gr. La familia está formada por madre, padre y dos hermanitos que concurren a la escuela, uno de ellos está con fiebre y cursando una virosis respiratoria.
+                <br><br>
+                <strong>Pregunta:</strong> Además de aconsejar y supervisar la técnica de lactancia, ¿cuáles son las conductas adecuadas en este momento? <em>(Marque hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li data-correct="true"><strong>A.</strong> Verificar que se haya realizado la pesquisa metabólica neonatal.</li>
+                <li><strong>B.</strong> Postergar la realización de la pesquisa neonatal en virtud del peso del bebé.</li>
+                <li><strong>C.</strong> Verificar la aplicación de vacuna de hepatitis B y demorar la BCG hasta alcanzar los 3000 gr de peso.</li>
+                <li data-correct="true"><strong>D.</strong> Verificar la aplicación de la hepatitis B en el momento del nacimiento y aplicar BCG antes del alta.</li>
+                <li><strong>E.</strong> Indicar a Ián vacuna antigripal antes del alta.</li>
+                <li><strong>F.</strong> Indicar que incorporen en los primeros días de vida el chupete.</li>
+                <li data-correct="true"><strong>G.</strong> Indicar colocarlo a dormir en posición supina.</li>
+                <li><strong>H.</strong> Recomendar que duerma inicialmente en otra habitación.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans2')">Ver Respuestas Correctas y Explicación</button>
+            
+            <div id="ans2" class="answer-box">
+                <strong>✅ Respuestas Correctas: A, D, G</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>A (Pesquisa metabólica):</strong> Constatar muestra entre 48 hs y 7 días.<br>
+                • <strong>D (Vacuna BCG):</strong> Se administra antes del alta a todo recién nacido con peso ≥ 2000 gr.<br>
+                • <strong>G (Posición supina):** Indicación clave para prevenir Muerte Súbita del Lactante.
+            </div>
+        </div>
+
+        <div class="card">
+            <span class="badge">Viernes 07 de Agosto — Semana 1</span>
+            <h2>Caso EFU 3: Lactante Emilio (Vómitos en Chorro / EHP)</h2>
+            
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial UBA:</strong><br>
+                Emilio de 1 mes y 17 días de vida asiste a guardia junto a sus padres. Refieren que hace 12 horas está decaído y presentaba vómitos postprandiales desde hace 1 semana. Toma pecho con mayor avidez. En las últimas horas presentó 4 vómitos en chorro. Siempre afebril. Nacido a término (3100 gr). Pesquisa neonatal: no fue retirada. Lactancia materna exclusiva. Al examen físico: regular estado general, fontanela deprimida, leve ictericia en cara. FC 180 lpm, FR 45 rpm, SatO2 98%, T° 36.9°C, mucosas secas, diuresis disminuida. Abdomen blando, depresible, indoloro. Peso actual: 3750 gr.
+                <br><br>
+                <strong>Pregunta:</strong> De acuerdo a su hipótesis diagnóstica, ¿cuál es la conducta diagnóstica adecuada? <em>(Marque hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li data-correct="true"><strong>A.</strong> Ecografía abdominal.</li>
+                <li data-correct="true"><strong>B.</strong> EAB, ionograma, glucemia, urea, creatinina.</li>
+                <li data-correct="true"><strong>C.</strong> Interconsulta con cirugía infantil.</li>
+                <li><strong>D.</strong> Hemograma, PCR, procalcitonina.</li>
+                <li><strong>E.</strong> 2 hemocultivos.</li>
+                <li><strong>F.</strong> Orina completa y urocultivo.</li>
+                <li><strong>G.</strong> Punción lumbar para citoquímica y cultivo.</li>
+                <li><strong>H.</strong> pHmetría de 24 horas.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans3')">Ver Respuestas Correctas y Explicación</button>
+            
+            <div id="ans3" class="answer-box">
+                <strong>✅ Respuestas Correctas: A, B, C</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>A (Ecografía abdominal):</strong> Estudio Gold Standard para diagnosticar Estenosis Hipertrófica de Píloro.<br>
+                • <strong>B (EAB e Ionograma):</strong> Evalúa alcalosis metabólica hipoclorémica e hipopotasémica por vómitos acuosos.<br>
+                • <strong>C (Cirugía infantil):</strong> Para programar piloromiotomía de Fredet-Ramstedt previa estabilización.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function copiar(id, btn) {
+            var copyText = document.getElementById(id);
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            btn.innerText = "¡Copiado!";
+            btn.classList.add("copied");
+            setTimeout(function(){
+                btn.innerText = "Copiar Anuncio";
+                btn.classList.remove("copied");
+            }, 2000);
+        }
+
+        function toggleAnswer(id) {
+            var el = document.getElementById(id);
+            el.classList.toggle('visible');
+        }
+
+        // ==========================================================================
+        // INTERACTIVE PRESENTATION MODE LOGIC
+        // ==========================================================================
+        let currentCaseIndex = 0;
+        let currentPhase = 1; // 1: Reading/Voting, 2: Reveal/Answers
+        let isDarkMode = false;
+        let presentationCases = [];
+        let controlsTimeout;
+        let presentationActive = false;
+
+        function resetControlsTimer() {
+            if (!presentationActive) return;
+            
+            let overlay = document.getElementById('presentation-overlay');
+            if (overlay) {
+                overlay.classList.remove('hide-controls');
+            }
+            
+            clearTimeout(controlsTimeout);
+            controlsTimeout = setTimeout(() => {
+                let overlay = document.getElementById('presentation-overlay');
+                if (overlay && presentationActive) {
+                    overlay.classList.add('hide-controls');
+                }
+            }, 2000);
+        }
+
+        function initPresentationData() {
+            presentationCases = [];
+            document.querySelectorAll('#tab-efu .card').forEach((card) => {
+                let badge = card.querySelector('.badge') ? card.querySelector('.badge').innerText : 'Taller EFU';
+                let title = card.querySelector('h2') ? card.querySelector('h2').innerText : '';
+                let vignette = card.querySelector('.efu-vignette') ? card.querySelector('.efu-vignette').innerHTML : '';
+                
+                let options = [];
+                card.querySelectorAll('.efu-options li').forEach((li) => {
+                    let isCorrect = li.hasAttribute('data-correct') || li.getAttribute('data-correct') === 'true';
+                    let text = li.innerHTML;
+                    // Strip the "<strong>A.</strong> " prefix if present to avoid duplicate labels in slide view
+                    text = text.replace(/^<strong>[A-H]\.<\/strong>\s*/i, '');
+                    options.push({
+                        text: text,
+                        isCorrect: isCorrect,
+                        voted: false
+                    });
+                });
+                
+                let answerHtml = card.querySelector('.answer-box') ? card.querySelector('.answer-box').innerHTML : '';
+                presentationCases.push({ badge, title, vignette, options, answerHtml });
+            });
+        }
+
+        function startPresentation() {
+            initPresentationData();
+            if (presentationCases.length === 0) return;
+            
+            // Create overlay if it doesn't exist
+            let overlay = document.getElementById('presentation-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'presentation-overlay';
+                document.body.appendChild(overlay);
+            }
+            
+            overlay.className = `active projector-theme-${isDarkMode ? 'dark' : 'light'}`;
+            currentCaseIndex = 0;
+            currentPhase = 1;
+            presentationActive = true;
+            
+            renderSlide(false);
+            resetControlsTimer();
+            
+            // Add event listeners
+            window.addEventListener('keydown', handleKeyPress);
+            window.addEventListener('mousemove', resetControlsTimer);
+            window.addEventListener('mousedown', resetControlsTimer);
+            
+            // Try to request fullscreen for a true slideshow feel
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+        }
+
+        function exitPresentation() {
+            presentationActive = false;
+            clearTimeout(controlsTimeout);
+            
+            let overlay = document.getElementById('presentation-overlay');
+            if (overlay) {
+                overlay.className = '';
+                overlay.classList.remove('hide-controls');
+            }
+            window.removeEventListener('keydown', handleKeyPress);
+            window.removeEventListener('mousemove', resetControlsTimer);
+            window.removeEventListener('mousedown', resetControlsTimer);
+            
+            if (document.fullscreenElement && document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            let overlay = document.getElementById('presentation-overlay');
+            if (overlay) {
+                if (isDarkMode) {
+                    overlay.classList.remove('projector-theme-light');
+                    overlay.classList.add('projector-theme-dark');
+                } else {
+                    overlay.classList.remove('projector-theme-dark');
+                    overlay.classList.add('projector-theme-light');
+                }
+            }
+            resetControlsTimer();
+        }
+
+        function handleKeyPress(e) {
+            resetControlsTimer();
+            const key = e.key.toUpperCase();
+            if (currentPhase === 1 && key >= 'A' && key <= 'H') {
+                const index = key.charCodeAt(0) - 65;
+                toggleVote(index);
+                e.preventDefault();
+                return;
+            }
+            
+            switch(e.key) {
+                case ' ':
+                case 'Enter':
+                case 'ArrowRight':
+                case 'PageDown':
+                    nextStep();
+                    e.preventDefault();
+                    break;
+                case 'ArrowLeft':
+                case 'PageUp':
+                    prevStep();
+                    e.preventDefault();
+                    break;
+                case 'Escape':
+                    exitPresentation();
+                    e.preventDefault();
+                    break;
+            }
+        }
+
+        function toggleVote(index) {
+            let currentCase = presentationCases[currentCaseIndex];
+            if (index >= 0 && index < currentCase.options.length) {
+                currentCase.options[index].voted = !currentCase.options[index].voted;
+                renderOptionsOnly();
+            }
+        }
+
+        function renderOptionsOnly() {
+            let currentCase = presentationCases[currentCaseIndex];
+            let optionsList = document.getElementById('pres-options-list');
+            if (!optionsList) return;
+            
+            let lis = optionsList.querySelectorAll('.pres-option-item');
+            currentCase.options.forEach((opt, idx) => {
+                let li = lis[idx];
+                if (!li) return;
+                
+                let badge = li.querySelector('.pres-option-badge');
+                let letter = String.fromCharCode(65 + idx);
+                
+                // Reset styling classes
+                li.className = 'pres-option-item';
+                badge.innerText = letter;
+                
+                if (currentPhase === 1) {
+                    if (opt.voted) {
+                        li.classList.add('voted');
+                    }
+                } else {
+                    // Phase 2: Reveal answers
+                    if (opt.isCorrect) {
+                        li.classList.add('correct');
+                        badge.innerText = '✓';
+                    } else if (opt.voted) {
+                        li.classList.add('incorrect-voted');
+                        badge.innerText = '✗';
+                    } else {
+                        li.classList.add('muted');
+                    }
+                }
+            });
+        }
+
+        function renderSlide(animateExplanation = false) {
+            let overlay = document.getElementById('presentation-overlay');
+            if (!overlay) return;
+            
+            let currentCase = presentationCases[currentCaseIndex];
+            
+            overlay.innerHTML = `
+                <div class="pres-header">
+                    <div class="pres-title-group">
+                        <span class="pres-badge">${currentCase.badge}</span>
+                        <h2>${currentCase.title}</h2>
+                    </div>
+                    <div class="pres-controls-top">
+                        <button class="pres-btn-top" onclick="toggleTheme()">🌓 Tema Claro/Oscuro</button>
+                        <button class="pres-btn-top" onclick="exitPresentation()">✕ Salir (Esc)</button>
+                    </div>
+                </div>
+                
+                <div class="pres-content">
+                    <div class="pres-left">
+                        <div class="pres-vignette-box">
+                            ${currentCase.vignette}
+                        </div>
+                        <div id="pres-explanation" class="pres-explanation-box">
+                            ${currentCase.answerHtml}
+                        </div>
+                    </div>
+                    
+                    <div class="pres-right">
+                        <div class="pres-instructions-bar">
+                            ${currentPhase === 1 
+                                ? '🗳️ <strong>Fase de Discusión:</strong> Vota usando las teclas <strong>A-H</strong> o haciendo clic. Presiona <strong>Enter</strong> o <strong>Espacio</strong> para revelar respuestas.' 
+                                : '📋 <strong>Fase de Respuestas:</strong> Respuestas oficiales y justificación clínica en pantalla.'}
+                        </div>
+                        <ul class="pres-options-list" id="pres-options-list">
+                            ${currentCase.options.map((opt, idx) => {
+                                const letter = String.fromCharCode(65 + idx);
+                                return `
+                                    <li class="pres-option-item" onclick="if(currentPhase===1) toggleVote(${idx})">
+                                        <span class="pres-option-badge">${letter}</span>
+                                        <div class="pres-option-text">${opt.text}</div>
+                                    </li>
+                                `;
+                            }).join('')}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="pres-footer">
+                    <button class="pres-btn-footer" onclick="prevStep()" ${currentCaseIndex === 0 && currentPhase === 1 ? 'disabled' : ''}>
+                        ← Atrás (Flecha Izq)
+                    </button>
+                    <div class="pres-progress-indicator">
+                        Caso ${currentCaseIndex + 1} de ${presentationCases.length} — ${currentPhase === 1 ? 'Pregunta' : 'Respuestas'}
+                    </div>
+                    <button class="pres-btn-footer" onclick="nextStep()">
+                        ${currentCaseIndex === presentationCases.length - 1 && currentPhase === 2 ? 'Finalizar' : 'Siguiente'} →
+                    </button>
+                </div>
+            `;
+            
+            renderOptionsOnly();
+            
+            if (currentPhase === 2) {
+                const box = document.getElementById('pres-explanation');
+                if (box) {
+                    if (animateExplanation) {
+                        void box.offsetHeight; // force layout reflow
+                        setTimeout(() => {
+                            box.classList.add('visible');
+                        }, 50);
+                    } else {
+                        box.classList.add('visible');
+                    }
+                }
+            }
+        }
+
+        function navigateWithTransition(updateDOM, direction) {
+            if (!document.startViewTransition) {
+                updateDOM();
+                return;
+            }
+            
+            document.startViewTransition({
+                update: updateDOM,
+                types: [direction]
+            });
+        }
+
+        function nextStep() {
+            if (currentPhase === 1) {
+                // Move from voting to reveal answers
+                currentPhase = 2;
+                renderSlide(true);
+            } else {
+                // Move to next case slide
+                if (currentCaseIndex < presentationCases.length - 1) {
+                    navigateWithTransition(() => {
+                        currentCaseIndex++;
+                        currentPhase = 1;
+                        renderSlide(false);
+                    }, 'forward');
+                } else {
+                    exitPresentation();
+                }
+            }
+        }
+
+        function prevStep() {
+            if (currentPhase === 2) {
+                currentPhase = 1;
+                renderSlide(false);
+            } else {
+                if (currentCaseIndex > 0) {
+                    navigateWithTransition(() => {
+                        currentCaseIndex--;
+                        currentPhase = 2;
+                        renderSlide(false);
+                    }, 'backward');
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
