@@ -89,3 +89,62 @@ Emilio de 1 mes y 17 días de vida asiste a guardia junto a sus padres, Claudia 
   * **B (EAB, ionograma, etc.):** Evalúa alcalosis metabólica hipoclorémica por vómitos repetidos.
   * **C (Interconsulta con cirugía infantil):** Para resolución quirúrgica oportuna.
 </details>
+
+---
+
+### 📝 PREGUNTA 4 (OFICIAL EFU)
+
+**Enunciado:**  
+Usted se encuentra en un centro de atención primaria y recibe a Bautista, de tres meses de edad. La mamá, Mariana, lo trae a la consulta porque lo nota agitado y presenta sudoración al alimentarse. Según cuenta Mariana, ella nota que Bautista se cansa cuando lleva unos minutos succionando el pecho. Mariana no controló el embarazo porque tenía miedo de concurrir a la salita por la pandemia de COVID-19. No hay antecedentes patológicos familiares. Bautista nació a las 38 semanas, por parto vaginal, con un peso de nacimiento de 2.950 gramos. Tiene pesquisa endocrino-metabólica normal y OEA normales. Recibió las vacunas de acuerdo al calendario nacional. Se alimenta con pecho exclusivo.
+Al examen físico se constata: Palidez cutáneo-mucosa leve. Peso actual: 4100 gr. FC: 140 latidos/minuto, FR: 54 respiraciones/minuto, Sat 98% AA. Afebril. Leve tiraje subcostal. Auscultación cardíaca: soplo pansistólico, intensidad 3/6, audible en múltiples focos, con mayor intensidad en 3er y 4to espacio intercostal izquierdo. Pulsos periféricos simétricos. Abdomen: blando, depresible, se palpa borde hepático 3 cm debajo del reborde costal.
+
+**Pregunta:** Según su hipótesis diagnóstica, ¿cuáles son las conductas iniciales más adecuadas? *(Marque hasta 3 opciones)*
+
+- **A.** Solicitar ecografía abdominal.
+- **B.** Solicitar evaluación en un centro de mayor complejidad.
+- **C.** Indicar corticoides por vía oral.
+- **D.** Solicitar ECG y ecocardiograma.
+- **E.** Indica serie de salbutamol inhalado y observa respuesta clínica.
+- **F.** Indicar corticoides inhalados.
+- **G.** Solicitar urgente hemograma con frotis y hepatograma.
+- **H.** Indica ofrecer el pecho de forma fraccionada.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
+
+* **Opciones Correctas:** **B, D, H**
+* **Justificación:**
+  * **B (Evaluación en centro de mayor complejidad):** Bautista se encuentra en un centro de atención primaria y presenta signos de insuficiencia cardíaca descompensada (taquipnea, hepatomegalia 3 cm, cansancio y sudoración al alimentarse). Requiere derivación para manejo y control especializado.
+  * **D (Solicitar ECG y ecocardiograma):** El soplo pansistólico 3/6 en el borde esternal izquierdo bajo es característico de una Comunicación Interventricular (CIV). El ecocardiograma es el estudio de elección para confirmar la cardiopatía congénita.
+  * **H (Ofrecer el pecho fraccionado):** La alimentación fraccionada (tomas más cortas pero más frecuentes) reduce el gasto de energía y la fatiga durante la lactancia, disminuyendo la sobrecarga de volumen.
+</details>
+
+---
+
+### 📝 PREGUNTA 5 (OFICIAL EFU)
+
+**Enunciado:**  
+Concurre a control Pamela de 5 años y 6 meses de edad. Es una niña con diagnóstico de asma moderada tratada con corticoides inhalados dos veces por día desde hace un año y salbutamol de rescate durante las crisis. En este momento se encuentra sin intercurrencias; la última crisis la presentó hace 1 semana, pero resolvió sin requerir internación. Su desarrollo es adecuado para su edad, está por ingresar a primer grado. Las últimas dosis de vacunas las recibió al año de edad. Su madre se encuentra cursando un embarazo de 20 semanas.
+
+**Pregunta:** ¿Cuál es su conducta con respecto a las inmunizaciones? *(Marque hasta 3 opciones)*
+
+- **A.** Pamela debe recibir Salk, DPT, vacuna antimeningocócica tetravalente, pero no puede recibir triple viral ni vacuna de varicela porque su madre está embarazada.
+- **B.** Pamela no puede vacunarse porque está recibiendo tratamiento prolongado con corticoides.
+- **C.** Pamela debe recibir Salk, DPT y Triple Viral, por su edad no está indicada la vacuna de varicela ni la antimeningocócica.
+- **D.** Pamela debe recibir Sabin, DPT, Triple Viral, vacuna antimeningocócica tetravalente y vacuna de varicela.
+- **E.** Pamela debe recibir Salk, DPT, Triple viral, vacuna antimeningocócica tetravalente y vacuna de varicela.
+- **F.** Indicar a la madre vacuna DPT acelular y Hepatitis B, si no la tiene aplicada y vacuna antigripal estacional.
+- **G.** Pamela debe recibir vacuna antigripal estacional y una dosis de Neumo 23 valente.
+- **H.** Debe esperar 15 días luego de una crisis asmática para poder vacunar a Pamela.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
+
+* **Opciones Correctas:** **C, F, G**
+* **Justificación:**
+  * **C (Esquema de ingreso escolar):** Al momento de este control (5 años), las vacunas obligatorias son Salk (IPV), DPT (Triple bacteriana celular) y Triple Viral. No corresponde vacuna meningocócica ni varicela en este rango del calendario oficial histórico.
+  * **F (Inmunización de la madre embarazada):** Las embarazadas a partir de la semana 20 deben recibir la vacuna triple bacteriana acelular (dTpa), además de vacuna antigripal estacional y completar esquema de Hepatitis B.
+  * **G (Factores de riesgo en asma):** Al ser una paciente asmática de nivel moderado, pertenece a grupo de riesgo y debe recibir anualmente la vacuna antigripal y el esquema contra el neumococo (Neumo 23).
+  *(Nota: El uso de corticoides inhalados NO contraindica la vacunación con vacunas vivas, y convivir con una embarazada tampoco contraindica que el niño reciba vacunas a virus vivo).*
+</details>
+
