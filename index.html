@@ -15,11 +15,15 @@
             --border: #dadce0;
             --success: #1e8e3e;
             --success-bg: #e6f4ea;
+            --neo-color: #0d9488;
+            --consultorio-color: #d97706;
+            --sala-color: #7c3aed;
+            --danger: #dc2626;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            max-width: 900px;
+            max-width: 1100px;
             margin: 30px auto;
             padding: 0 20px;
             background: var(--bg);
@@ -712,19 +716,181 @@
         html:active-view-transition-type(backward)::view-transition-new(root) {
             animation-name: slide-from-left;
         }
+        /* Prácticos / Asistencia Styling */
+        .controls-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f1f3f4;
+            padding-bottom: 12px;
+        }
+
+        .controls-btns {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-export {
+            background-color: #10b981;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn-export:hover {
+            background-color: #059669;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn-danger:hover {
+            background-color: #b91c1c;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 15px;
+        }
+
+        .student-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .student-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #0f172a;
+        }
+
+        .attendance-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .btn-attendance {
+            color: white;
+            padding: 8px 4px;
+            font-size: 0.8rem;
+            text-align: center;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .btn-attendance:hover {
+            opacity: 0.9;
+        }
+
+        .btn-neo { background-color: var(--neo-color); }
+        .btn-consultorio { background-color: var(--consultorio-color); }
+        .btn-sala { background-color: var(--sala-color); }
+
+        .counters {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .counter-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .counter-value {
+            font-weight: 700;
+        }
+
+        .history-list {
+            max-height: 120px;
+            overflow-y: auto;
+            border-top: 1px solid var(--border);
+            padding-top: 8px;
+            font-size: 0.8rem;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            color: #64748b;
+        }
+
+        .history-tag {
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .tag-neo { background-color: var(--neo-color); }
+        .tag-consultorio { background-color: var(--consultorio-color); }
+        .tag-sala { background-color: var(--sala-color); }
+
+        .btn-delete-log {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 5px;
+        }
+
+        .btn-delete-log:hover {
+            color: var(--danger);
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>🏥 Cátedra de Pediatría UBA</h1>
-        <div class="subtitle">Hospital Ramón Carrillo — Portal de Anuncios y Ejercitación EFU</div>
+        <div class="subtitle">Hospital Ramón Carrillo — Portal Docente (Anuncios, EFU y Asistencia Prácticos)</div>
     </header>
 
     <!-- Navigation Tabs -->
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('tab-anuncios', this)">📢 Anuncios Classroom</button>
         <button class="tab-btn" onclick="switchTab('tab-efu', this)">📝 Talleres EFU (Viernes)</button>
+        <button class="tab-btn" onclick="switchTab('tab-practicos', this)">🩺 Control de Prácticos</button>
     </div>
 
     <!-- TAB 1: ANUNCIOS CLASSROOM -->
@@ -982,6 +1148,20 @@ Equipo Docente de Pediatría</textarea>
             </div>
         </div>
 
+    </div>
+
+    <!-- TAB 3: CONTROL DE PRÁCTICOS -->
+    <div id="tab-practicos" class="tab-content">
+        <div class="card">
+            <div class="controls-header">
+                <h2 style="margin:0; border-bottom:none; padding-bottom:0;">📋 Registro de Asistencia a Prácticos</h2>
+                <div class="controls-btns">
+                    <button class="btn-export" onclick="exportToCSV()">Exportar a Excel (CSV)</button>
+                    <button class="btn-danger" onclick="clearAllData()">Resetear Datos</button>
+                </div>
+            </div>
+            <div class="grid" id="studentsContainer"></div>
+        </div>
     </div>
 
     <script>
@@ -1327,6 +1507,156 @@ Equipo Docente de Pediatría</textarea>
                 }
             }
         }
+
+        // ==========================================================================
+        // LÓGICA DE CONTROL DE ASISTENCIA A PRÁCTICOS
+        // ==========================================================================
+        const initialStudents = [
+            "ACUÑA, Leila Carolina",
+            "BARILARO, Canela",
+            "CARUSO, Ailen",
+            "CASTRO, Candela",
+            "DAMIANI, Amanda",
+            "DELGADO PAVIA, Milena Yazmin",
+            "DIAZ MORENO, Milagros Anahi",
+            "GARCIA, Luna Mora",
+            "GENTILE, Florencia Belen",
+            "GUERREIRO CAPARICA BORGES, Rafaella",
+            "GUTIERREZ, Mailen Oriana",
+            "LEGUIZAMON, Antonella Nerea",
+            "MARQUEZ, Sofia Ailen",
+            "MENDEZ, Mora",
+            "OLMOS MUÑOZ, Melina Evelyn",
+            "QUISPE PEÑA, Nicole Selene",
+            "ROJAS, Romina Rosana",
+            "TEIXEIRA CRUZ, Caroline",
+            "TELIAS, Giselle Marisol",
+            "GALLOTTO, Tomas Matias"
+        ];
+
+        let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
+
+        function initData() {
+            initialStudents.forEach(student => {
+                if (!attendanceData[student]) {
+                    attendanceData[student] = [];
+                }
+            });
+            saveData();
+        }
+
+        function saveData() {
+            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+        }
+
+        function addAttendance(student, type) {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('es-AR') + ' ' + now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+            
+            attendanceData[student].unshift({
+                id: Date.now(),
+                type: type,
+                date: dateStr
+            });
+
+            saveData();
+            renderPracticos();
+        }
+
+        function deleteAttendance(student, id) {
+            attendanceData[student] = attendanceData[student].filter(item => item.id !== id);
+            saveData();
+            renderPracticos();
+        }
+
+        function clearAllData() {
+            if (confirm("¿Está seguro de que desea borrar todos los registros? Esta acción no se puede deshacer.")) {
+                attendanceData = {};
+                initData();
+                renderPracticos();
+            }
+        }
+
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+            csvContent += "Alumno,Tipo de Practico,Fecha y Hora\n";
+
+            Object.keys(attendanceData).forEach(student => {
+                const records = attendanceData[student];
+                if (records.length === 0) {
+                    csvContent += `"${student}","Sin registros",""\n`;
+                } else {
+                    records.forEach(rec => {
+                        csvContent += `"${student}","${rec.type}","${rec.date}"\n`;
+                    });
+                }
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `asistencia_practicos_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function renderPracticos() {
+            const container = document.getElementById('studentsContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            Object.keys(attendanceData).sort().forEach(student => {
+                const records = attendanceData[student];
+                
+                const countNeo = records.filter(r => r.type === 'Neonatología').length;
+                const countConsultorio = records.filter(r => r.type === 'Consultorio').length;
+                const countSala = records.filter(r => r.type === 'Sala').length;
+
+                const card = document.createElement('div');
+                card.className = 'student-card';
+
+                let historyHTML = records.map(r => {
+                    let tagClass = 'tag-neo';
+                    if (r.type === 'Consultorio') tagClass = 'tag-consultorio';
+                    if (r.type === 'Sala') tagClass = 'tag-sala';
+
+                    return `
+                        <div class="history-item">
+                            <span class="history-tag ${tagClass}">${r.type}</span>
+                            <span>${r.date}</span>
+                            <button class="btn-delete-log" onclick="deleteAttendance('${student}', ${r.id})">&times;</button>
+                        </div>
+                    `;
+                }).join('');
+
+                card.innerHTML = `
+                    <div>
+                        <div class="student-name">${student}</div>
+                        <div class="attendance-buttons">
+                            <button class="btn-attendance btn-neo" onclick="addAttendance('${student}', 'Neonatología')">+ Neo</button>
+                            <button class="btn-attendance btn-consultorio" onclick="addAttendance('${student}', 'Consultorio')">+ Consultorio</button>
+                            <button class="btn-attendance btn-sala" onclick="addAttendance('${student}', 'Sala')">+ Sala</button>
+                        </div>
+                        <div class="counters">
+                            <div class="counter-item"><span>Neo</span><span class="counter-value">${countNeo}</span></div>
+                            <div class="counter-item"><span>Consultorio</span><span class="counter-value">${countConsultorio}</span></div>
+                            <div class="counter-item"><span>Sala</span><span class="counter-value">${countSala}</span></div>
+                            <div class="counter-item"><span>Total</span><span class="counter-value">${records.length}</span></div>
+                        </div>
+                    </div>
+                    <div class="history-list">
+                        ${historyHTML || '<div style="color: #94a3b8; text-align: center;">Sin registros</div>'}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Inicializar Prácticos al cargar la página
+        initData();
+        renderPracticos();
     </script>
 
 </body>
