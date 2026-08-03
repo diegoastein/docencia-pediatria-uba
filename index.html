@@ -877,6 +877,102 @@
         .btn-delete-log:hover {
             color: var(--danger);
         }
+
+        /* Cloud Sync Panel Styling */
+        .sync-panel {
+            background: #f0f7ff;
+            border: 1px solid #c2e0ff;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .sync-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .sync-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sync-input {
+            padding: 6px 12px;
+            border: 1px solid #a0c7f7;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            width: 180px;
+            font-weight: 600;
+        }
+
+        .sync-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: bold;
+        }
+
+        .sync-badge.online {
+            background-color: #e6f4ea;
+            color: #137333;
+            border: 1px solid #ceead6;
+        }
+
+        .sync-badge.offline {
+            background-color: #fce8e6;
+            color: #c5221f;
+            border: 1px solid #fad2cf;
+        }
+
+        .sync-badge.syncing {
+            background-color: #fef7e0;
+            color: #b06000;
+            border: 1px solid #feefc3;
+        }
+
+        .btn-sync {
+            background-color: #1a73e8;
+            color: white;
+            padding: 6px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: background 0.2s ease;
+        }
+
+        .btn-sync:hover {
+            background-color: #1557b0;
+        }
+
+        .btn-sync-secondary {
+            background-color: #ffffff;
+            color: #1a73e8;
+            border: 1px solid #1a73e8;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-sync-secondary:hover {
+            background-color: #e8f0fe;
+        }
     </style>
 </head>
 <body>
@@ -1153,6 +1249,23 @@ Equipo Docente de Pediatría</textarea>
     <!-- TAB 3: CONTROL DE PRÁCTICOS -->
     <div id="tab-practicos" class="tab-content">
         <div class="card">
+            <!-- Cloud Sync Panel -->
+            <div class="sync-panel">
+                <div class="sync-info">
+                    <strong>☁️ Sincronización Nube:</strong>
+                    <div class="sync-input-group">
+                        <input type="text" id="syncRoomInput" class="sync-input" placeholder="ID de Sala" title="Ingrese un ID de sala o cree una nueva">
+                        <button class="btn-sync" onclick="setSyncRoom()">Conectar</button>
+                        <button class="btn-sync-secondary" onclick="createSyncRoom()">✨ Nueva Sala</button>
+                    </div>
+                    <span id="syncStatusBadge" class="sync-badge offline">🔴 Sin Conexión Nube</span>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-sync-secondary" onclick="shareSyncLink()">🔗 Copiar Enlace Sync</button>
+                    <button class="btn-sync-secondary" onclick="pullFromCloud(true)">🔄 Sincronizar Ahora</button>
+                </div>
+            </div>
+
             <div class="controls-header">
                 <h2 style="margin:0; border-bottom:none; padding-bottom:0;">📋 Registro de Asistencia a Prácticos</h2>
                 <div class="controls-btns">
@@ -1536,17 +1649,176 @@ Equipo Docente de Pediatría</textarea>
 
         let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
 
+        // --------------------------------------------------------------------------
+        // LÓGICA DE SINCRONIZACIÓN EN LA NUBE (MULTI-DISPOSITIVO)
+        // --------------------------------------------------------------------------
+        const API_ENDPOINT = "https://api.restful-api.dev/objects";
+        let syncRoomId = localStorage.getItem('syncRoomId') || '';
+        let lastSyncTimestamp = 0;
+        let isSyncing = false;
+
+        function updateSyncBadge(status, text) {
+            const badge = document.getElementById('syncStatusBadge');
+            if (!badge) return;
+            badge.className = `sync-badge ${status}`;
+            badge.innerText = text;
+        }
+
+        function initSyncRoom() {
+            // Check URL hash for #sync=ROOM_ID
+            const hash = window.location.hash;
+            if (hash.startsWith('#sync=')) {
+                const roomFromUrl = hash.replace('#sync=', '').trim();
+                if (roomFromUrl) {
+                    syncRoomId = roomFromUrl;
+                    localStorage.setItem('syncRoomId', syncRoomId);
+                }
+            }
+
+            const input = document.getElementById('syncRoomInput');
+            if (input && syncRoomId) {
+                input.value = syncRoomId;
+            }
+
+            if (syncRoomId) {
+                pullFromCloud();
+            } else {
+                updateSyncBadge('offline', '🔴 Sin Conexión Nube');
+            }
+        }
+
+        function setSyncRoom() {
+            const input = document.getElementById('syncRoomInput');
+            const room = input ? input.value.trim() : '';
+            if (!room) {
+                alert("Ingrese un ID de sala válido.");
+                return;
+            }
+            syncRoomId = room;
+            localStorage.setItem('syncRoomId', syncRoomId);
+            window.location.hash = `sync=${syncRoomId}`;
+            pullFromCloud(true);
+        }
+
+        async function createSyncRoom() {
+            updateSyncBadge('syncing', '⏳ Creando nueva sala...');
+            try {
+                const response = await fetch(API_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        name: "asistencia_pediatria_uba",
+                        data: {
+                            attendanceData: attendanceData,
+                            updatedAt: Date.now()
+                        }
+                    })
+                });
+                const res = await response.json();
+                if (res && res.id) {
+                    syncRoomId = res.id;
+                    localStorage.setItem('syncRoomId', syncRoomId);
+                    const input = document.getElementById('syncRoomInput');
+                    if (input) input.value = syncRoomId;
+                    window.location.hash = `sync=${syncRoomId}`;
+                    updateSyncBadge('online', '🟢 Sala Conectada');
+                    alert(`¡Nueva sala de sincronización creada con éxito!\n\nID de Sala: ${syncRoomId}\nComparta este enlace o ID con el otro dispositivo para sincronizar en tiempo real.`);
+                }
+            } catch (err) {
+                console.error("Error creando sala:", err);
+                updateSyncBadge('offline', '🔴 Error de Conexión');
+            }
+        }
+
+        async function pushToCloud() {
+            if (!syncRoomId) return;
+            if (isSyncing) return;
+            isSyncing = true;
+            updateSyncBadge('syncing', '⏳ Guardando en nube...');
+            try {
+                const now = Date.now();
+                lastSyncTimestamp = now;
+                await fetch(`${API_ENDPOINT}/${syncRoomId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        name: "asistencia_pediatria_uba",
+                        data: {
+                            attendanceData: attendanceData,
+                            updatedAt: now
+                        }
+                    })
+                });
+                updateSyncBadge('online', '🟢 Sincronizado en Tiempo Real');
+            } catch (err) {
+                console.error("Error guardando en la nube:", err);
+                updateSyncBadge('offline', '🔴 Error al Guardar (Local Guardado)');
+            } finally {
+                isSyncing = false;
+            }
+        }
+
+        async function pullFromCloud(manual = false) {
+            if (!syncRoomId) return;
+            if (isSyncing) return;
+            isSyncing = true;
+            if (manual) updateSyncBadge('syncing', '⏳ Consultando nube...');
+            try {
+                const response = await fetch(`${API_ENDPOINT}/${syncRoomId}`);
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        updateSyncBadge('offline', '🔴 Sala No Encontrada');
+                    }
+                    return;
+                }
+                const res = await response.json();
+                if (res && res.data && res.data.attendanceData) {
+                    const remoteTimestamp = res.data.updatedAt || 0;
+                    if (remoteTimestamp > lastSyncTimestamp) {
+                        attendanceData = res.data.attendanceData;
+                        lastSyncTimestamp = remoteTimestamp;
+                        saveDataLocalOnly();
+                        renderPracticos();
+                    }
+                    updateSyncBadge('online', '🟢 Sincronizado en Tiempo Real');
+                }
+            } catch (err) {
+                console.error("Error obteniendo datos remotos:", err);
+                updateSyncBadge('offline', '🔴 Conexión Pendiente');
+            } finally {
+                isSyncing = false;
+            }
+        }
+
+        function saveDataLocalOnly() {
+            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+        }
+
+        function saveData() {
+            saveDataLocalOnly();
+            pushToCloud();
+        }
+
+        function shareSyncLink() {
+            if (!syncRoomId) {
+                alert("Primero debes conectar o crear una sala de sincronización.");
+                return;
+            }
+            const syncUrl = `${window.location.origin}${window.location.pathname}#sync=${syncRoomId}`;
+            navigator.clipboard.writeText(syncUrl);
+            alert(`¡Enlace de sincronización copiado al portapapeles!\n\nAbre este enlace en tu otro celular o computadora para sincronizar:\n${syncUrl}`);
+        }
+
+        // --------------------------------------------------------------------------
+        // INICIALIZACIÓN Y RENDERIZADO
+        // --------------------------------------------------------------------------
         function initData() {
             initialStudents.forEach(student => {
                 if (!attendanceData[student]) {
                     attendanceData[student] = [];
                 }
             });
-            saveData();
-        }
-
-        function saveData() {
-            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+            saveDataLocalOnly();
         }
 
         function addAttendance(student, type) {
@@ -1573,6 +1845,7 @@ Equipo Docente de Pediatría</textarea>
             if (confirm("¿Está seguro de que desea borrar todos los registros? Esta acción no se puede deshacer.")) {
                 attendanceData = {};
                 initData();
+                saveData();
                 renderPracticos();
             }
         }
@@ -1654,9 +1927,22 @@ Equipo Docente de Pediatría</textarea>
             });
         }
 
-        // Inicializar Prácticos al cargar la página
+        // Inicializar datos y sincronización
         initData();
         renderPracticos();
+        initSyncRoom();
+
+        // Polling automático cada 10s y al cambiar visibilidad
+        setInterval(() => {
+            const tabPracticos = document.getElementById('tab-practicos');
+            if (tabPracticos && tabPracticos.classList.contains('active')) {
+                pullFromCloud();
+            }
+        }, 10000);
+
+        window.addEventListener('focus', () => {
+            pullFromCloud();
+        });
     </script>
 
 </body>
