@@ -1652,10 +1652,24 @@ Equipo Docente de Pediatría</textarea>
         // --------------------------------------------------------------------------
         // LÓGICA DE SINCRONIZACIÓN EN LA NUBE (MULTI-DISPOSITIVO)
         // --------------------------------------------------------------------------
-        const API_ENDPOINT = "https://api.restful-api.dev/objects";
+        const API_BASE = "https://jsonblob.com/api/jsonBlob";
         let syncRoomId = localStorage.getItem('syncRoomId') || '';
         let lastSyncTimestamp = 0;
         let isSyncing = false;
+
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 6000) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    signal: controller.signal
+                });
+                return response;
+            } finally {
+                clearTimeout(timer);
+            }
+        }
 
         function updateSyncBadge(status, text) {
             const badge = document.getElementById('syncStatusBadge');
@@ -1703,30 +1717,46 @@ Equipo Docente de Pediatría</textarea>
         async function createSyncRoom() {
             updateSyncBadge('syncing', '⏳ Creando nueva sala...');
             try {
-                const response = await fetch(API_ENDPOINT, {
+                const response = await fetchWithTimeout(API_BASE, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
                     body: JSON.stringify({
-                        name: "asistencia_pediatria_uba",
-                        data: {
-                            attendanceData: attendanceData,
-                            updatedAt: Date.now()
-                        }
+                        attendanceData: attendanceData,
+                        updatedAt: Date.now()
                     })
-                });
-                const res = await response.json();
-                if (res && res.id) {
-                    syncRoomId = res.id;
-                    localStorage.setItem('syncRoomId', syncRoomId);
-                    const input = document.getElementById('syncRoomInput');
-                    if (input) input.value = syncRoomId;
-                    window.location.hash = `sync=${syncRoomId}`;
-                    updateSyncBadge('online', '🟢 Sala Conectada');
-                    alert(`¡Nueva sala de sincronización creada con éxito!\n\nID de Sala: ${syncRoomId}\nComparta este enlace o ID con el otro dispositivo para sincronizar en tiempo real.`);
+                }, 6000);
+
+                if (!response.ok) {
+                    throw new Error(`Servidor retornó estado ${response.status}`);
                 }
+
+                const locationHeader = response.headers.get("Location") || response.headers.get("location");
+                let newId = "";
+                if (locationHeader) {
+                    newId = locationHeader.split("/").pop();
+                } else {
+                    const resData = await response.json();
+                    newId = resData.id || resData._id;
+                }
+
+                if (!newId) throw new Error("No se pudo extraer el ID de la nueva sala.");
+
+                syncRoomId = newId;
+                localStorage.setItem('syncRoomId', syncRoomId);
+                const input = document.getElementById('syncRoomInput');
+                if (input) input.value = syncRoomId;
+                window.location.hash = `sync=${syncRoomId}`;
+                updateSyncBadge('online', '🟢 Sala Conectada');
+                
+                alert(`¡Nueva sala creada con éxito!\n\nID de Sala:\n${syncRoomId}\n\nUsa el botón "Copiar Enlace Sync" para vincularlo con tu otro dispositivo.`);
             } catch (err) {
                 console.error("Error creando sala:", err);
+                const reason = err.name === 'AbortError' ? 'Tiempo de espera agotado (6s)' : err.message;
                 updateSyncBadge('offline', '🔴 Error de Conexión');
+                alert("No se pudo crear la sala en la nube: " + reason);
             }
         }
 
@@ -1738,21 +1768,23 @@ Equipo Docente de Pediatría</textarea>
             try {
                 const now = Date.now();
                 lastSyncTimestamp = now;
-                await fetch(`${API_ENDPOINT}/${syncRoomId}`, {
+                const response = await fetchWithTimeout(`${API_BASE}/${syncRoomId}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        name: "asistencia_pediatria_uba",
-                        data: {
-                            attendanceData: attendanceData,
-                            updatedAt: now
-                        }
+                        attendanceData: attendanceData,
+                        updatedAt: now
                     })
-                });
-                updateSyncBadge('online', '🟢 Sincronizado en Tiempo Real');
+                }, 6000);
+
+                if (response.ok) {
+                    updateSyncBadge('online', '🟢 Sincronizado');
+                } else {
+                    updateSyncBadge('offline', '🔴 Error al guardar');
+                }
             } catch (err) {
-                console.error("Error guardando en la nube:", err);
-                updateSyncBadge('offline', '🔴 Error al Guardar (Local Guardado)');
+                console.error("Error guardando en nube:", err);
+                updateSyncBadge('offline', '🔴 Error de Conexión');
             } finally {
                 isSyncing = false;
             }
@@ -1764,23 +1796,25 @@ Equipo Docente de Pediatría</textarea>
             isSyncing = true;
             if (manual) updateSyncBadge('syncing', '⏳ Consultando nube...');
             try {
-                const response = await fetch(`${API_ENDPOINT}/${syncRoomId}`);
+                const response = await fetchWithTimeout(`${API_BASE}/${syncRoomId}`, {}, 6000);
                 if (!response.ok) {
                     if (response.status === 404) {
                         updateSyncBadge('offline', '🔴 Sala No Encontrada');
+                    } else {
+                        updateSyncBadge('offline', '🔴 Error al leer');
                     }
                     return;
                 }
                 const res = await response.json();
-                if (res && res.data && res.data.attendanceData) {
-                    const remoteTimestamp = res.data.updatedAt || 0;
+                if (res && res.attendanceData) {
+                    const remoteTimestamp = res.updatedAt || 0;
                     if (remoteTimestamp > lastSyncTimestamp) {
-                        attendanceData = res.data.attendanceData;
+                        attendanceData = res.attendanceData;
                         lastSyncTimestamp = remoteTimestamp;
                         saveDataLocalOnly();
                         renderPracticos();
                     }
-                    updateSyncBadge('online', '🟢 Sincronizado en Tiempo Real');
+                    updateSyncBadge('online', '🟢 Sincronizado');
                 }
             } catch (err) {
                 console.error("Error obteniendo datos remotos:", err);
