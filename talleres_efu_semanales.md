@@ -67,56 +67,59 @@ Ud. se encuentra otorgando el alta de Ián, un recién nacido de 39 semanas de e
 ### 📝 PREGUNTA 3 (OFICIAL EFU)
 
 **Enunciado:**  
-Emilio de 1 mes y 17 días de vida asiste a guardia junto a sus padres, Claudia y Marcos. Refieren que Emilio, único hijo, hace 12 horas está decaído y presentaba vómitos postprandiales desde hace 1 semana. Toma pecho con mayor avidez. En las últimas horas presentó 4 vómitos en chorro. Siempre afebril. Nacido a término (3100 gr). Pesquisa neonatal: no fue retirada. Lactancia materna exclusiva. Al examen físico: regular estado general, fontanela deprimida, leve ictericia en cara. FC 180 lpm, FR 45 rpm, SatO2 98%, T° 36.9°C, mucosas secas, diuresis disminuida. Abdomen blando, depresible, indoloro. Peso actual: 3750 gr.
+Anahí es una niña de 6 meses de vida, primera hija de Sandra (32 años, docente) y Julio (32 años, docente). Fue una RNT PAEG y no presentó hasta el momento ningún problema de salud. Tiene aplicadas vacunas completas para la edad. La familia vive en el conurbano bonaerense y los padres trabajan en una escuela en el partido en el que viven. Anahí queda al cuidado de su abuela materna durante el tiempo que ellos están trabajando. Anahí sigue tomando el pecho y también toma biberones con fórmula de inicio.  
+Al examen físico Anahí se sienta, toma objetos y los lleva a la boca, y no se observa reflejo de extrusión lingual. Peso: 7 kg (pc 25) y talla 64 cm (pc 25). En la consulta los padres preguntan acerca de comenzar con la alimentación con semisólidos.
 
-**Pregunta:** De acuerdo a su hipótesis diagnóstica, ¿cuál es la conducta diagnóstica adecuada? *(Marque hasta 3 opciones)*
+**Pregunta:** Ante esta consulta, ¿qué considera informarles? *(Marque hasta 3 opciones)*
 
-- **A.** Ecografía abdominal.
-- **B.** EAB, ionograma, glucemia, urea, creatinina.
-- **C.** Interconsulta con cirugía infantil.
-- **D.** Hemograma, PCR, procalcitonina.
-- **E.** 2 hemocultivos.
-- **F.** Orina completa y urocultivo.
-- **G.** Punción lumbar para citoquímica y cultivo.
-- **H.** pHmetría de 24 horas.
+- **A.** Indica que comiencen con sucedáneos lácteos inicialmente.
+- **B.** Se debería aguardar a que alcanzara un peso y una talla en percentilo 50 para comenzar con semisólidos.
+- **C.** Alienta la ingesta de agua y desalienta la de jugos industriales y gaseosas.
+- **D.** Aclara que pueden añadir sal, azúcar y/o miel a las comidas.
+- **E.** Indica que comiencen con vegetales inicialmente y más tarde incorporar otros grupos de alimentos (carnes, cereales y frutas).
+- **F.** Estimula el agregado de grasas a las comidas que se le ofrezcan.
+- **G.** Es un buen momento para comenzar con semisólidos.
+- **H.** Indica alimentos variados, pero limitando carnes y algunas frutas.
 
 <details>
 <summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
 
-* **Opciones Correctas:** **A, B, C**
+* **Opciones Correctas:** **C, E, G**
 * **Justificación:**
-  * **A (Ecografía abdominal):** Confirma el diagnóstico de estenosis hipertrófica de píloro.
-  * **B (EAB, ionograma, etc.):** Evalúa alcalosis metabólica hipoclorémica por vómitos repetidos.
-  * **C (Interconsulta con cirugía infantil):** Para resolución quirúrgica oportuna.
+  * **C (Alentar ingesta de agua / desalentar jugos y gaseosas):** Promoción de pautas de hidratación saludables desde el inicio de la alimentación complementaria.
+  * **E (Inicio de semisólidos progresivos):** Incorporar vegetales e ir sumando progresivamente otros grupos de alimentos (carnes, cereales y frutas).
+  * **G (Momento adecuado para semisólidos):** Presenta madurez del neurodesarrollo adecuada (sedestación, desaparición del reflejo de extrusión lingual, exploración con objetos) a los 6 meses de vida.
 </details>
 
 ---
 
+
 ### 📝 PREGUNTA 4 (OFICIAL EFU)
 
 **Enunciado:**  
-Usted se encuentra en un centro de atención primaria y recibe a Bautista, de tres meses de edad. La mamá, Mariana, lo trae a la consulta porque lo nota agitado y presenta sudoración al alimentarse. Según cuenta Mariana, ella nota que Bautista se cansa cuando lleva unos minutos succionando el pecho. Mariana no controló el embarazo porque tenía miedo de concurrir a la salita por la pandemia de COVID-19. No hay antecedentes patológicos familiares. Bautista nació a las 38 semanas, por parto vaginal, con un peso de nacimiento de 2.950 gramos. Tiene pesquisa endocrino-metabólica normal y OEA normales. Recibió las vacunas de acuerdo al calendario nacional. Se alimenta con pecho exclusivo.
-Al examen físico se constata: Palidez cutáneo-mucosa leve. Peso actual: 4100 gr. FC: 140 latidos/minuto, FR: 54 respiraciones/minuto, Sat 98% AA. Afebril. Leve tiraje subcostal. Auscultación cardíaca: soplo pansistólico, intensidad 3/6, audible en múltiples focos, con mayor intensidad en 3er y 4to espacio intercostal izquierdo. Pulsos periféricos simétricos. Abdomen: blando, depresible, se palpa borde hepático 3 cm debajo del reborde costal.
+José, de 6 años y 3 meses de edad, llega a la consulta con su madre. Ella está preocupada por la altura de José, ya que lo nota más bajo que sus compañeros.  
+Antecedentes: nacido a término con peso adecuado para la edad gestacional. Sin antecedentes patológicos de importancia. Vive con su madre, su padre ha fallecido en un accidente y no hay antecedentes patológicos familiares de importancia.  
+La libreta sanitaria de José muestra una curva de talla que a partir de los 2 años de vida ha crecido entre los percentiles 10-25 hasta los 5 años. A partir de esa edad, la curva empieza a descender, ubicándose actualmente debajo del percentil 3, con un puntaje Z de -3,4 y una velocidad de crecimiento menor al percentil 3.
 
-**Pregunta:** Según su hipótesis diagnóstica, ¿cuáles son las conductas iniciales más adecuadas? *(Marque hasta 3 opciones)*
+**Pregunta:** Con respecto al cuadro clínico del paciente, ¿cuáles de las siguientes conductas son las más adecuadas? *(Marque hasta 3 opciones)*
 
-- **A.** Solicitar ecografía abdominal.
-- **B.** Solicitar evaluación en un centro de mayor complejidad.
-- **C.** Indicar corticoides por vía oral.
-- **D.** Solicitar ECG y ecocardiograma.
-- **E.** Indica serie de salbutamol inhalado y observa respuesta clínica.
-- **F.** Indicar corticoides inhalados.
-- **G.** Solicitar urgente hemograma con frotis y hepatograma.
-- **H.** Indica ofrecer el pecho de forma fraccionada.
+- **A.** Explicar a la madre que se trata de un madurador lento.
+- **B.** Internar al paciente en sala general.
+- **C.** Citar ambulatoriamente en 6 meses sin solicitar estudios.
+- **D.** Solicitar interconsulta con endocrinología infantil.
+- **E.** Explicar a la madre que se trata de baja talla familiar.
+- **F.** Explicar a la madre que su niño tiene un retardo constitucional del crecimiento.
+- **G.** Solicitar laboratorio con panel celíaco, hormonas tiroideas (TSH y T4 libre) y radiografía de mano/muñeca izquierda para edad ósea.
+- **H.** Realizar curva de velocidad de crecimiento y seguimiento antropométrico estricto.
 
 <details>
 <summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
 
-* **Opciones Correctas:** **B, D, H**
+* **Opciones Correctas:** **D, G, H**
 * **Justificación:**
-  * **B (Evaluación en centro de mayor complejidad):** Bautista se encuentra en un centro de atención primaria y presenta signos de insuficiencia cardíaca descompensada (taquipnea, hepatomegalia 3 cm, cansancio y sudoración al alimentarse). Requiere derivación para manejo y control especializado.
-  * **D (Solicitar ECG y ecocardiograma):** El soplo pansistólico 3/6 en el borde esternal izquierdo bajo es característico de una Comunicación Interventricular (CIV). El ecocardiograma es el estudio de elección para confirmar la cardiopatía congénita.
-  * **H (Ofrecer el pecho fraccionado):** La alimentación fraccionada (tomas más cortas pero más frecuentes) reduce el gasto de energía y la fatiga durante la lactancia, disminuyendo la sobrecarga de volumen.
+  * **D (Interconsulta con endocrinología):** La desaceleración de la curva de crecimiento con puntaje Z < -3 y velocidad de crecimiento en percentil < 3 es un signo de alarma de baja talla patológica que requiere evaluación especializada.
+  * **G (Estudios iniciales):** Corresponde descartar causas orgánicas/sistémicas de falla de crecimiento (enfermedad celíaca e hipotiroidismo) y evaluar la maduración ósea mediante radiografía de mano izquierda.
+  * **H (Curva de velocidad de crecimiento):** El seguimiento estricto de la velocidad de crecimiento es el parámetro auxológico fundamental para definir el ritmo de crecimiento.
 </details>
 
 ---
