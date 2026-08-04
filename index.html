@@ -876,6 +876,8 @@
         /* Tabla Matriz */
         .matrix-table-wrapper {
             overflow-x: auto;
+            max-height: 70vh;
+            overflow-y: auto;
             border: 1px solid var(--border);
             border-radius: 10px;
             background: white;
@@ -894,6 +896,9 @@
             color: #334155;
             border-bottom: 2px solid #e2e8f0;
             white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         .matrix-table td {
             padding: 10px 14px;
@@ -1485,22 +1490,11 @@ Equipo Docente de Pediatría</textarea>
             <div class="practicos-nav-bar">
                 <div class="subtab-buttons">
                     <button class="subtab-btn active" id="btnSubtabMatrix" onclick="switchPracticosSubtab('matrix')">📊 Planilla Matriz</button>
-                    <button class="subtab-btn" id="btnSubtabGroups" onclick="switchPracticosSubtab('groups')">👥 Por Grupos</button>
                     <button class="subtab-btn" id="btnSubtabBatch" onclick="switchPracticosSubtab('batch')">⚡ Toma de Lista por Fecha</button>
                 </div>
                 
                 <div class="filter-bar" style="margin: 0;">
                     <input type="text" id="searchStudentInput" class="filter-input" placeholder="🔍 Buscar por apellido o nombre..." oninput="renderPracticos()">
-                    <select id="filterGroupSelect" class="filter-select" onchange="renderPracticos()">
-                        <option value="all">Todos los Grupos (1-7)</option>
-                        <option value="Grupo 1">Grupo 1 (Acuña / Barilaro)</option>
-                        <option value="Grupo 2">Grupo 2 (Caruso / Castro / Damiani / Delgado)</option>
-                        <option value="Grupo 3">Grupo 3 (Díaz / García / Gentile / Guerreiro)</option>
-                        <option value="Grupo 4">Grupo 4 (Gutiérrez / Quispe / Rojas)</option>
-                        <option value="Grupo 5">Grupo 5 (Teixeira / Telias / Gallotto)</option>
-                        <option value="Grupo 6">Grupo 6 (Leguizamón / Márquez)</option>
-                        <option value="Grupo 7">Grupo 7 (Méndez / Olmos)</option>
-                    </select>
                 </div>
             </div>
 
@@ -1512,13 +1506,11 @@ Equipo Docente de Pediatría</textarea>
                             <tr>
                                 <th style="width: 40px; text-align: center;">#</th>
                                 <th>Alumno</th>
-                                <th style="width: 90px; text-align: center;">Grupo</th>
-                                <th style="width: 110px; text-align: center;">Neo</th>
-                                <th style="width: 120px; text-align: center;">Consultorio</th>
-                                <th style="width: 110px; text-align: center;">Sala</th>
-                                <th style="width: 110px; text-align: center;">Guardia</th>
-                                <th style="width: 70px; text-align: center;">Total</th>
-                                <th style="width: 140px; text-align: center;">% Asistencia</th>
+                                <th style="width: 130px; text-align: center;">Neonatología</th>
+                                <th style="width: 140px; text-align: center;">Consultorio</th>
+                                <th style="width: 130px; text-align: center;">Sala</th>
+                                <th style="width: 80px; text-align: center;">Total</th>
+                                <th style="width: 150px; text-align: center;">% Asistencia</th>
                                 <th style="width: 90px; text-align: center;">Acciones</th>
                             </tr>
                         </thead>
@@ -1529,14 +1521,7 @@ Equipo Docente de Pediatría</textarea>
                 </div>
             </div>
 
-            <!-- SUB-VIEW 2: POR GRUPOS HOSPITALARIOS -->
-            <div id="viewPracticosGroups" style="display: none;">
-                <div class="grid" id="groupsContainer">
-                    <!-- Populated dynamically -->
-                </div>
-            </div>
-
-            <!-- SUB-VIEW 3: TOMA DE LISTA POR FECHA -->
+            <!-- SUB-VIEW 2: TOMA DE LISTA POR FECHA -->
             <div id="viewPracticosBatch" style="display: none;">
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; max-width: 750px; margin: 0 auto;">
                     <h3 style="margin-top: 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">⚡ Registro Colectivo por Fecha</h3>
@@ -1551,14 +1536,13 @@ Equipo Docente de Pediatría</textarea>
                                 <option value="Neonatología">Neonatología</option>
                                 <option value="Consultorio">Consultorio Externo</option>
                                 <option value="Sala">Sala de Cuidados Intermedios</option>
-                                <option value="Guardia">Guardia de Urgencias</option>
                             </select>
                         </div>
                     </div>
                     
                     <div style="margin-bottom: 15px;">
                         <label style="font-weight: 600; font-size: 0.85rem; color: #475569; display: block; margin-bottom: 5px;">Observación / Comentario (Opcional):</label>
-                        <input type="text" id="batchNoteInput" class="filter-input" placeholder="Ej. Pase de guardia, Presentación de caso, Puntualidad..." style="width: 100%;">
+                        <input type="text" id="batchNoteInput" class="filter-input" placeholder="Ej. Pase de sala, Presentación de caso, Puntualidad..." style="width: 100%;">
                     </div>
 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -1944,7 +1928,7 @@ Equipo Docente de Pediatría</textarea>
                 ["PLANILLA MAESTRA DE CONTROL DE ASISTENCIA A PRÁCTICOS 2026"],
                 ["Fecha de Emisión: " + new Date().toLocaleDateString('es-AR')],
                 [],
-                ["N°", "Apellido y Nombre", "Grupo Hospitalario", "Neonatología", "Consultorio", "Sala", "Guardia", "Total Prácticos", "% Asistencia", "Condición"]
+                ["N°", "Apellido y Nombre", "Neonatología", "Consultorio", "Sala", "Total Prácticos", "% Asistencia", "Condición"]
             ];
 
             const sortedStudents = Object.keys(attendanceData).sort();
@@ -1953,15 +1937,17 @@ Equipo Docente de Pediatría</textarea>
                 const cNeo = records.filter(r => r.type === 'Neonatología').length;
                 const cConsultorio = records.filter(r => r.type === 'Consultorio').length;
                 const cSala = records.filter(r => r.type === 'Sala').length;
-                const cGuardia = records.filter(r => r.type === 'Guardia').length;
                 const total = records.length;
                 const pct = Math.min(100, Math.round((total / 10) * 100));
                 const condicion = total >= 8 ? "REGULAR" : (total >= 5 ? "EN RIESGO" : "INSUFICIENTE");
 
-                summaryData.push([index + 1, student, studentGroups[student] || "Sin Grupo", cNeo, cConsultorio, cSala, cGuardia, total, pct + "%", condicion]);
+                summaryData.push([index + 1, student, cNeo, cConsultorio, cSala, total, pct + "%", condicion]);
             });
 
             const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
+            wsSummary['!cols'] = [
+                { wch: 5 }, { wch: 40 }, { wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 15 }, { wch: 16 }
+            ];
             XLSX.utils.book_append_sheet(wb, wsSummary, "Resumen_Asistencia");
 
             const fileName = `control_practicos_pediatria_${new Date().toISOString().slice(0,10)}.xlsx`;
@@ -1982,7 +1968,7 @@ Equipo Docente de Pediatría</textarea>
                 const div = document.createElement('div');
                 div.style.cssText = 'display:flex; align-items:center; gap:6px; font-size:0.85rem;';
                 div.innerHTML = `<input type="checkbox" class="batch-chk" value="${student}" id="chk_${student.replace(/[^a-zA-Z0-9]/g, '_')}">
-                                 <label for="chk_${student.replace(/[^a-zA-Z0-9]/g, '_')}" style="cursor:pointer;"><strong>${student}</strong></label>`;
+                                 <label for="chk_${student.replace(/[^a-zA-Z0-9]/g, '_')}" style="cursor:pointer; user-select:none;"><strong>${student}</strong></label>`;
                 container.appendChild(div);
             });
         }
@@ -1997,14 +1983,16 @@ Equipo Docente de Pediatría</textarea>
             const noteVal = document.getElementById('batchNoteInput').value.trim();
             const selected = Array.from(document.querySelectorAll('.batch-chk:checked')).map(c => c.value);
             
-            if (selected.length === 0) return alert("Seleccione al menos un alumno.");
+            if (selected.length === 0) return alert("Por favor, seleccione al menos un alumno.");
             const formattedDate = dateVal ? new Date(dateVal + 'T12:00:00').toLocaleDateString('es-AR') : new Date().toLocaleDateString('es-AR');
             
             selected.forEach(student => {
                 attendanceData[student].unshift({id: Date.now() + Math.random(), type: typeVal, date: formattedDate + ' 10:30', note: noteVal});
             });
             saveData();
-            alert("Asistencia registrada.");
+            alert(`¡Asistencia registrada con éxito para ${selected.length} alumnos en ${typeVal}!`);
+            document.getElementById('batchNoteInput').value = '';
+            toggleSelectAllBatch(false);
             switchPracticosSubtab('matrix');
         }
 
@@ -2026,7 +2014,7 @@ Equipo Docente de Pediatría</textarea>
         }
 
         function clearAllData() {
-            if (confirm("¿Borrar todo?")) {
+            if (confirm("¿Está seguro de que desea borrar todos los registros de asistencia?")) {
                 attendanceData = {};
                 Object.keys(studentGroups).forEach(st => attendanceData[st] = []);
                 saveData();
@@ -2035,51 +2023,86 @@ Equipo Docente de Pediatría</textarea>
         }
 
         function exportToCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFFAlumno,Grupo,Tipo,Fecha,Observacion\n";
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFFAlumno,Tipo de Practico,Fecha y Hora,Observacion\n";
             Object.keys(attendanceData).sort().forEach(student => {
-                attendanceData[student].forEach(rec => {
-                    csvContent += `"${student}","${studentGroups[student]}","${rec.type}","${rec.date}","${rec.note || ''}"\n`;
-                });
+                const records = attendanceData[student];
+                if (records.length === 0) {
+                    csvContent += `"${student}","Sin registros","",""\n`;
+                } else {
+                    records.forEach(rec => {
+                        csvContent += `"${student}","${rec.type}","${rec.date}","${rec.note || ''}"\n`;
+                    });
+                }
             });
             const link = document.createElement("a");
             link.href = encodeURI(csvContent);
-            link.download = "asistencia.csv";
-            document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            link.download = `asistencia_practicos_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function renderPracticos() {
-            const searchVal = document.getElementById('searchStudentInput')?.value.toLowerCase();
-            const groupVal = document.getElementById('filterGroupSelect')?.value;
+            const searchVal = (document.getElementById('searchStudentInput')?.value || '').toLowerCase().trim();
 
-            let filteredStudents = Object.keys(attendanceData).filter(st => {
-                return st.toLowerCase().includes(searchVal) && (groupVal === 'all' || studentGroups[st] === groupVal);
+            let filteredStudents = Object.keys(attendanceData).sort().filter(st => {
+                return st.toLowerCase().includes(searchVal);
             });
 
-            // Metrics
+            // Metrics Summary
             const totalAlumnos = Object.keys(attendanceData).length;
             const totalPracticos = Object.values(attendanceData).flat().length;
             const enRiesgo = Object.values(attendanceData).filter(r => r.length < 5).length;
             
-            document.getElementById('metricTotalAlumnos').innerText = totalAlumnos;
-            document.getElementById('metricTotalPracticos').innerText = totalPracticos;
-            document.getElementById('metricPromedio').innerText = (totalPracticos / (totalAlumnos || 1)).toFixed(1);
-            document.getElementById('metricAlumnosRiesgo').innerText = enRiesgo;
+            if (document.getElementById('metricTotalAlumnos')) document.getElementById('metricTotalAlumnos').innerText = totalAlumnos;
+            if (document.getElementById('metricTotalPracticos')) document.getElementById('metricTotalPracticos').innerText = totalPracticos;
+            if (document.getElementById('metricPromedio')) document.getElementById('metricPromedio').innerText = (totalAlumnos > 0 ? (totalPracticos / totalAlumnos).toFixed(1) : '0.0');
+            if (document.getElementById('metricAlumnosRiesgo')) document.getElementById('metricAlumnosRiesgo').innerText = enRiesgo;
 
-            // Matrix
+            // Matrix Table
             const tbody = document.getElementById('matrixTableBody');
-            tbody.innerHTML = '';
-            filteredStudents.forEach((student, idx) => {
-                const recs = attendanceData[student];
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${idx+1}</td><td>${student}</td><td>${studentGroups[student]}</td>
-                    <td>${recs.filter(r=>r.type==='Neonatología').length}<button onclick="addAttendance('${student}','Neonatología')">+</button></td>
-                    <td>${recs.filter(r=>r.type==='Consultorio').length}<button onclick="addAttendance('${student}','Consultorio')">+</button></td>
-                    <td>${recs.filter(r=>r.type==='Sala').length}<button onclick="addAttendance('${student}','Sala')">+</button></td>
-                    <td>${recs.filter(r=>r.type==='Guardia').length}<button onclick="addAttendance('${student}','Guardia')">+</button></td>
-                    <td>${recs.length}</td><td>${Math.min(100, Math.round((recs.length/10)*100))}%</td>
-                    <td><button onclick="deleteAttendance('${student}', ${recs[0]?.id})">Del</button></td>`;
-                tbody.appendChild(tr);
-            });
+            if (tbody) {
+                tbody.innerHTML = '';
+                filteredStudents.forEach((student, idx) => {
+                    const recs = attendanceData[student] || [];
+                    const cNeo = recs.filter(r => r.type === 'Neonatología').length;
+                    const cConsultorio = recs.filter(r => r.type === 'Consultorio').length;
+                    const cSala = recs.filter(r => r.type === 'Sala').length;
+                    const total = recs.length;
+
+                    const pct = Math.min(100, Math.round((total / 10) * 100));
+                    let fillClass = 'fill-red';
+                    if (pct >= 80) fillClass = 'fill-green';
+                    else if (pct >= 50) fillClass = 'fill-yellow';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="text-align: center; font-weight: 600; color: #64748b;">${idx + 1}</td>
+                        <td style="font-weight: 700; color: #1e293b;">${student}</td>
+                        <td style="text-align: center;">
+                            <strong>${cNeo}</strong>
+                            <button class="btn-mini-add btn-neo" onclick="addAttendance('${student}', 'Neonatología')" title="Agregar Neonatología">+</button>
+                        </td>
+                        <td style="text-align: center;">
+                            <strong>${cConsultorio}</strong>
+                            <button class="btn-mini-add btn-consultorio" onclick="addAttendance('${student}', 'Consultorio')" title="Agregar Consultorio">+</button>
+                        </td>
+                        <td style="text-align: center;">
+                            <strong>${cSala}</strong>
+                            <button class="btn-mini-add btn-sala" onclick="addAttendance('${student}', 'Sala')" title="Agregar Sala">+</button>
+                        </td>
+                        <td style="text-align: center; font-weight: 800; font-size: 1rem; color: #0f172a;">${total}</td>
+                        <td style="text-align: center;">
+                            <div class="progress-bar-container"><div class="progress-bar-fill ${fillClass}" style="width: ${pct}%;"></div></div>
+                            <span style="font-weight: 700; font-size: 0.8rem;">${pct}%</span>
+                        </td>
+                        <td style="text-align: center;">
+                            ${recs.length > 0 ? `<button class="btn-danger" style="padding: 3px 8px; font-size: 0.75rem;" onclick="deleteAttendance('${student}', ${recs[0].id})" title="Deshacer última asistencia">↩ Deshacer</button>` : '-'}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
         }
 
         // --------------------------------------------------------------------------
