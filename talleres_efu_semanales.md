@@ -8,7 +8,7 @@ Este documento contiene las preguntas extraídas de los exámenes EFU reales de 
 
 ---
 
-### 📝 PREGUNTA 1 (OFICIAL EFU)
+### 📝 PREGUNTA 1 (OFICIAL EFU 2019)
 
 **Enunciado:**  
 Ud. atiende en su consultorio a Pablo un neonato de 14 días de vida que concurre para control. Es un nacido de término, de un embarazo controlado y sin patologías del embarazo. Pesó 2800 grs al nacer y fue dado de alta al 3° día con 2600 grs. Las vacunas están completas. Se alimenta con lactancia materna exclusiva. Presenta deposiciones diarias color amarillo oro y la diuresis está conservada. Al examen físico se encuentra vigoroso, con ictericia en cara, no se auscultan soplos cardíacos, el abdomen es blando y sin visceromegalias. El peso actual es de 2780 grs.
@@ -36,7 +36,7 @@ Ud. atiende en su consultorio a Pablo un neonato de 14 días de vida que concurr
 
 ---
 
-### 📝 PREGUNTA 2 (OFICIAL EFU)
+### 📝 PREGUNTA 2 (OFICIAL EFU 2019)
 
 **Enunciado:**  
 Ud. se encuentra otorgando el alta de Ián, un recién nacido de 39 semanas de edad gestacional, que pesó 2500 gr al nacer, peso actual 2400 gr. La familia está formada por madre, padre y dos hermanitos que concurren a la escuela, uno de ellos está con fiebre y cursando una virosis respiratoria.
@@ -64,7 +64,7 @@ Ud. se encuentra otorgando el alta de Ián, un recién nacido de 39 semanas de e
 
 ---
 
-### 📝 PREGUNTA 3 (OFICIAL EFU)
+### 📝 PREGUNTA 3 (OFICIAL EFU 2021)
 
 **Enunciado:**  
 Anahí es una niña de 6 meses de vida, primera hija de Sandra (32 años, docente) y Julio (32 años, docente). Fue una RNT PAEG y no presentó hasta el momento ningún problema de salud. Tiene aplicadas vacunas completas para la edad. La familia vive en el conurbano bonaerense y los padres trabajan en una escuela en el partido en el que viven. Anahí queda al cuidado de su abuela materna durante el tiempo que ellos están trabajando. Anahí sigue tomando el pecho y también toma biberones con fórmula de inicio.  
@@ -93,8 +93,7 @@ Al examen físico Anahí se sienta, toma objetos y los lleva a la boca, y no se 
 
 ---
 
-
-### 📝 PREGUNTA 4 (OFICIAL EFU)
+### 📝 PREGUNTA 4 (OFICIAL EFU 2021)
 
 **Enunciado:**  
 José, de 6 años y 3 meses de edad, llega a la consulta con su madre. Ella está preocupada por la altura de José, ya que lo nota más bajo que sus compañeros.  
@@ -124,7 +123,7 @@ La libreta sanitaria de José muestra una curva de talla que a partir de los 2 a
 
 ---
 
-### 📝 PREGUNTA 5 (OFICIAL EFU)
+### 📝 PREGUNTA 5 (OFICIAL EFU 2021)
 
 **Enunciado:**  
 Concurre a control Pamela de 5 años y 6 meses de edad. Es una niña con diagnóstico de asma moderada tratada con corticoides inhalados dos veces por día desde hace un año y salbutamol de rescate durante las crisis. En este momento se encuentra sin intercurrencias; la última crisis la presentó hace 1 semana, pero resolvió sin requerir internación. Su desarrollo es adecuado para su edad, está por ingresar a primer grado. Las últimas dosis de vacunas las recibió al año de edad. Su madre se encuentra cursando un embarazo de 20 semanas.
