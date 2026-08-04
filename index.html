@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Docencia Pediatría UBA - Anuncios y Talleres EFU</title>
+    <title>Docencia Pediatría UBA - Anuncios, EFU y Control de Prácticos</title>
+    <!-- SheetJS CDN para Exportación Nativa a Excel (.xlsx) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         :root {
             --primary: #1a73e8;
@@ -716,7 +718,7 @@
         html:active-view-transition-type(backward)::view-transition-new(root) {
             animation-name: slide-from-left;
         }
-        /* Prácticos / Asistencia Styling */
+        /* Prácticos / Asistencia Styling Reformulado */
         .controls-header {
             display: flex;
             justify-content: space-between;
@@ -731,10 +733,31 @@
         .controls-btns {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-xlsx {
+            background-color: #16a34a;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);
+        }
+        .btn-xlsx:hover {
+            background-color: #15803d;
+            transform: translateY(-1px);
         }
 
         .btn-export {
-            background-color: #10b981;
+            background-color: #0284c7;
             color: white;
             padding: 8px 16px;
             border: none;
@@ -744,9 +767,8 @@
             font-size: 0.9rem;
             transition: background-color 0.2s;
         }
-
         .btn-export:hover {
-            background-color: #059669;
+            background-color: #0369a1;
         }
 
         .btn-danger {
@@ -760,10 +782,168 @@
             font-size: 0.9rem;
             transition: background-color 0.2s;
         }
-
         .btn-danger:hover {
             background-color: #b91c1c;
         }
+
+        /* Metrics Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px 18px;
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        .metric-card .val {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+        .metric-card .lbl {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* Subtab Nav Bar */
+        .practicos-nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: #ffffff;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .subtab-buttons {
+            display: flex;
+            gap: 6px;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 8px;
+        }
+        .subtab-btn {
+            border: none;
+            background: transparent;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .subtab-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .filter-input {
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            min-width: 200px;
+        }
+        .filter-select {
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        /* Tabla Matriz */
+        .matrix-table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            text-align: left;
+        }
+        .matrix-table th {
+            background: #f8fafc;
+            padding: 12px 14px;
+            font-weight: 700;
+            color: #334155;
+            border-bottom: 2px solid #e2e8f0;
+            white-space: nowrap;
+        }
+        .matrix-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+        .matrix-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .badge-group {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: #e2e8f0;
+            color: #475569;
+            white-space: nowrap;
+        }
+        .progress-bar-container {
+            width: 70px;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+        .fill-green { background: #10b981; }
+        .fill-yellow { background: #f59e0b; }
+        .fill-red { background: #ef4444; }
+
+        .btn-mini-add {
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-left: 4px;
+            transition: opacity 0.2s;
+        }
+        .btn-mini-add:hover { opacity: 0.85; }
 
         .grid {
             display: grid;
@@ -785,21 +965,21 @@
         .student-name {
             font-size: 1.05rem;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             color: #0f172a;
         }
 
         .attendance-buttons {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 6px;
             margin-bottom: 12px;
         }
 
         .btn-attendance {
             color: white;
-            padding: 8px 4px;
-            font-size: 0.8rem;
+            padding: 7px 4px;
+            font-size: 0.78rem;
             text-align: center;
             border: none;
             border-radius: 6px;
@@ -815,6 +995,7 @@
         .btn-neo { background-color: var(--neo-color); }
         .btn-consultorio { background-color: var(--consultorio-color); }
         .btn-sala { background-color: var(--sala-color); }
+        .btn-guardia { background-color: #e11d48; }
 
         .counters {
             display: flex;
@@ -822,7 +1003,7 @@
             background-color: #f8fafc;
             padding: 8px 12px;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             margin-bottom: 10px;
             border: 1px solid #e2e8f0;
         }
@@ -1247,7 +1428,7 @@ Equipo Docente de Pediatría</textarea>
 
     </div>
 
-    <!-- TAB 3: CONTROL DE PRÁCTICOS -->
+    <!-- TAB 3: CONTROL DE PRÁCTICOS REFORMULADO -->
     <div id="tab-practicos" class="tab-content">
         <div class="card">
             <!-- Cloud Sync Panel -->
@@ -1267,14 +1448,137 @@ Equipo Docente de Pediatría</textarea>
                 </div>
             </div>
 
+            <!-- Controls Header -->
             <div class="controls-header">
-                <h2 style="margin:0; border-bottom:none; padding-bottom:0;">📋 Registro de Asistencia a Prácticos</h2>
+                <div>
+                    <h2 style="margin:0; border-bottom:none; padding-bottom:4px;">📋 Planilla de Control de Prácticos Hospitalarios</h2>
+                    <span style="color: #64748b; font-size: 0.9rem;">Gestión integral de asistencia por rotación, grupos y exportación a Excel</span>
+                </div>
                 <div class="controls-btns">
-                    <button class="btn-export" onclick="exportToCSV()">Exportar a Excel (CSV)</button>
+                    <button class="btn-xlsx" onclick="exportToXLSX()">📥 Exportar a Excel (.xlsx)</button>
+                    <button class="btn-export" onclick="exportToCSV()">📄 CSV</button>
                     <button class="btn-danger" onclick="clearAllData()">Resetear Datos</button>
                 </div>
             </div>
-            <div class="grid" id="studentsContainer"></div>
+
+            <!-- Metrics Summary Cards -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="val" id="metricTotalAlumnos">20</div>
+                    <div class="lbl">Total Alumnos</div>
+                </div>
+                <div class="metric-card">
+                    <div class="val" id="metricTotalPracticos">0</div>
+                    <div class="lbl">Prácticas Registradas</div>
+                </div>
+                <div class="metric-card">
+                    <div class="val" id="metricPromedio">0.0</div>
+                    <div class="lbl">Promedio / Alumno</div>
+                </div>
+                <div class="metric-card" style="border-left: 4px solid #f59e0b;">
+                    <div class="val" id="metricAlumnosRiesgo" style="color: #d97706;">0</div>
+                    <div class="lbl">En Riesgo (&lt; 75%)</div>
+                </div>
+            </div>
+
+            <!-- Sub-tab Navigation Bar & Filters -->
+            <div class="practicos-nav-bar">
+                <div class="subtab-buttons">
+                    <button class="subtab-btn active" id="btnSubtabMatrix" onclick="switchPracticosSubtab('matrix')">📊 Planilla Matriz</button>
+                    <button class="subtab-btn" id="btnSubtabGroups" onclick="switchPracticosSubtab('groups')">👥 Por Grupos</button>
+                    <button class="subtab-btn" id="btnSubtabBatch" onclick="switchPracticosSubtab('batch')">⚡ Toma de Lista por Fecha</button>
+                </div>
+                
+                <div class="filter-bar" style="margin: 0;">
+                    <input type="text" id="searchStudentInput" class="filter-input" placeholder="🔍 Buscar por apellido o nombre..." oninput="renderPracticos()">
+                    <select id="filterGroupSelect" class="filter-select" onchange="renderPracticos()">
+                        <option value="all">Todos los Grupos (1-7)</option>
+                        <option value="Grupo 1">Grupo 1 (Acuña / Barilaro)</option>
+                        <option value="Grupo 2">Grupo 2 (Caruso / Castro / Damiani / Delgado)</option>
+                        <option value="Grupo 3">Grupo 3 (Díaz / García / Gentile / Guerreiro)</option>
+                        <option value="Grupo 4">Grupo 4 (Gutiérrez / Quispe / Rojas)</option>
+                        <option value="Grupo 5">Grupo 5 (Teixeira / Telias / Gallotto)</option>
+                        <option value="Grupo 6">Grupo 6 (Leguizamón / Márquez)</option>
+                        <option value="Grupo 7">Grupo 7 (Méndez / Olmos)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- SUB-VIEW 1: PLANILLA MATRIZ (TABLA RÁPIDA) -->
+            <div id="viewPracticosMatrix">
+                <div class="matrix-table-wrapper">
+                    <table class="matrix-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px; text-align: center;">#</th>
+                                <th>Alumno</th>
+                                <th style="width: 90px; text-align: center;">Grupo</th>
+                                <th style="width: 110px; text-align: center;">Neo</th>
+                                <th style="width: 120px; text-align: center;">Consultorio</th>
+                                <th style="width: 110px; text-align: center;">Sala</th>
+                                <th style="width: 110px; text-align: center;">Guardia</th>
+                                <th style="width: 70px; text-align: center;">Total</th>
+                                <th style="width: 140px; text-align: center;">% Asistencia</th>
+                                <th style="width: 90px; text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matrixTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SUB-VIEW 2: POR GRUPOS HOSPITALARIOS -->
+            <div id="viewPracticosGroups" style="display: none;">
+                <div class="grid" id="groupsContainer">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- SUB-VIEW 3: TOMA DE LISTA POR FECHA -->
+            <div id="viewPracticosBatch" style="display: none;">
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; max-width: 750px; margin: 0 auto;">
+                    <h3 style="margin-top: 0; color: #1e293b; display: flex; align-items: center; gap: 8px;">⚡ Registro Colectivo por Fecha</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <label style="font-weight: 600; font-size: 0.85rem; color: #475569; display: block; margin-bottom: 5px;">Fecha del Práctico:</label>
+                            <input type="date" id="batchDateInput" class="filter-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label style="font-weight: 600; font-size: 0.85rem; color: #475569; display: block; margin-bottom: 5px;">Tipo de Rotación:</label>
+                            <select id="batchTypeSelect" class="filter-select" style="width: 100%;">
+                                <option value="Neonatología">Neonatología</option>
+                                <option value="Consultorio">Consultorio Externo</option>
+                                <option value="Sala">Sala de Cuidados Intermedios</option>
+                                <option value="Guardia">Guardia de Urgencias</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: 600; font-size: 0.85rem; color: #475569; display: block; margin-bottom: 5px;">Observación / Comentario (Opcional):</label>
+                        <input type="text" id="batchNoteInput" class="filter-input" placeholder="Ej. Pase de guardia, Presentación de caso, Puntualidad..." style="width: 100%;">
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <label style="font-weight: 700; color: #334155;">Seleccionar Alumnos Presentes:</label>
+                        <div>
+                            <button type="button" class="btn-sync-secondary" style="font-size: 0.8rem; padding: 4px 10px;" onclick="toggleSelectAllBatch(true)">Seleccionar Todos</button>
+                            <button type="button" class="btn-sync-secondary" style="font-size: 0.8rem; padding: 4px 10px;" onclick="toggleSelectAllBatch(false)">Desmarcar Todos</button>
+                        </div>
+                    </div>
+
+                    <div id="batchStudentsList" style="max-height: 280px; overflow-y: auto; background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <!-- Checkboxes populated dynamically -->
+                    </div>
+
+                    <button class="btn-xlsx" style="width: 100%; margin-top: 20px; justify-content: center; padding: 12px; font-size: 1rem;" onclick="submitBatchAttendance()">
+                        💾 Guardar Asistencia Colectiva
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -1574,298 +1878,142 @@ Equipo Docente de Pediatría</textarea>
                     }
                 }
             }
-        }
+    </script>
 
-        function navigateWithTransition(updateDOM, direction) {
-            if (!document.startViewTransition) {
-                updateDOM();
-                return;
-            }
-            
-            document.startViewTransition({
-                update: updateDOM,
-                types: [direction]
-            });
-        }
+    <script>
+        const studentGroups = {
+            "ACUÑA, Leila Carolina": "Grupo 1",
+            "BARILARO, Canela": "Grupo 1",
+            "CARUSO, Ailen": "Grupo 2",
+            "CASTRO, Candela": "Grupo 2",
+            "DAMIANI, Amanda": "Grupo 2",
+            "DELGADO PAVIA, Milena Yazmin": "Grupo 2",
+            "DIAZ MORENO, Milagros Anahi": "Grupo 3",
+            "GARCIA, Luna Mora": "Grupo 3",
+            "GENTILE, Florencia Belen": "Grupo 3",
+            "GUERREIRO CAPARICA BORGES, Rafaella": "Grupo 3",
+            "GUTIERREZ, Mailen Oriana": "Grupo 4",
+            "QUISPE PEÑA, Nicole Selene": "Grupo 4",
+            "ROJAS, Romina Rosana": "Grupo 4",
+            "TEIXEIRA CRUZ, Caroline": "Grupo 5",
+            "TELIAS, Giselle Marisol": "Grupo 5",
+            "GALLOTTO, Tomas Matias": "Grupo 5",
+            "LEGUIZAMON, Antonella Nerea": "Grupo 6",
+            "MARQUEZ, Sofia Ailen": "Grupo 6",
+            "MENDEZ, Mora": "Grupo 7",
+            "OLMOS MUÑOZ, Melina Evelyn": "Grupo 7"
+        };
 
-        function nextStep() {
-            if (currentPhase === 1) {
-                // Move from voting to reveal answers
-                currentPhase = 2;
-                renderSlide(true);
-            } else {
-                // Move to next case slide
-                if (currentCaseIndex < presentationCases.length - 1) {
-                    navigateWithTransition(() => {
-                        currentCaseIndex++;
-                        currentPhase = 1;
-                        renderSlide(false);
-                    }, 'forward');
-                } else {
-                    exitPresentation();
-                }
-            }
-        }
-
-        function prevStep() {
-            if (currentPhase === 2) {
-                currentPhase = 1;
-                renderSlide(false);
-            } else {
-                if (currentCaseIndex > 0) {
-                    navigateWithTransition(() => {
-                        currentCaseIndex--;
-                        currentPhase = 2;
-                        renderSlide(false);
-                    }, 'backward');
-                }
-            }
-        }
-
-        // ==========================================================================
-        // LÓGICA DE CONTROL DE ASISTENCIA A PRÁCTICOS
-        // ==========================================================================
-        const initialStudents = [
-            "ACUÑA, Leila Carolina",
-            "BARILARO, Canela",
-            "CARUSO, Ailen",
-            "CASTRO, Candela",
-            "DAMIANI, Amanda",
-            "DELGADO PAVIA, Milena Yazmin",
-            "DIAZ MORENO, Milagros Anahi",
-            "GARCIA, Luna Mora",
-            "GENTILE, Florencia Belen",
-            "GUERREIRO CAPARICA BORGES, Rafaella",
-            "GUTIERREZ, Mailen Oriana",
-            "LEGUIZAMON, Antonella Nerea",
-            "MARQUEZ, Sofia Ailen",
-            "MENDEZ, Mora",
-            "OLMOS MUÑOZ, Melina Evelyn",
-            "QUISPE PEÑA, Nicole Selene",
-            "ROJAS, Romina Rosana",
-            "TEIXEIRA CRUZ, Caroline",
-            "TELIAS, Giselle Marisol",
-            "GALLOTTO, Tomas Matias"
-        ];
-
+        let activePracticosSubtab = 'matrix';
         let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
 
-        // --------------------------------------------------------------------------
-        // LÓGICA DE SINCRONIZACIÓN EN LA NUBE (MULTI-DISPOSITIVO)
-        // --------------------------------------------------------------------------
-        const API_BASE = "https://jsonblob.com/api/jsonBlob";
-        let syncRoomId = localStorage.getItem('syncRoomId') || '';
-        let lastSyncTimestamp = 0;
-        let isSyncing = false;
+        function switchPracticosSubtab(subtabKey) {
+            activePracticosSubtab = subtabKey;
+            
+            document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('viewPracticosMatrix').style.display = 'none';
+            document.getElementById('viewPracticosGroups').style.display = 'none';
+            document.getElementById('viewPracticosBatch').style.display = 'none';
 
-        async function fetchWithTimeout(url, options = {}, timeoutMs = 6000) {
-            const controller = new AbortController();
-            const timer = setTimeout(() => controller.abort(), timeoutMs);
-            try {
-                const response = await fetch(url, {
-                    ...options,
-                    signal: controller.signal
-                });
-                return response;
-            } finally {
-                clearTimeout(timer);
+            if (subtabKey === 'matrix') {
+                document.getElementById('btnSubtabMatrix').classList.add('active');
+                document.getElementById('viewPracticosMatrix').style.display = 'block';
+            } else if (subtabKey === 'groups') {
+                document.getElementById('btnSubtabGroups').classList.add('active');
+                document.getElementById('viewPracticosGroups').style.display = 'block';
+            } else if (subtabKey === 'batch') {
+                document.getElementById('btnSubtabBatch').classList.add('active');
+                document.getElementById('viewPracticosBatch').style.display = 'block';
+                initBatchForm();
             }
+
+            renderPracticos();
         }
 
-        function updateSyncBadge(status, text) {
-            const badge = document.getElementById('syncStatusBadge');
-            if (!badge) return;
-            badge.className = `sync-badge ${status}`;
-            badge.innerText = text;
-        }
-
-        function initSyncRoom() {
-            // Check URL hash for #sync=ROOM_ID
-            const hash = window.location.hash;
-            if (hash.startsWith('#sync=')) {
-                const roomFromUrl = hash.replace('#sync=', '').trim();
-                if (roomFromUrl) {
-                    syncRoomId = roomFromUrl;
-                    localStorage.setItem('syncRoomId', syncRoomId);
-                }
-            }
-
-            const input = document.getElementById('syncRoomInput');
-            if (input && syncRoomId) {
-                input.value = syncRoomId;
-            }
-
-            if (syncRoomId) {
-                pullFromCloud();
-            } else {
-                updateSyncBadge('offline', '🔴 Sin Conexión Nube');
-            }
-        }
-
-        function setSyncRoom() {
-            const input = document.getElementById('syncRoomInput');
-            const room = input ? input.value.trim() : '';
-            if (!room) {
-                alert("Ingrese un ID de sala válido.");
+        function exportToXLSX() {
+            if (typeof XLSX === 'undefined') {
+                alert("Cargando librería de Excel...");
                 return;
             }
-            syncRoomId = room;
-            localStorage.setItem('syncRoomId', syncRoomId);
-            window.location.hash = `sync=${syncRoomId}`;
-            pullFromCloud(true);
-        }
 
-        async function createSyncRoom() {
-            updateSyncBadge('syncing', '⏳ Creando nueva sala...');
-            try {
-                const response = await fetchWithTimeout(API_BASE, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify({
-                        attendanceData: attendanceData,
-                        updatedAt: Date.now()
-                    })
-                }, 6000);
+            const wb = XLSX.utils.book_new();
+            const summaryData = [
+                ["UNIVERSIDAD DE BUENOS AIRES - FACULTAD DE MEDICINA"],
+                ["CÁTEDRA DE PEDIATRÍA - HOSPITAL RAMÓN CARRILLO"],
+                ["PLANILLA MAESTRA DE CONTROL DE ASISTENCIA A PRÁCTICOS 2026"],
+                ["Fecha de Emisión: " + new Date().toLocaleDateString('es-AR')],
+                [],
+                ["N°", "Apellido y Nombre", "Grupo Hospitalario", "Neonatología", "Consultorio", "Sala", "Guardia", "Total Prácticos", "% Asistencia", "Condición"]
+            ];
 
-                if (!response.ok) {
-                    throw new Error(`Servidor retornó estado ${response.status}`);
-                }
+            const sortedStudents = Object.keys(attendanceData).sort();
+            sortedStudents.forEach((student, index) => {
+                const records = attendanceData[student] || [];
+                const cNeo = records.filter(r => r.type === 'Neonatología').length;
+                const cConsultorio = records.filter(r => r.type === 'Consultorio').length;
+                const cSala = records.filter(r => r.type === 'Sala').length;
+                const cGuardia = records.filter(r => r.type === 'Guardia').length;
+                const total = records.length;
+                const pct = Math.min(100, Math.round((total / 10) * 100));
+                const condicion = total >= 8 ? "REGULAR" : (total >= 5 ? "EN RIESGO" : "INSUFICIENTE");
 
-                const locationHeader = response.headers.get("Location") || response.headers.get("location");
-                let newId = "";
-                if (locationHeader) {
-                    newId = locationHeader.split("/").pop();
-                } else {
-                    const resData = await response.json();
-                    newId = resData.id || resData._id;
-                }
-
-                if (!newId) throw new Error("No se pudo extraer el ID de la nueva sala.");
-
-                syncRoomId = newId;
-                localStorage.setItem('syncRoomId', syncRoomId);
-                const input = document.getElementById('syncRoomInput');
-                if (input) input.value = syncRoomId;
-                window.location.hash = `sync=${syncRoomId}`;
-                updateSyncBadge('online', '🟢 Sala Conectada');
-                
-                alert(`¡Nueva sala creada con éxito!\n\nID de Sala:\n${syncRoomId}\n\nUsa el botón "Copiar Enlace Sync" para vincularlo con tu otro dispositivo.`);
-            } catch (err) {
-                console.error("Error creando sala:", err);
-                const reason = err.name === 'AbortError' ? 'Tiempo de espera agotado (6s)' : err.message;
-                updateSyncBadge('offline', '🔴 Error de Conexión');
-                alert("No se pudo crear la sala en la nube: " + reason);
-            }
-        }
-
-        async function pushToCloud() {
-            if (!syncRoomId) return;
-            if (isSyncing) return;
-            isSyncing = true;
-            updateSyncBadge('syncing', '⏳ Guardando en nube...');
-            try {
-                const now = Date.now();
-                lastSyncTimestamp = now;
-                const response = await fetchWithTimeout(`${API_BASE}/${syncRoomId}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        attendanceData: attendanceData,
-                        updatedAt: now
-                    })
-                }, 6000);
-
-                if (response.ok) {
-                    updateSyncBadge('online', '🟢 Sincronizado');
-                } else {
-                    updateSyncBadge('offline', '🔴 Error al guardar');
-                }
-            } catch (err) {
-                console.error("Error guardando en nube:", err);
-                updateSyncBadge('offline', '🔴 Error de Conexión');
-            } finally {
-                isSyncing = false;
-            }
-        }
-
-        async function pullFromCloud(manual = false) {
-            if (!syncRoomId) return;
-            if (isSyncing) return;
-            isSyncing = true;
-            if (manual) updateSyncBadge('syncing', '⏳ Consultando nube...');
-            try {
-                const response = await fetchWithTimeout(`${API_BASE}/${syncRoomId}`, {}, 6000);
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        updateSyncBadge('offline', '🔴 Sala No Encontrada');
-                    } else {
-                        updateSyncBadge('offline', '🔴 Error al leer');
-                    }
-                    return;
-                }
-                const res = await response.json();
-                if (res && res.attendanceData) {
-                    const remoteTimestamp = res.updatedAt || 0;
-                    if (remoteTimestamp > lastSyncTimestamp) {
-                        attendanceData = res.attendanceData;
-                        lastSyncTimestamp = remoteTimestamp;
-                        saveDataLocalOnly();
-                        renderPracticos();
-                    }
-                    updateSyncBadge('online', '🟢 Sincronizado');
-                }
-            } catch (err) {
-                console.error("Error obteniendo datos remotos:", err);
-                updateSyncBadge('offline', '🔴 Conexión Pendiente');
-            } finally {
-                isSyncing = false;
-            }
-        }
-
-        function saveDataLocalOnly() {
-            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
-        }
-
-        function saveData() {
-            saveDataLocalOnly();
-            pushToCloud();
-        }
-
-        function shareSyncLink() {
-            if (!syncRoomId) {
-                alert("Primero debes conectar o crear una sala de sincronización.");
-                return;
-            }
-            const syncUrl = `${window.location.origin}${window.location.pathname}#sync=${syncRoomId}`;
-            navigator.clipboard.writeText(syncUrl);
-            alert(`¡Enlace de sincronización copiado al portapapeles!\n\nAbre este enlace en tu otro celular o computadora para sincronizar:\n${syncUrl}`);
-        }
-
-        // --------------------------------------------------------------------------
-        // INICIALIZACIÓN Y RENDERIZADO
-        // --------------------------------------------------------------------------
-        function initData() {
-            initialStudents.forEach(student => {
-                if (!attendanceData[student]) {
-                    attendanceData[student] = [];
-                }
+                summaryData.push([index + 1, student, studentGroups[student] || "Sin Grupo", cNeo, cConsultorio, cSala, cGuardia, total, pct + "%", condicion]);
             });
-            saveDataLocalOnly();
+
+            const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
+            XLSX.utils.book_append_sheet(wb, wsSummary, "Resumen_Asistencia");
+
+            const fileName = `control_practicos_pediatria_${new Date().toISOString().slice(0,10)}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+        }
+
+        function initBatchForm() {
+            const dateInput = document.getElementById('batchDateInput');
+            if (dateInput && !dateInput.value) dateInput.value = new Date().toISOString().slice(0,10);
+            renderBatchStudentsList();
+        }
+
+        function renderBatchStudentsList() {
+            const container = document.getElementById('batchStudentsList');
+            if (!container) return;
+            container.innerHTML = '';
+            Object.keys(attendanceData).sort().forEach(student => {
+                const div = document.createElement('div');
+                div.style.cssText = 'display:flex; align-items:center; gap:6px; font-size:0.85rem;';
+                div.innerHTML = `<input type="checkbox" class="batch-chk" value="${student}" id="chk_${student.replace(/[^a-zA-Z0-9]/g, '_')}">
+                                 <label for="chk_${student.replace(/[^a-zA-Z0-9]/g, '_')}" style="cursor:pointer;"><strong>${student}</strong></label>`;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleSelectAllBatch(status) {
+            document.querySelectorAll('.batch-chk').forEach(chk => chk.checked = status);
+        }
+
+        function submitBatchAttendance() {
+            const dateVal = document.getElementById('batchDateInput').value;
+            const typeVal = document.getElementById('batchTypeSelect').value;
+            const noteVal = document.getElementById('batchNoteInput').value.trim();
+            const selected = Array.from(document.querySelectorAll('.batch-chk:checked')).map(c => c.value);
+            
+            if (selected.length === 0) return alert("Seleccione al menos un alumno.");
+            const formattedDate = dateVal ? new Date(dateVal + 'T12:00:00').toLocaleDateString('es-AR') : new Date().toLocaleDateString('es-AR');
+            
+            selected.forEach(student => {
+                attendanceData[student].unshift({id: Date.now() + Math.random(), type: typeVal, date: formattedDate + ' 10:30', note: noteVal});
+            });
+            saveData();
+            alert("Asistencia registrada.");
+            switchPracticosSubtab('matrix');
         }
 
         function addAttendance(student, type) {
             const now = new Date();
-            const dateStr = now.toLocaleDateString('es-AR') + ' ' + now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-            
             attendanceData[student].unshift({
-                id: Date.now(),
+                id: Date.now() + Math.random(),
                 type: type,
-                date: dateStr
+                date: now.toLocaleDateString('es-AR') + ' ' + now.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
             });
-
             saveData();
             renderPracticos();
         }
@@ -1877,108 +2025,71 @@ Equipo Docente de Pediatría</textarea>
         }
 
         function clearAllData() {
-            if (confirm("¿Está seguro de que desea borrar todos los registros? Esta acción no se puede deshacer.")) {
+            if (confirm("¿Borrar todo?")) {
                 attendanceData = {};
-                initData();
+                Object.keys(studentGroups).forEach(st => attendanceData[st] = []);
                 saveData();
                 renderPracticos();
             }
         }
 
         function exportToCSV() {
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "Alumno,Tipo de Practico,Fecha y Hora\n";
-
-            Object.keys(attendanceData).forEach(student => {
-                const records = attendanceData[student];
-                if (records.length === 0) {
-                    csvContent += `"${student}","Sin registros",""\n`;
-                } else {
-                    records.forEach(rec => {
-                        csvContent += `"${student}","${rec.type}","${rec.date}"\n`;
-                    });
-                }
+            let csvContent = "data:text/csv;charset=utf-8,\uFEFFAlumno,Grupo,Tipo,Fecha,Observacion\n";
+            Object.keys(attendanceData).sort().forEach(student => {
+                attendanceData[student].forEach(rec => {
+                    csvContent += `"${student}","${studentGroups[student]}","${rec.type}","${rec.date}","${rec.note || ''}"\n`;
+                });
             });
-
-            const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `asistencia_practicos_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            link.href = encodeURI(csvContent);
+            link.download = "asistencia.csv";
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
         function renderPracticos() {
-            const container = document.getElementById('studentsContainer');
-            if (!container) return;
-            container.innerHTML = '';
+            const searchVal = document.getElementById('searchStudentInput')?.value.toLowerCase();
+            const groupVal = document.getElementById('filterGroupSelect')?.value;
 
-            Object.keys(attendanceData).sort().forEach(student => {
-                const records = attendanceData[student];
-                
-                const countNeo = records.filter(r => r.type === 'Neonatología').length;
-                const countConsultorio = records.filter(r => r.type === 'Consultorio').length;
-                const countSala = records.filter(r => r.type === 'Sala').length;
+            let filteredStudents = Object.keys(attendanceData).filter(st => {
+                return st.toLowerCase().includes(searchVal) && (groupVal === 'all' || studentGroups[st] === groupVal);
+            });
 
-                const card = document.createElement('div');
-                card.className = 'student-card';
+            // Metrics
+            const totalAlumnos = Object.keys(attendanceData).length;
+            const totalPracticos = Object.values(attendanceData).flat().length;
+            const enRiesgo = Object.values(attendanceData).filter(r => r.length < 5).length;
+            
+            document.getElementById('metricTotalAlumnos').innerText = totalAlumnos;
+            document.getElementById('metricTotalPracticos').innerText = totalPracticos;
+            document.getElementById('metricPromedio').innerText = (totalPracticos / (totalAlumnos || 1)).toFixed(1);
+            document.getElementById('metricAlumnosRiesgo').innerText = enRiesgo;
 
-                let historyHTML = records.map(r => {
-                    let tagClass = 'tag-neo';
-                    if (r.type === 'Consultorio') tagClass = 'tag-consultorio';
-                    if (r.type === 'Sala') tagClass = 'tag-sala';
-
-                    return `
-                        <div class="history-item">
-                            <span class="history-tag ${tagClass}">${r.type}</span>
-                            <span>${r.date}</span>
-                            <button class="btn-delete-log" onclick="deleteAttendance('${student}', ${r.id})">&times;</button>
-                        </div>
-                    `;
-                }).join('');
-
-                card.innerHTML = `
-                    <div>
-                        <div class="student-name">${student}</div>
-                        <div class="attendance-buttons">
-                            <button class="btn-attendance btn-neo" onclick="addAttendance('${student}', 'Neonatología')">+ Neo</button>
-                            <button class="btn-attendance btn-consultorio" onclick="addAttendance('${student}', 'Consultorio')">+ Consultorio</button>
-                            <button class="btn-attendance btn-sala" onclick="addAttendance('${student}', 'Sala')">+ Sala</button>
-                        </div>
-                        <div class="counters">
-                            <div class="counter-item"><span>Neo</span><span class="counter-value">${countNeo}</span></div>
-                            <div class="counter-item"><span>Consultorio</span><span class="counter-value">${countConsultorio}</span></div>
-                            <div class="counter-item"><span>Sala</span><span class="counter-value">${countSala}</span></div>
-                            <div class="counter-item"><span>Total</span><span class="counter-value">${records.length}</span></div>
-                        </div>
-                    </div>
-                    <div class="history-list">
-                        ${historyHTML || '<div style="color: #94a3b8; text-align: center;">Sin registros</div>'}
-                    </div>
-                `;
-
-                container.appendChild(card);
+            // Matrix
+            const tbody = document.getElementById('matrixTableBody');
+            tbody.innerHTML = '';
+            filteredStudents.forEach((student, idx) => {
+                const recs = attendanceData[student];
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${idx+1}</td><td>${student}</td><td>${studentGroups[student]}</td>
+                    <td>${recs.filter(r=>r.type==='Neonatología').length}<button onclick="addAttendance('${student}','Neonatología')">+</button></td>
+                    <td>${recs.filter(r=>r.type==='Consultorio').length}<button onclick="addAttendance('${student}','Consultorio')">+</button></td>
+                    <td>${recs.filter(r=>r.type==='Sala').length}<button onclick="addAttendance('${student}','Sala')">+</button></td>
+                    <td>${recs.filter(r=>r.type==='Guardia').length}<button onclick="addAttendance('${student}','Guardia')">+</button></td>
+                    <td>${recs.length}</td><td>${Math.min(100, Math.round((recs.length/10)*100))}%</td>
+                    <td><button onclick="deleteAttendance('${student}', ${recs[0]?.id})">Del</button></td>`;
+                tbody.appendChild(tr);
             });
         }
 
-        // Inicializar datos y sincronización
+        function initData() {
+            Object.keys(studentGroups).forEach(st => { if (!attendanceData[st]) attendanceData[st] = []; });
+            saveData();
+        }
+
+        function saveData() {
+            localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+        }
+
         initData();
         renderPracticos();
-        initSyncRoom();
-
-        // Polling automático cada 10s y al cambiar visibilidad
-        setInterval(() => {
-            const tabPracticos = document.getElementById('tab-practicos');
-            if (tabPracticos && tabPracticos.classList.contains('active')) {
-                pullFromCloud();
-            }
-        }, 10000);
-
-        window.addEventListener('focus', () => {
-            pullFromCloud();
-        });
     </script>
-
-</body>
-</html>
