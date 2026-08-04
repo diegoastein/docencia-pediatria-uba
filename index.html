@@ -2082,15 +2082,218 @@ Equipo Docente de Pediatría</textarea>
             });
         }
 
-        function initData() {
-            Object.keys(studentGroups).forEach(st => { if (!attendanceData[st]) attendanceData[st] = []; });
-            saveData();
+        // --------------------------------------------------------------------------
+        // LÓGICA DE SINCRONIZACIÓN EN LA NUBE (MULTI-DISPOSITIVO)
+        // --------------------------------------------------------------------------
+        const API_BASE = "https://jsonblob.com/api/jsonBlob";
+        let syncRoomId = localStorage.getItem('syncRoomId') || '';
+        let lastSyncTimestamp = 0;
+        let isSyncing = false;
+
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 6000) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    signal: controller.signal
+                });
+                return response;
+            } finally {
+                clearTimeout(timer);
+            }
         }
 
-        function saveData() {
+        function updateSyncBadge(status, text) {
+            const badge = document.getElementById('syncStatusBadge');
+            if (!badge) return;
+            badge.className = `sync-badge ${status}`;
+            badge.innerText = text;
+        }
+
+        function initSyncRoom() {
+            const hash = window.location.hash;
+            if (hash.startsWith('#sync=')) {
+                const roomFromUrl = hash.replace('#sync=', '').trim();
+                if (roomFromUrl) {
+                    syncRoomId = roomFromUrl;
+                    localStorage.setItem('syncRoomId', syncRoomId);
+                }
+            }
+
+            const input = document.getElementById('syncRoomInput');
+            if (input && syncRoomId) {
+                input.value = syncRoomId;
+            }
+
+            if (syncRoomId) {
+                pullFromCloud();
+            } else {
+                updateSyncBadge('offline', '🔴 Sin Conexión Nube');
+            }
+        }
+
+        function setSyncRoom() {
+            const input = document.getElementById('syncRoomInput');
+            const room = input ? input.value.trim() : '';
+            if (!room) {
+                alert("Ingrese un ID de sala válido.");
+                return;
+            }
+            syncRoomId = room;
+            localStorage.setItem('syncRoomId', syncRoomId);
+            window.location.hash = `sync=${syncRoomId}`;
+            pullFromCloud(true);
+        }
+
+        async function createSyncRoom() {
+            updateSyncBadge('syncing', '⏳ Creando nueva sala...');
+            try {
+                const response = await fetchWithTimeout(API_BASE, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        attendanceData: attendanceData,
+                        updatedAt: Date.now()
+                    })
+                }, 6000);
+
+                if (!response.ok) {
+                    throw new Error(`Servidor retornó estado ${response.status}`);
+                }
+
+                const locationHeader = response.headers.get("Location") || response.headers.get("location");
+                let newId = "";
+                if (locationHeader) {
+                    newId = locationHeader.split("/").pop();
+                } else {
+                    const resData = await response.json();
+                    newId = resData.id || resData._id;
+                }
+
+                if (!newId) throw new Error("No se pudo extraer el ID de la nueva sala.");
+
+                syncRoomId = newId;
+                localStorage.setItem('syncRoomId', syncRoomId);
+                const input = document.getElementById('syncRoomInput');
+                if (input) input.value = syncRoomId;
+                window.location.hash = `sync=${syncRoomId}`;
+                updateSyncBadge('online', '🟢 Sala Conectada');
+                
+                alert(`¡Nueva sala creada con éxito!\n\nID de Sala:\n${syncRoomId}\n\nUsa el botón "Copiar Enlace Sync" para vincularlo con tu otro dispositivo.`);
+            } catch (err) {
+                console.error("Error creando sala:", err);
+                const reason = err.name === 'AbortError' ? 'Tiempo de espera agotado (6s)' : err.message;
+                updateSyncBadge('offline', '🔴 Error de Conexión');
+                alert("No se pudo crear la sala en la nube: " + reason);
+            }
+        }
+
+        async function pushToCloud() {
+            if (!syncRoomId) return;
+            if (isSyncing) return;
+            isSyncing = true;
+            updateSyncBadge('syncing', '⏳ Guardando en nube...');
+            try {
+                const now = Date.now();
+                lastSyncTimestamp = now;
+                const response = await fetchWithTimeout(`${API_BASE}/${syncRoomId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        attendanceData: attendanceData,
+                        updatedAt: now
+                    })
+                }, 6000);
+
+                if (response.ok) {
+                    updateSyncBadge('online', '🟢 Sincronizado');
+                } else {
+                    updateSyncBadge('offline', '🔴 Error al guardar');
+                }
+            } catch (err) {
+                console.error("Error guardando en nube:", err);
+                updateSyncBadge('offline', '🔴 Error de Conexión');
+            } finally {
+                isSyncing = false;
+            }
+        }
+
+        async function pullFromCloud(manual = false) {
+            if (!syncRoomId) return;
+            if (isSyncing) return;
+            isSyncing = true;
+            if (manual) updateSyncBadge('syncing', '⏳ Consultando nube...');
+            try {
+                const response = await fetchWithTimeout(`${API_BASE}/${syncRoomId}`, {}, 6000);
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        updateSyncBadge('offline', '🔴 Sala No Encontrada');
+                    } else {
+                        updateSyncBadge('offline', '🔴 Error al leer');
+                    }
+                    return;
+                }
+                const res = await response.json();
+                if (res && res.attendanceData) {
+                    const remoteTimestamp = res.updatedAt || 0;
+                    if (remoteTimestamp > lastSyncTimestamp) {
+                        attendanceData = res.attendanceData;
+                        lastSyncTimestamp = remoteTimestamp;
+                        saveDataLocalOnly();
+                        renderPracticos();
+                    }
+                    updateSyncBadge('online', '🟢 Sincronizado');
+                }
+            } catch (err) {
+                console.error("Error obteniendo datos remotos:", err);
+                updateSyncBadge('offline', '🔴 Conexión Pendiente');
+            } finally {
+                isSyncing = false;
+            }
+        }
+
+        function saveDataLocalOnly() {
             localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
         }
 
+        function saveData() {
+            saveDataLocalOnly();
+            pushToCloud();
+        }
+
+        function shareSyncLink() {
+            if (!syncRoomId) {
+                alert("Primero debes conectar o crear una sala de sincronización.");
+                return;
+            }
+            const syncUrl = `${window.location.origin}${window.location.pathname}#sync=${syncRoomId}`;
+            navigator.clipboard.writeText(syncUrl);
+            alert(`¡Enlace de sincronización copiado al portapapeles!\n\nAbre este enlace en tu otro celular o computadora para sincronizar:\n${syncUrl}`);
+        }
+
+        function initData() {
+            Object.keys(studentGroups).forEach(st => { if (!attendanceData[st]) attendanceData[st] = []; });
+            saveDataLocalOnly();
+        }
+
+        // Inicializar datos y sincronización
         initData();
         renderPracticos();
+        initSyncRoom();
+
+        // Polling automático cada 10s y al cambiar visibilidad
+        setInterval(() => {
+            const tabPracticos = document.getElementById('tab-practicos');
+            if (tabPracticos && tabPracticos.classList.contains('active')) {
+                pullFromCloud();
+            }
+        }, 10000);
+
+        window.addEventListener('focus', () => {
+            pullFromCloud();
+        });
     </script>
