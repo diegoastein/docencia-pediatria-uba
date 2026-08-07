@@ -1000,7 +1000,6 @@
         .btn-neo { background-color: var(--neo-color); }
         .btn-consultorio { background-color: var(--consultorio-color); }
         .btn-sala { background-color: var(--sala-color); }
-        .btn-guardia { background-color: #e11d48; }
 
         .counters {
             display: flex;
@@ -1212,8 +1211,8 @@ Estimados/as estudiantes, les compartimos la agenda de clases teóricas y la dis
 
 🏥 PRÁCTICA HOSPITALARIA (10:30 a 12:00 hs)
 Concurren únicamente los alumnos asignados a cada día:
-• Lunes 03/08: Acuña Leyla y Barilaro Canela
-• Martes 04/08: Caruso, Castro, Damiani y Delgado Pabia
+• Lunes 03/08: Acuña Leila y Barilaro Canela
+• Martes 04/08: Caruso, Castro, Damiani y Delgado Pavia
 • Miércoles 05/08: Díaz Moreno, García, Gentile y Guerreiro
 • Jueves 06/08: (A confirmar en clase)
 • Viernes 07/08: (A confirmar en clase)
@@ -1241,7 +1240,7 @@ Estimados/as estudiantes, les compartimos la agenda de la Semana 2, enfocada en 
 🏥 PRÁCTICA HOSPITALARIA (10:30 a 12:00 hs)
 Concurren únicamente los alumnos asignados a cada día:
 • Lunes 10/08: Quispe y Rojas
-• Martes 11/08: Teixeira Cruz, Tellias y Gallioto
+• Martes 11/08: Teixeira Cruz, Telias y Gallotto
 • Miércoles 12/08: Leguizamón y Márquez
 • Jueves 13/08: Méndez y Olmos
 • Viernes 14/08: (A confirmar en clase)
@@ -1268,7 +1267,7 @@ Equipo Docente de Pediatría</textarea>
             
             <div class="efu-vignette">
                 <strong>Enunciado Oficial UBA (EFU 2019):</strong><br>
-                Ud. atiende en su consultorio a Pablo un neonato de 14 días de vida que concurre para control. Es un nacido de término, de un embarazo controlled y sin patologías del embarazo. Pesó 2800 grs al nacer y fue dado de alta al 3° día con 2600 grs. Las vacunas están completas. Se alimenta con lactancia materna exclusiva. Presenta deposiciones diarias color amarillo oro y la diuresis está conservada. Al examen físico se encuentra vigoroso, con ictericia en cara, no se auscultan soplos cardíacos, el abdomen es blando y sin visceromegalias. El peso actual es de 2780 grs.
+                Ud. atiende en su consultorio a Pablo un neonato de 14 días de vida que concurre para control. Es un nacido de término, de un embarazo controlado y sin patologías del embarazo. Pesó 2800 grs al nacer y fue dado de alta al 3° día con 2600 grs. Las vacunas están completas. Se alimenta con lactancia materna exclusiva. Presenta deposiciones diarias color amarillo oro y la diuresis está conservada. Al examen físico se encuentra vigoroso, con ictericia en cara, no se auscultan soplos cardíacos, el abdomen es blando y sin visceromegalias. El peso actual es de 2780 grs.
                 <br><br>
                 <strong>Pregunta:</strong> ¿Cuáles son las conductas más adecuadas? <em>(Marque hasta 3 opciones)</em>
             </div>
@@ -1897,15 +1896,11 @@ Equipo Docente de Pediatría</textarea>
             
             document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('viewPracticosMatrix').style.display = 'none';
-            document.getElementById('viewPracticosGroups').style.display = 'none';
             document.getElementById('viewPracticosBatch').style.display = 'none';
 
             if (subtabKey === 'matrix') {
                 document.getElementById('btnSubtabMatrix').classList.add('active');
                 document.getElementById('viewPracticosMatrix').style.display = 'block';
-            } else if (subtabKey === 'groups') {
-                document.getElementById('btnSubtabGroups').classList.add('active');
-                document.getElementById('viewPracticosGroups').style.display = 'block';
             } else if (subtabKey === 'batch') {
                 document.getElementById('btnSubtabBatch').classList.add('active');
                 document.getElementById('viewPracticosBatch').style.display = 'block';
