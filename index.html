@@ -160,6 +160,15 @@
             border: 1px solid var(--border);
             border-radius: 6px;
             font-size: 0.95rem;
+            transition: all 0.25s ease;
+        }
+
+        .efu-options li.correct-highlight {
+            background: var(--success-bg);
+            border-color: #ceead6;
+            color: #137333;
+            font-weight: 600;
+            box-shadow: 0 1px 4px rgba(30, 142, 62, 0.12);
         }
 
         .reveal-btn {
@@ -448,6 +457,31 @@
             background: #2e1c0d;
             color: #ffbc75;
             border: 2px solid #5c3c1e;
+        }
+
+        .pres-inline-reveal-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        .pres-inline-reveal-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+        .projector-theme-dark .pres-inline-reveal-btn {
+            background: #8ab4f8;
+            color: #0c0d0f;
+        }
+        .projector-theme-dark .pres-inline-reveal-btn:hover {
+            background: #aecbfa;
         }
 
         .pres-options-list {
@@ -1588,7 +1622,21 @@ Equipo Docente de Pediatría</textarea>
 
         function toggleAnswer(id) {
             var el = document.getElementById(id);
-            el.classList.toggle('visible');
+            if (!el) return;
+            var isVisible = el.classList.toggle('visible');
+            
+            var card = el.closest('.card');
+            if (card) {
+                card.querySelectorAll('.efu-options li').forEach(function(li) {
+                    if (li.hasAttribute('data-correct') || li.getAttribute('data-correct') === 'true') {
+                        if (isVisible) {
+                            li.classList.add('correct-highlight');
+                        } else {
+                            li.classList.remove('correct-highlight');
+                        }
+                    }
+                });
+            }
         }
 
         // ==========================================================================
@@ -1615,7 +1663,7 @@ Equipo Docente de Pediatría</textarea>
                 if (overlay && presentationActive) {
                     overlay.classList.add('hide-controls');
                 }
-            }, 2000);
+            }, 4000);
         }
 
         function initPresentationData() {
@@ -1816,8 +1864,8 @@ Equipo Docente de Pediatría</textarea>
                     <div class="pres-right">
                         <div class="pres-instructions-bar">
                             ${currentPhase === 1 
-                                ? '🗳️ <strong>Fase de Discusión:</strong> Vota usando las teclas <strong>A-H</strong> o haciendo clic. Presiona <strong>Enter</strong> o <strong>Espacio</strong> para revelar respuestas.' 
-                                : '📋 <strong>Fase de Respuestas:</strong> Respuestas oficiales y justificación clínica en pantalla.'}
+                                ? '🗳️ <strong>Fase de Votación:</strong> Vota usando teclas <strong>A-H</strong> o clic. <button class="pres-inline-reveal-btn" onclick="nextStep()">Ver Respuestas Correctas ✨</button>' 
+                                : '📋 <strong>Fase de Respuestas:</strong> Claves oficiales EFU y justificación clínica en pantalla.'}
                         </div>
                         <ul class="pres-options-list" id="pres-options-list">
                             ${currentCase.options.map((opt, idx) => {
@@ -1835,13 +1883,17 @@ Equipo Docente de Pediatría</textarea>
                 
                 <div class="pres-footer">
                     <button class="pres-btn-footer" onclick="prevStep()" ${currentCaseIndex === 0 && currentPhase === 1 ? 'disabled' : ''}>
-                        ← Atrás (Flecha Izq)
+                        ← Atrás ${currentPhase === 2 ? '(Votación)' : '(Caso Anter.)'}
                     </button>
                     <div class="pres-progress-indicator">
                         Caso ${currentCaseIndex + 1} de ${presentationCases.length} — ${currentPhase === 1 ? 'Pregunta' : 'Respuestas'}
                     </div>
                     <button class="pres-btn-footer" onclick="nextStep()">
-                        ${currentCaseIndex === presentationCases.length - 1 && currentPhase === 2 ? 'Finalizar' : 'Siguiente'} →
+                        ${currentPhase === 1 
+                            ? 'Revelar Respuestas (Enter / ➔) →' 
+                            : (currentCaseIndex === presentationCases.length - 1 
+                                ? 'Finalizar Presentación ✓' 
+                                : 'Siguiente Caso (Enter / ➔) →')}
                     </button>
                 </div>
             `;
@@ -1861,6 +1913,34 @@ Equipo Docente de Pediatría</textarea>
                     }
                 }
             }
+        }
+
+        function nextStep() {
+            if (currentPhase === 1) {
+                currentPhase = 2;
+                renderSlide(true);
+            } else if (currentPhase === 2) {
+                if (currentCaseIndex < presentationCases.length - 1) {
+                    currentCaseIndex++;
+                    currentPhase = 1;
+                    renderSlide(false);
+                } else {
+                    exitPresentation();
+                }
+            }
+            resetControlsTimer();
+        }
+
+        function prevStep() {
+            if (currentPhase === 2) {
+                currentPhase = 1;
+                renderSlide(false);
+            } else if (currentPhase === 1 && currentCaseIndex > 0) {
+                currentCaseIndex--;
+                currentPhase = 2;
+                renderSlide(false);
+            }
+            resetControlsTimer();
         }
     </script>
 
