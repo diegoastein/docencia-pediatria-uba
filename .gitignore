@@ -1,3 +1,6 @@
 .venv/
 scratch/
 clases_drive/
+
+# Presentaciones pesadas: se comparten por Google Drive, no por el repositorio
+*.pptx
