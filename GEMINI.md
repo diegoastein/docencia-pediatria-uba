@@ -30,5 +30,5 @@ Este archivo configura las reglas de comportamiento y contexto de proyecto para 
 - `cronograma_y_planificacion_pediatria_2026.md`: Planificador maestro de la cursada.
 - `talleres_efu_semanales.md`: Cuadernillos de ejercitación para los viernes.
 - `banco_preguntas_efu_pediatria.md`: Catálogo con 168 preguntas de EFU extraídas de los PDFs.
-- `anuncios_classroom.html`: Herramienta interactiva con botón de copiado directo para Google Classroom.
+- `index.html`: Herramienta interactiva (anuncios con botón de copiado directo para Google Classroom, talleres EFU y planilla de control de prácticos).
 - `inventario_clases_drive.md`: Repositorio dinámico de presentaciones en Google Drive.
