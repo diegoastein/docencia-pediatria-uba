@@ -2,9 +2,13 @@
 
 Este documento contiene las preguntas extraídas de los exámenes EFU reales de la UBA, respetando estrictamente el enunciado del examen original y **limitado a un máximo de 8 opciones reales (A a H)** sin invención ni modificación de opciones.
 
+**Criterio de selección:** sólo se incluyen casos cuyas respuestas están marcadas de forma inequívoca en la grilla oficial de los PDF fuente. Se descartan los casos con respuestas dudosas, discutidas o con más de 8 opciones oficiales.
+
 ---
 
 ## 📌 VIERNES 07 DE AGOSTO (SEMANA 1)
+
+**Temas de la semana:** Crecimiento y Nutrición · Lactancia · Auxología · Inmunizaciones
 
 ---
 
@@ -64,89 +68,278 @@ Ud. se encuentra otorgando el alta de Ián, un recién nacido de 39 semanas de e
 
 ---
 
-### 📝 PREGUNTA 3 (OFICIAL EFU 2021)
+### 📝 PREGUNTA 3 (OFICIAL EFU MAYO 2021)
 
 **Enunciado:**  
-Anahí es una niña de 6 meses de vida, primera hija de Sandra (32 años, docente) y Julio (32 años, docente). Fue una RNT PAEG y no presentó hasta el momento ningún problema de salud. Tiene aplicadas vacunas completas para la edad. La familia vive en el conurbano bonaerense y los padres trabajan en una escuela en el partido en el que viven. Anahí queda al cuidado de su abuela materna durante el tiempo que ellos están trabajando. Anahí sigue tomando el pecho y también toma biberones con fórmula de inicio.  
-Al examen físico Anahí se sienta, toma objetos y los lleva a la boca, y no se observa reflejo de extrusión lingual. Peso: 7 kg (pc 25) y talla 64 cm (pc 25). En la consulta los padres preguntan acerca de comenzar con la alimentación con semisólidos.
+Darío, de 1 mes de edad, concurre con sus padres a una consulta en salud. Su mamá, Mónica, está preocupada porque, desde hace 6 días, no ha presentado deposiciones. Refiere que con frecuencia llora y se pone colorado, antes de evacuar materia fecal. La última deposición fue a los 24 días de vida. La materia fecal fue de consistencia blanda, grumosa, color amarillo oro.  
+Antecedentes de embarazo y parto: primer embarazo, controlado, de término. Parto eutócico en cefálica. Apgar 9/10. Alimentación exclusiva con leche materna. Mónica refiere que el cordón umbilical cayó al octavo día de vida, y que eliminó meconio a las 24 horas de haber nacido. La prueba de pesquisa neonatal está pendiente. Antecedentes personales: Peso al nacer 3400 gramos. Al alta, 48 horas de vida: 3300 gramos. Control a los 7 días de vida: 3100 gramos.  
+Darío tiene sueño tranquilo. Solo se despierta para tomar el pecho. Succiona con avidez y parece disfrutar el momento de alimentarse. Pocas veces está algo llorón. Presenta una regurgitación escasa luego de alguna de las tomas. Examen físico: buen estado general. Peso actual 3850 gramos. El abdomen es globuloso, blando y la palpación no desencadena llanto. El hígado se palpa a 2,5 cm del reborde costal en la línea axilar media y el polo de bazo se insinúa bajo la parrilla costal izquierda. No se palpan masas fecales.
 
-**Pregunta:** Ante esta consulta, ¿qué considera informarles? *(Marque hasta 3 opciones)*
+**Pregunta:** ¿Cuáles son las conductas más adecuadas a seguir con Darío? *(Marcar hasta 3 opciones)*
 
-- **A.** Indica que comiencen con sucedáneos lácteos inicialmente.
-- **B.** Se debería aguardar a que alcanzara un peso y una talla en percentilo 50 para comenzar con semisólidos.
-- **C.** Alienta la ingesta de agua y desalienta la de jugos industriales y gaseosas.
-- **D.** Aclara que pueden añadir sal, azúcar y/o miel a las comidas.
-- **E.** Indica que comiencen con vegetales inicialmente y más tarde incorporar otros grupos de alimentos (carnes, cereales y frutas).
-- **F.** Estimula el agregado de grasas a las comidas que se le ofrezcan.
-- **G.** Es un buen momento para comenzar con semisólidos.
-- **H.** Indica alimentos variados, pero limitando carnes y algunas frutas.
-
-<details>
-<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
-
-* **Opciones Correctas:** **C, E, G**
-* **Justificación:**
-  * **C (Alentar ingesta de agua / desalentar jugos y gaseosas):** Promoción de pautas de hidratación saludables desde el inicio de la alimentación complementaria.
-  * **E (Inicio de semisólidos progresivos):** Incorporar vegetales e ir sumando progresivamente otros grupos de alimentos (carnes, cereales y frutas).
-  * **G (Momento adecuado para semisólidos):** Presenta madurez del neurodesarrollo adecuada (sedestación, desaparición del reflejo de extrusión lingual, exploración con objetos) a los 6 meses de vida.
-</details>
-
----
-
-### 📝 PREGUNTA 4 (OFICIAL EFU 2021)
-
-**Enunciado:**  
-José, de 6 años y 3 meses de edad, llega a la consulta con su madre. Ella está preocupada por la altura de José, ya que lo nota más bajo que sus compañeros.  
-Antecedentes: nacido a término con peso adecuado para la edad gestacional. Sin antecedentes patológicos de importancia. Vive con su madre, su padre ha fallecido en un accidente y no hay antecedentes patológicos familiares de importancia.  
-La libreta sanitaria de José muestra una curva de talla que a partir de los 2 años de vida ha crecido entre los percentiles 10-25 hasta los 5 años. A partir de esa edad, la curva empieza a descender, ubicándose actualmente debajo del percentil 3, con un puntaje Z de -3,4 y una velocidad de crecimiento menor al percentil 3.
-
-**Pregunta:** Con respecto al cuadro clínico del paciente, ¿cuáles de las siguientes conductas son las más adecuadas? *(Marque hasta 3 opciones)*
-
-- **A.** Explicar a la madre que se trata de un madurador lento.
-- **B.** Internar al paciente en sala general.
-- **C.** Citar ambulatoriamente en 6 meses sin solicitar estudios.
-- **D.** Solicitar interconsulta con endocrinología infantil.
-- **E.** Explicar a la madre que se trata de baja talla familiar.
-- **F.** Explicar a la madre que su niño tiene un retardo constitucional del crecimiento.
-- **G.** Solicitar laboratorio con panel celíaco, hormonas tiroideas (TSH y T4 libre) y radiografía de mano/muñeca izquierda para edad ósea.
-- **H.** Realizar curva de velocidad de crecimiento y seguimiento antropométrico estricto.
-
-<details>
-<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
-
-* **Opciones Correctas:** **D, G, H**
-* **Justificación:**
-  * **D (Interconsulta con endocrinología):** La desaceleración de la curva de crecimiento con puntaje Z < -3 y velocidad de crecimiento en percentil < 3 es un signo de alarma de baja talla patológica que requiere evaluación especializada.
-  * **G (Estudios iniciales):** Corresponde descartar causas orgánicas/sistémicas de falla de crecimiento (enfermedad celíaca e hipotiroidismo) y evaluar la maduración ósea mediante radiografía de mano izquierda.
-  * **H (Curva de velocidad de crecimiento):** El seguimiento estricto de la velocidad de crecimiento es el parámetro auxológico fundamental para definir el ritmo de crecimiento.
-</details>
-
----
-
-### 📝 PREGUNTA 5 (OFICIAL EFU 2021)
-
-**Enunciado:**  
-Concurre a control Pamela de 5 años y 6 meses de edad. Es una niña con diagnóstico de asma moderada tratada con corticoides inhalados dos veces por día desde hace un año y salbutamol de rescate durante las crisis. En este momento se encuentra sin intercurrencias; la última crisis la presentó hace 1 semana, pero resolvió sin requerir internación. Su desarrollo es adecuado para su edad, está por ingresar a primer grado. Las últimas dosis de vacunas las recibió al año de edad. Su madre se encuentra cursando un embarazo de 20 semanas.
-
-**Pregunta:** ¿Cuál es su conducta con respecto a las inmunizaciones? *(Marque hasta 3 opciones)*
-
-- **A.** Pamela debe recibir Salk, DPT, vacuna antimeningocócica tetravalente, pero no puede recibir triple viral ni vacuna de varicela porque su madre está embarazada.
-- **B.** Pamela no puede vacunarse porque está recibiendo tratamiento prolongado con corticoides.
-- **C.** Pamela debe recibir Salk, DPT y Triple Viral, por su edad no está indicada la vacuna de varicela ni la antimeningocócica.
-- **D.** Pamela debe recibir Sabin, DPT, Triple Viral, vacuna antimeningocócica tetravalente y vacuna de varicela.
-- **E.** Pamela debe recibir Salk, DPT, Triple viral, vacuna antimeningocócica tetravalente y vacuna de varicela.
-- **F.** Indicar a la madre vacuna DPT acelular y Hepatitis B, si no la tiene aplicada y vacuna antigripal estacional.
-- **G.** Pamela debe recibir vacuna antigripal estacional y una dosis de Neumo 23 valente.
-- **H.** Debe esperar 15 días luego de una crisis asmática para poder vacunar a Pamela.
+- **A.** Colocar un supositorio de glicerina si Darío no presenta deposiciones en las próximas 24 horas.
+- **B.** Comenzar la administración de lactulosa si no constatan deposiciones luego de siete días.
+- **C.** Informar a los padres que el ritmo evacuatorio de Darío es normal al estar alimentado exclusivamente con leche materna.
+- **D.** Administrar jugo de compota de ciruelas por medio de un gotero durante 48-72 horas.
+- **E.** Efectuar la consulta en un servicio de emergencia si luego de siete días Darío no ha presentado deposiciones.
+- **F.** Mantener la alimentación materna a libre demanda.
+- **G.** Informar a los padres que el llanto y el "ponerse colorado" no indica que Darío está constipado.
+- **H.** Complementar la alimentación con fórmula de inicio.
 
 <details>
 <summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
 
 * **Opciones Correctas:** **C, F, G**
 * **Justificación:**
-  * **C (Esquema de ingreso escolar):** Al momento de este control (5 años), las vacunas obligatorias son Salk (IPV), DPT (Triple bacteriana celular) y Triple Viral. No corresponde vacuna meningocócica ni varicela en este rango del calendario oficial histórico.
-  * **F (Inmunización de la madre embarazada):** Las embarazadas a partir de la semana 20 deben recibir la vacuna triple bacteriana acelular (dTpa), además de vacuna antigripal estacional y completar esquema de Hepatitis B.
-  * **G (Factores de riesgo en asma):** Al ser una paciente asmática de nivel moderado, pertenece a grupo de riesgo y debe recibir anualmente la vacuna antigripal y el esquema contra el neumococo (Neumo 23).
-  *(Nota: El uso de corticoides inhalados NO contraindica la vacunación con vacunas vivas, y convivir con una embarazada tampoco contraindica que el niño reciba vacunas a virus vivo).*
+  * **C (Ritmo evacuatorio normal):** El lactante con lactancia materna exclusiva puede pasar varios días sin evacuar. Mientras la materia fecal sea blanda, grumosa y de color amarillo oro, y el niño esté en buen estado, no hay constipación.
+  * **F (Libre demanda):** La conducta es sostener la lactancia materna exclusiva a libre demanda, sin agregar ningún complemento.
+  * **G (Llanto y pujo):** El pujo y el enrojecimiento previos a evacuar corresponden a la inmadurez de la coordinación entre la prensa abdominal y la relajación del esfínter anal (disquecia del lactante), no a constipación.
+  * *(Dato clave de crecimiento: recuperó y superó el peso de nacimiento — 3400 g al nacer, descenso fisiológico a 3100 g y 3850 g al mes de vida — lo que confirma una lactancia efectiva.)*
+</details>
+
+---
+
+### 📝 PREGUNTA 4 (OFICIAL EFU 02/09/2021)
+
+**Enunciado:**  
+Juan, de 6 años y 3 meses de edad, es traído a la consulta por su madre porque está preocupada por su altura, ya que lo nota más bajo que sus compañeros.  
+Antecedentes: nacido a término con peso adecuado para la edad gestacional. Sin antecedentes patológicos de importancia. Vive con su madre, su padre ha fallecido en un accidente y no hay antecedentes patológicos familiares de importancia. La libreta sanitaria de Juan muestra una curva de talla que a partir de los 2 años de vida se ubica a -2,3 DE hasta la actualidad. La velocidad de crecimiento está en percentilo 25.  
+La talla materna es de 150,0 cm y según lo que refieren el padre medía alrededor de 160 cm. Trae una radiografía de edad ósea 5 años.
+
+**Pregunta:** Con respecto al cuadro clínico del paciente, ¿cuáles de las siguientes conductas son las más adecuadas? *(Marque hasta 3 opciones)*
+
+- **A.** Explicar que alcanzará talla en percentilo 50 luego del empuje puberal.
+- **B.** Explicar que la talla final estaría alrededor de 160,0 cm (+/- 8 cm).
+- **C.** Explicar a la madre que se trata de un madurador lento.
+- **D.** Citar a control ambulatorio en 6 meses.
+- **E.** Explicar a la madre que se trata de baja talla familiar.
+- **F.** Explicar a la mamá que su niño tiene un retardo constitucional del crecimiento.
+- **G.** Solicitar interconsulta con endocrinología.
+- **H.** Solicitar laboratorio con panel celíaco y hormonas tiroideas.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
+
+* **Opciones Correctas:** **B, G, H**
+* **Justificación:**
+  * **B (Blanco genético):** En un varón se calcula como (talla materna + talla paterna + 13) / 2 = (150 + 160 + 13) / 2 ≈ 161,5 cm, con un rango de ± 8 cm. La talla diana familiar es baja, pero eso no exime de estudiar al paciente.
+  * **G (Interconsulta con endocrinología):** Una talla sostenida en -2,3 DE amerita evaluación especializada.
+  * **H (Panel celíaco y hormonas tiroideas):** Estudios iniciales para descartar las causas orgánicas más frecuentes de baja talla: enfermedad celíaca e hipotiroidismo.
+  * *(Por qué no las otras: la edad ósea de 5 años frente a una edad cronológica de 6 años y 3 meses no permite asumir baja talla familiar; el madurador lento y el retardo constitucional del crecimiento se definen recién en la adolescencia.)*
+</details>
+
+---
+
+### 📝 PREGUNTA 5 (OFICIAL EFU 02/09/2021)
+
+**Enunciado:**  
+La mamá de Leandro de 7 años de edad, le consulta acerca de los efectos de la administración de las vacunas que su hijo ha recibido o que recibirá más adelante.
+
+**Pregunta:** Con relación a las preguntas que ella le formula, Ud. le informa lo siguiente: *(Marque hasta tres opciones)*
+
+- **A.** Puede demostrarse la efectividad de la vacuna anti hepatitis B si se le extrae a Leandro una muestra de sangre y se detecta el antígeno de superficie HBsAg.
+- **B.** Al haber recibido la vacuna anti hepatitis A a los 12 meses, puede determinarse en suero el anticuerpo denominado IgM HAV.
+- **C.** Habiendo recibido la vacuna contra la varicela, si la contrajera nuevamente, la infección transcurrirá más leve y con pocas lesiones.
+- **D.** Respecto a la inmunización para tétanos, pertussis y difteria, a partir de ahora sólo podrá recibir vacunas acelulares.
+- **E.** La aplicación de la vacuna BCG que Leandro recibió al momento del nacimiento, impide la posibilidad de que adquiera tuberculosis a edades posteriores.
+- **F.** Al ingreso escolar era necesario que recibiera un refuerzo de vacuna antineumocócica conjugada.
+- **G.** Si bien la parotiditis es una enfermedad relativamente benigna, al haber recibido la vacuna, se evita en gran medida la meningoencefalitis y la anacusia.
+- **H.** Al ingreso escolar debería haber recibido el refuerzo para hepatitis A.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
+
+* **Opciones Correctas:** **C, D, G**
+* **Justificación:**
+  * **C (Varicela modificada):** El niño vacunado que igualmente contrae varicela cursa una forma atenuada, con menos lesiones y menor riesgo de complicaciones.
+  * **D (Componente pertussis acelular):** A partir de los 7 años sólo se emplean formulaciones acelulares (dTpa), porque el componente celular se asocia a mayor reactogenicidad en niños mayores.
+  * **G (Parotiditis y triple viral):** La vacunación previene sus complicaciones principales, la meningoencefalitis urliana y la sordera (anacusia).
+  * *(Por qué no las otras: la protección posvacunal contra hepatitis B se demuestra con el **anticuerpo** anti-HBs y no con el antígeno HBsAg; la IgM anti-HAV marca infección aguda, no respuesta a la vacuna; la BCG no impide contraer tuberculosis sino que previene las formas graves —miliar y meníngea—; la antineumocócica conjugada refuerza al año de vida y la hepatitis A es de dosis única.)*
+</details>
+
+---
+
+## 📌 VIERNES 14 DE AGOSTO (SEMANA 2)
+
+**Temas de la semana:** Prematurez · Crecimiento y Desarrollo · Cardiopatías Congénitas
+
+---
+
+### 📝 PREGUNTA 1 (OFICIAL EFU JUNIO 2021)
+
+**Enunciado:**  
+Los padres de Elena de 2 meses de edad están preocupados porque, la niña, si bien fija la mirada en una cara y la sigue brevemente, no sigue objetos hasta la línea media. La preocupación de los padres se centra en que su hijo de 4 años tiene un trastorno del desarrollo no especificado. Elena es una niña nacida de un embarazo controlado, con 32 semanas de edad gestacional. Al examen físico se encuentra en buen estado general, vital reactiva, presenta un buen tono muscular. En suficiencia cardiorrespiratoria. Presenta reflejo de moro completo, reflejo cocleopalpebral presente.
+
+**Pregunta:** Con respecto al desarrollo de esta niña y a la preocupación de los padres, ¿cuáles son las opciones más correctas? *(Marque hasta 3 opciones)*
+
+- **A.** Durante la evaluación del desarrollo se debe separar a Elena de sus padres para que el examen sea más objetivo.
+- **B.** Elena presenta un trastorno transitorio del desarrollo.
+- **C.** Elena es muy pequeña para poder detectar un trastorno del desarrollo.
+- **D.** Se debe conocer las edades de adquisición de las pautas madurativas.
+- **E.** Para darle una respuesta a los padres debe evaluar todas las áreas de desarrollo.
+- **F.** Es muy poco probable que Elena tenga un trastorno del desarrollo.
+- **G.** Se debe tener en cuenta la edad corregida por edad gestacional.
+- **H.** La edad gestacional de Elena es un factor protector para los trastornos del desarrollo.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
+
+* **Opciones Correctas:** **D, E, G**
+* **Justificación:**
+  * **D (Conocer las edades de adquisición de las pautas):** Es el paso previo indispensable para interpretar si un hallazgo es normal o constituye una pauta de alarma.
+  * **E (Evaluar todas las áreas del desarrollo):** La evaluación madurativa nunca se limita a un solo dominio; debe abarcar motor grueso, motor fino, lenguaje y área social.
+  * **G (Edad corregida por edad gestacional):** Elena nació a las 32 semanas, es decir 8 semanas antes del término. A los 2 meses cronológicos su **edad corregida es de 0 meses**, por lo que fijar la mirada y seguir brevemente una cara es lo esperable. La corrección se mantiene hasta los 2 años.
+  * *(Punto clave del caso: la prematurez es un **factor de riesgo** para trastornos del neurodesarrollo, nunca un factor protector — opción H incorrecta.)*
+</details>
+
+---
+
+### 📝 PREGUNTA 2 (OFICIAL EFU JUNIO 2021)
+
+**Enunciado:**  
+Los padres de Esteban, de 22 meses (1 año 10 meses), acuden a su consultorio. Están preocupados por su maduración. De un embarazo controlado, nació a las 37 semanas de edad gestacional por cesárea de urgencia por desprendimiento de placenta. Tuvo sufrimiento fetal agudo y fue deprimido grave, recibiendo reanimación en la sala de partos. Estuvo internado un mes en la unidad de cuidados intensivos neonatales, con muy buena evolución. Inmunizaciones completas para la edad. Antropometría: Peso pc 10-25, talla pc 25, perímetro cefálico pc 25-50. Examen físico sin particularidades.
+
+**Pregunta:** ¿La ausencia de cuáles pautas madurativas es signo de alarma para usted? *(Marque hasta 3 opciones)*
+
+- **A.** Señalar las figuras de su papá y mamá en un dibujo.
+- **B.** Decir mamá y papá.
+- **C.** Entonar una canción infantil sencilla.
+- **D.** Hacer una torre de 12 cubos.
+- **E.** Decir oraciones de dos palabras.
+- **F.** Introducir pequeños objetos dentro de un recipiente.
+- **G.** Subir escaleras alternando pies.
+- **H.** Patear una pelota.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
+
+* **Opciones Correctas:** **B, F, H**
+* **Justificación:**
+  * **B (Decir mamá y papá):** Pauta esperable alrededor de los **12 meses**. Su ausencia a los 22 meses es signo de alarma en el área del lenguaje.
+  * **F (Introducir pequeños objetos en un recipiente):** Pauta de motricidad fina esperable hacia los **15 meses**.
+  * **H (Patear una pelota):** Pauta de motricidad gruesa esperable hacia los **18 meses**.
+  * *(Las restantes son pautas de adquisición posterior a los 22 meses — oraciones de dos palabras ~24 meses, subir escaleras alternando pies ~3 años, torre de 12 cubos y entonar canciones aún más tarde — por lo que su ausencia NO constituye alarma a esta edad.)*
+  * *(Nota del caso: el antecedente de asfixia perinatal con reanimación e internación en UCIN justifica el seguimiento madurativo estricto.)*
+</details>
+
+---
+
+### 📝 PREGUNTA 3 (OFICIAL EFU)
+
+**Enunciado:**  
+Concurre a la consulta Marcela de 25 años con su hijo Juan de 18 meses. Viven en una localidad del Gran Buenos Aires junto a Pablo, el papá de Juan, y su hermano de 4 años. Marcela es peluquera y Pablo trabaja en un supermercado. Ambos terminaron el colegio primario. Marcela fue alérgica al polen durante su niñez y Pablo fuma un atado de cigarrillos por día. Al ingresar a su consultorio Juan entró de la mano de su madre y traía un auto en su otra mano. Durante el examen físico, colabora levantando las manos cuando la mamá lo desviste pero cuando ella se aleja comienza a llorar.  
+Presenta examen físico normal, pesa 9,950 kg (Pc 25) y mide 80,5 cm (Pc 25-50). Mientras dialoga con Marcela, Juan se mete abajo del escritorio para jugar con el auto y unos bloques. Marcela le pide que salga pero el niño no quiere y se larga a llorar. Ella le entrega el celular y logra calmarlo. Refiere que se comporta de esta manera en casa y que siempre la sigue, ayudando con las tareas del hogar. Marcela le pregunta si Juan tiene un desarrollo esperable para su edad y si está creciendo bien.
+
+**Pregunta:** Teniendo en cuenta el motivo de consulta, ¿cuáles son las respuestas más adecuadas? *(Puede marcar hasta 3 opciones)*
+
+- **A.** Solicitar interconsulta a psicología infantil por aparición temprana de berrinches.
+- **B.** Recomendar que le compre lápices porque ya debería dibujar líneas.
+- **C.** Explicar a la madre que es normal que comience con berrinches.
+- **D.** Desaconsejar el uso de pantallas.
+- **E.** Comunicar a la madre que Pedro cumple con las pautas de un niño de 18 meses.
+- **F.** Citar para control de pautas madurativas dentro de 2 meses.
+- **G.** Indicar alimentación hipercalórica porque Pedro está con bajo peso.
+- **H.** Indicar interconsulta con neurología porque no cumple pautas madurativas para su edad.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
+
+* **Opciones Correctas:** **C, D, E**
+* **Justificación:**
+  * **C (Los berrinches son normales):** Entre los 18 y 36 meses la oposición y los berrinches forman parte del desarrollo emocional esperable (búsqueda de autonomía). No requieren derivación.
+  * **D (Desaconsejar pantallas):** No se recomienda exposición a pantallas en menores de 2 años. En el caso, la madre usa el celular como recurso para calmarlo.
+  * **E (Cumple las pautas de 18 meses):** Camina, sostiene objetos con la otra mano, colabora al desvestirse, imita tareas del hogar, presenta juego simbólico y angustia frente a la separación: todo esperable para la edad.
+  * *(Crecimiento: peso Pc 25 y talla Pc 25-50 son percentilos normales; no corresponde indicar alimentación hipercalórica — opción G incorrecta.)*
+  * ⚠️ *El enunciado oficial contiene una errata: las opciones E y G dicen "Pedro" cuando el paciente se llama Juan. Se transcribe textual.*
+</details>
+
+---
+
+### 📝 PREGUNTA 4 (OFICIAL EFU MAYO 2021)
+
+**Enunciado:**  
+Florencia es una niña de 6 años de edad que concurre a un control de salud. No tiene antecedentes de importancia. Usted encuentra que según la curva de crecimiento su talla se encuentra en percentilo 75 y creció 2,5 cm en este último año, y durante este mismo período, su peso se mantuvo en percentilo 50.
+
+**Pregunta:** ¿Cómo interpreta estos resultados? *(Marcar hasta 2 opciones)*
+
+- **A.** Presenta una estatura normal para la edad con una velocidad de crecimiento normal.
+- **B.** Presenta peso en percentilo 50, esto refleja el promedio de su peso en los últimos meses.
+- **C.** Presenta una estatura normal para edad con una velocidad de crecimiento anormalmente alta para su edad.
+- **D.** Presenta una estatura anormal con una velocidad de crecimiento anormalmente alta.
+- **E.** Presenta un peso en el límite inferior a lo normal.
+- **F.** Presenta una estatura normal para la edad con una velocidad de crecimiento anormalmente baja.
+- **G.** Presenta peso normal para la edad.
+- **H.** Presenta una estatura anormal para la edad con una velocidad de crecimiento anormalmente.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
+
+* **Opciones Correctas:** **F, G**
+* **Justificación:**
+  * **F (Estatura normal con velocidad de crecimiento anormalmente baja):** Este es el concepto central del caso. La **talla** en Pc 75 es normal, pero la **velocidad de crecimiento** de 2,5 cm/año es marcadamente baja para una niña de 6 años (lo esperable en la etapa prepuberal es del orden de 5 a 7 cm/año, por encima del Pc 3).
+  * **G (Peso normal para la edad):** Pc 50 es un peso normal.
+  * *(Enseñanza del caso: un percentilo de talla aislado puede ser normal y ocultar una desaceleración patológica. La velocidad de crecimiento es el parámetro auxológico más sensible y requiere al menos dos mediciones separadas por 6-12 meses.)*
+</details>
+
+---
+
+### 📝 PREGUNTA 5 (OFICIAL EFU 02/09/2021)
+
+**Enunciado:**  
+Usted se encuentra en un centro de atención primaria y recibe a Bautista, de tres meses de edad. La mamá, Mariana, lo trae a la consulta porque lo nota agitado y presenta sudoración al alimentarse. Según cuenta Mariana ella nota que Bautista se cansa cuando lleva unos minutos succionando el pecho. Mariana no controló el embarazo porque tenía miedo de concurrir a la salita por la pandemia de COVID-19. No hay antecedentes patológicos familiares. Bautista nació a las 38 semanas, por parto vaginal, con un peso de nacimiento de 2.950 gramos. Tiene pesquisa endocrino-metabólica normal y OEA normales. Recibió las vacunas de acuerdo al calendario nacional. Se alimenta con pecho exclusivo.  
+Usted constata en el examen físico: Palidez cutáneo-mucosa leve. Peso actual: 4.100 gr. FC: 140 latidos/minuto, FR: 54 respiraciones/minuto, Sat 98% AA. Afebril. Leve tiraje subcostal. Auscultación cardíaca: soplo pansistólico, intensidad 3/6, audible en múltiples focos, con mayor intensidad en 3er y 4to espacio intercostal izquierdo. Pulsos periféricos simétricos. Abdomen: blando, depresible, se palpa borde hepático 3 cm debajo del reborde costal.
+
+**Pregunta:** Según su hipótesis diagnóstica, ¿cuáles son las conductas iniciales más adecuadas? *(Puede marcar hasta 3 opciones)*
+
+- **A.** Solicita ecografía abdominal.
+- **B.** Solicita evaluación en un centro de mayor complejidad.
+- **C.** Indica corticoides por vía oral.
+- **D.** Solicita ECG y ecocardiograma.
+- **E.** Indica serie de salbutamol inhalado y observa respuesta clínica.
+- **F.** Indica corticoides inhalados.
+- **G.** Solicita urgente hemograma con frotis y hepatograma.
+- **H.** Indica ofrecer el pecho de forma fraccionada.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
+
+* **Opciones Correctas:** **B, D, H**
+* **Justificación:**
+  * **Hipótesis diagnóstica:** insuficiencia cardíaca por cardiopatía congénita con cortocircuito de izquierda a derecha (típicamente CIV). Los datos que la sostienen son: fatiga y sudoración durante la alimentación, escasa progresión ponderal (2.950 g al nacer → 4.100 g a los 3 meses), taquipnea con tiraje, hepatomegalia y **soplo pansistólico 3/6 en 3.º y 4.º espacio intercostal izquierdo**. La saturación de 98% orienta a cardiopatía **acianótica**.
+  * **B (Derivar a mayor complejidad):** Se está en un centro de atención primaria, sin recursos para estudiar ni tratar una cardiopatía.
+  * **D (ECG y ecocardiograma):** Estudios iniciales de elección para confirmar la cardiopatía y caracterizarla.
+  * **H (Pecho fraccionado):** Medida clave de sostén nutricional: el lactante con insuficiencia cardíaca se agota al mamar, por lo que se fracciona la alimentación para reducir el gasto energético y mejorar el aporte calórico.
+  * *(Diagnóstico diferencial que el caso invita a descartar: bronquiolitis. Por eso salbutamol y corticoides — opciones C, E, F — son distractores.)*
+</details>
+
+---
+
+### 📝 PREGUNTA 6 (OFICIAL EFU 02/09/2021)
+
+**Enunciado:**  
+Usted se encuentra en una guardia de emergencias. Recibe a Rosendo, un niño de 8 meses de edad, oriundo de Paraguay, con la familia recién llegada. Está al cuidado de la tía porque los padres están buscando trabajo. La tía sabe que tiene un soplo en el corazón y que lo estaban estudiando antes de que llegaran a Argentina. Hace 48 hs comenzó con rinorrea serosa y febrícula. Lo trae a la guardia porque comenzó en forma brusca con agitación y coloración azulada de mucosas. Llora durante el examen y en la guardia usted constata: frecuencia cardíaca 160/minuto; frecuencia respiratoria 68/minuto; saturación de oxígeno 70% AA. No ausculta soplo. No se auscultan sibilancias a nivel respiratorio.
+
+**Pregunta:** De acuerdo a su hipótesis diagnóstica, ¿cuáles son las conductas iniciales más adecuadas? *(Puede marcar hasta 3 opciones)*
+
+- **A.** Indica lorazepam.
+- **B.** Indica tratamiento con salbutamol y corticoides.
+- **C.** Coloca oxígeno.
+- **D.** Coloca al paciente en posición de cuclillas.
+- **E.** Indica diuréticos.
+- **F.** Solicita interconsulta en guardia con neurología infantil.
+- **G.** Ubica al niño en un ambiente tranquilo.
+- **H.** Tranquiliza a la tía dado que el episodio cederá en pocos minutos.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
+
+* **Opciones Correctas:** **C, D, G**
+* **Justificación:**
+  * **Hipótesis diagnóstica:** **crisis hipoxémica** (crisis de disnea y cianosis) en un lactante con cardiopatía congénita cianótica conocida, clásicamente Tetralogía de Fallot. Es una emergencia.
+  * **Dato semiológico clave:** durante la crisis **el soplo desaparece**, porque el espasmo infundibular reduce drásticamente el flujo a través del tracto de salida pulmonar. Sumado a saturación de 70% con auscultación pulmonar limpia, descarta causa respiratoria.
+  * **C (Oxígeno):** Primera medida ante la desaturación grave.
+  * **D (Posición de cuclillas / genupectoral):** Aumenta la resistencia vascular sistémica, disminuye el cortocircuito derecha-izquierda y redirige flujo hacia el pulmón.
+  * **G (Ambiente tranquilo):** El llanto y la agitación perpetúan la crisis; calmar al niño es parte del tratamiento inicial.
+  * *(Salbutamol y corticoides — opción B — estaban marcados como **"killer"** en la grilla: tratar el cuadro como bronquiolitis retrasa el manejo de una emergencia cardiológica.)*
 </details>
 
