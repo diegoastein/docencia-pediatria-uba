@@ -958,34 +958,4 @@ Concurre a la guardia José de 12 años de edad que consulta por dolor exquisito
 
 ---
 
-### 📝 PREGUNTA 3 (OFICIAL EFU COMPILADO) — Estenosis de Píloro y Abdomen Agudo: Emilio
-
-**Enunciado:**
-Emilio de 1 mes y 17 días de vida asiste a guardia junto a sus padres, Claudia y Marcos. Refieren que Emilio, único hijo, hace 12 horas está decaído y presentaba vómitos postprandiales desde hace 1 semana. Toma pecho con mayor avidez. En las últimas horas presentó 4 vómitos en chorro. Siempre afebril. Como antecedentes, Emilio es un recién nacido de término de peso adecuado para la edad gestacional (3100 gr), nacido por parto vaginal en presentación cefálica. Estuvo 4 días internado en neonatología por ictericia. Antecedentes familiares: tío paterno con historia de estenosis de píloro. En el momento de la consulta, se observa un lactante decaído, con peso de 2850 gramos (representa una pérdida del 8% de su peso de nacimiento). Presenta los ojos hundidos, llanto débil, mucosa oral seca. FC 160/min, FR 50/min.
-
-**Pregunta:** De acuerdo a su hipótesis diagnóstica (estenosis de píloro), ¿cuál es la conducta diagnóstica adecuada? *(Marque hasta 3 opciones)*
-
-- **A.** Ecografía abdominal.
-- **B.** EAB, ionograma, glucemia, urea, creatinina.
-- **C.** Interconsulta por cirugía infantil.
-- **D.** Hemograma, PCR, procalcitonina.
-- **E.** 2 hemocultivos.
-- **F.** Orina completa y urocultivo.
-- **G.** Punción lumbar para citoquímico y cultivo.
-- **H.** pHmetría de 24 horas.
-
-**✅ Respuestas Correctas: A, B, C**
-
-**Justificación Clínica:**
-* **A (Ecografía abdominal):** Gold standard diagnóstico de estenosis de píloro. Imágenes típicas: "aceituna" pilórica (masa hipertrófica del píloro), hipertrofia muscular, canal pilórico elongado (>3 mm de espesor), signo de "target sign".
-* **B (EAB, ionograma, bioquímica):** Imprescindible evaluar trastornos hidroelectrolíticos por vómitos en chorro: alcalosis hipoclorémica hipopotasémica (por pérdida de HCl gástrico). Evaluar deshidratación (8% pérdida ponderal), función renal.
-* **C (Interconsulta cirugía):** Estenosis de píloro requiere corrección quirúrgica (piloromiotomía de Ramstedt). Debe ser evaluado por cirugía pediátrica antes de la intervención.
-
-**Por qué NO las otras:**
-* **D, E, F (Estudios infecciosos):** No hay datos de infección sistémica. Afebril, sin contexto de sepsis.
-* **G (Punción lumbar):** No indicada; sin meningitis.
-* **H (pHmetría):** No pertinente en este contexto. Se usa para valorar reflujo gastroesofágico crónico, no para estenosis de píloro aguda.
-
----
-
-*Fin de Semanas 6-9. Disponibles para incorporación a talleres_efu_semanales.md*
+⚠️ *Nota: la PREGUNTA 3 original de esta semana (Estenosis de Píloro: Emilio) se eliminó por ser un caso duplicado exacto del [Caso EFU 5.1](#-pregunta-1-oficial-efus-2019-octubre--estenosis-de-píloro-emilio) de la Semana 5 (mismo enunciado, mismas opciones). Semana 9 queda con 2 casos; pendiente incorporar un tercer caso genuino de Emergencias/Cirugía.*
