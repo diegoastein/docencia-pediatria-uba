@@ -1299,7 +1299,8 @@ Equipo Docente de Pediatría</textarea>
             <div class="subtab-buttons" id="efu-week-filter">
                 <button class="subtab-btn" onclick="filterEfuWeek('all', this)">Todas</button>
                 <button class="subtab-btn" onclick="filterEfuWeek('1', this)">Semana 1 — Vie 07/08</button>
-                <button class="subtab-btn active" onclick="filterEfuWeek('2', this)">Semana 2 — Vie 14/08</button>
+                <button class="subtab-btn" onclick="filterEfuWeek('2', this)">Semana 2 — Vie 14/08</button>
+                <button class="subtab-btn active" onclick="filterEfuWeek('3', this)">Semana 3 — Vie 21/08</button>
             </div>
             <span id="efu-week-count" style="font-size: 0.9rem; color: #64748b; font-weight: 600;"></span>
         </div>
@@ -1683,6 +1684,83 @@ Equipo Docente de Pediatría</textarea>
             </div>
         </div>
 
+        <div class="card" data-semana="3">
+            <span class="badge">Viernes 21 de Agosto — EFU 23/07/2021</span>
+            <h2>Caso EFU 12: Jonathan de 3 meses (Bronquiolitis Grave — Score de Tal 9)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial UBA (EFU 23/07/2021):</strong><br>
+                Jonathan de 3 meses de edad es traído a la guardia por cuadro de tos de 24 horas de evolución. Los padres refieren que comenzó con mocos claros por nariz y tos seca esporádica, con 37,7 ºC de temperatura axilar pero les preocupa que está con tendencia al sueño e inapetente. En el día de hoy presentó dos regurgitaciones. Nació a las 35 semanas de edad gestacional, con peso de 2.170 gramos, dado de alta a las 48 hs. Se alimenta con pecho exclusivo con buena progresión de peso. No refiere otros antecedentes de importancia.<br><br>
+                Su hermano de 5 años de edad está resfriado desde hace 4 días pero sin fiebre y sin tos. El padre sano de 32 años, empleado fuma 15 cigarrillos por día pero no en el hogar. Madre sana 30 años no fumadora, ama de casa. Viven en un departamento de dos ambientes, con todas las necesidades básicas.<br><br>
+                Al examen físico se aprecia aletargado, algo pálido, temperatura axilar 37,4 ºC, frecuencia respiratoria: 66 por minuto (VN 40-60), frecuencia cardiaca: 148 por minuto (VN 120-180), auscultación cardiaca normal. Presenta tiraje intercostal y supraesternal con aleteo nasal intermitente y se auscultan sibilancias inspiratorias y espiratorias con rales subcrepitantes diseminados bilaterales. Abdomen algo globuloso pero depresible e indoloro, se palpa borde hepático a 3 cm del reborde costal y se percibe polo de bazo. Resto del examen físico sin particularidades.
+                <br><br>
+                <strong>Pregunta:</strong> ¿Cuáles son las conductas iniciales más adecuadas frente a este cuadro? <em>(Puede marcar hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li><strong>A.</strong> Colocar sonda nasogástrica para alimentación.</li>
+                <li data-correct="true"><strong>B.</strong> Desobstruir las narinas y colocar en posición semisentada.</li>
+                <li><strong>C.</strong> Continuar con pecho en forma frecuente y fraccionada para que tolere mejor.</li>
+                <li><strong>D.</strong> Indicar kinesioterapia respiratoria.</li>
+                <li data-correct="true"><strong>E.</strong> Internar en sala y colocar oxígeno por cánula nasal.</li>
+                <li data-correct="true"><strong>F.</strong> Indicar salbutamol en aerosol cada 20 minutos durante una hora y revalorar.</li>
+                <li><strong>G.</strong> Solicitar radiografía de tórax.</li>
+                <li><strong>H.</strong> Enviar al domicilio con salbutamol aerosol y betametasona y citar a las 24 horas.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans12')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans12" class="answer-box">
+                <strong>✅ Respuestas Correctas: B, E, F</strong><br><br>
+                <strong>Diagnóstico:</strong> Bronquiolitis con Score de Tal ≈ 9 (grave): taquipnea &gt; 60/min para la edad, tiraje intercostal y supraesternal, aleteo nasal, sibilancias con rales subcrepitantes bilaterales, sensorio deprimido (letárgico) y mal registro alimentario. Es un lactante con factores de riesgo (pretérmino de 35 semanas, 3 meses de vida). Cumple criterio de internación.<br><br>
+                <strong>Justificación Clínica:</strong><br>
+                • <strong>B (Desobstruir narinas y posición semisentada):</strong> Medida de sostén de primera línea que mejora el trabajo respiratorio.<br>
+                • <strong>E (Internar con oxígeno):</strong> El score de gravedad y el trabajo respiratorio aumentado son criterio de internación.<br>
+                • <strong>F (Prueba con salbutamol y revalorar):</strong> En cuadros graves está indicado un ensayo terapéutico con broncodilatador, revalorando la respuesta a la hora.<br>
+                • <strong>C (incorrecta):</strong> Con este grado de dificultad respiratoria, alimentar por vía oral aumenta el riesgo de aspiración.<br>
+                • <strong>D, G, H (incorrectas):</strong> La kinesioterapia respiratoria no tiene indicación de rutina; la radiografía no es un estudio inicial sistemático; y un cuadro grave no se maneja de forma ambulatoria ni con corticoides (no indicados en bronquiolitis).<br><br>
+                *(Nota de método: el PDF fuente no trae grilla oficial letra-por-letra para este caso, sino anotaciones parciales de un compañero de cursada. C y H están marcadas explícitamente como incorrectas y F trae la anotación "Grave" señalando el ensayo terapéutico; B y E se derivan sin ambigüedad del criterio de internación anotado en el enunciado; A, D y G se completaron por manejo estándar de bronquiolitis, sin anotación en la fuente.)*
+            </div>
+        </div>
+
+        <div class="card" data-semana="3">
+            <span class="badge">Viernes 21 de Agosto — EFU 23/07/2021</span>
+            <h2>Caso EFU 13: Amalia de 9 meses (Bronquiolitis Leve — Score de Tal 3)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial UBA (EFU 23/07/2021):</strong><br>
+                Concurre a la guardia donde usted trabaja, Amalia, de 9 meses, por fiebre (38-38,5 ºC) que cede transitoriamente con medios físicos y tos durante las últimas 72 horas que interrumpió su sueño durante la última noche. Ha mantenido una buena actitud alimentaria.<br><br>
+                Antecedentes personales: Vacunas completas. Tuvo un resfrío, dos otitis medias agudas y una gastroenteritis aguda, todos con buena evolución. Su padre, 24 años, albañil, su madre, 27 años, ama de casa, ambos sanos. Viven a 12 cuadras del hospital.<br><br>
+                Al examen físico luce en buen estado general, rosada. Frecuencia cardíaca 136/minuto (VN 100-130). Presión arterial 90/56 mm Hg. Frecuencia respiratoria 44 por minuto (VN 20-40). Saturometría con aire ambiental 96 %. Temperatura axilar 37,6 °C. Fauces levemente congestivas, ambos tímpanos rosados con triángulo luminoso presente. Sin aleteo nasal, leve tiraje intercostal, murmullo vesicular presente, sibilancias al final de la espiración en ambas bases pulmonares. Resto del examen sin particularidades.
+                <br><br>
+                <strong>Pregunta:</strong> ¿Cuáles son las conductas iniciales más adecuadas? <em>(Puede marcar hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li><strong>A.</strong> Solicitar aspirado nasofaríngeo de secreciones respiratorias.</li>
+                <li><strong>B.</strong> Indicar nebulizaciones con budesonide cada 8 horas.</li>
+                <li><strong>C.</strong> Internar al paciente con oxígeno.</li>
+                <li data-correct="true"><strong>D.</strong> Indicar paracetamol por vía oral si tuviera fiebre.</li>
+                <li data-correct="true"><strong>E.</strong> Continuar con la alimentación por vía oral.</li>
+                <li data-correct="true"><strong>F.</strong> Citar a control en 24-48 horas.</li>
+                <li><strong>G.</strong> Indicar ibuprofeno y paracetamol alternados si tuviera fiebre.</li>
+                <li><strong>H.</strong> Indicar bromuro de ipratropio por aerocámara cada 12 horas.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans13')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans13" class="answer-box">
+                <strong>✅ Respuestas Correctas: D, E, F</strong><br><br>
+                <strong>Diagnóstico:</strong> Bronquiolitis leve, Score de Tal ≈ 3 (buen estado general, leve tiraje, sibilancias espiratorias, saturación 96% con aire ambiental, buena tolerancia oral). No presenta criterios de internación → manejo ambulatorio.<br><br>
+                <strong>Justificación Clínica:</strong><br>
+                • <strong>D (Paracetamol si fiebre):</strong> Manejo sintomático estándar.<br>
+                • <strong>E (Continuar alimentación por vía oral):</strong> Tolera adecuadamente, no hay dificultad respiratoria que la contraindique.<br>
+                • <strong>F (Control en 24-48 horas):</strong> Todo lactante con bronquiolitis manejado ambulatoriamente requiere reevaluación cercana por riesgo de progresión.<br>
+                • <strong>A, B, C, G, H (incorrectas):</strong> El aspirado nasofaríngeo no cambia la conducta; los corticoides inhalados y el bromuro de ipratropio no están indicados en bronquiolitis; no hay criterio de internación ni de oxígeno; y no se recomienda alternar antitérmicos de rutina.<br><br>
+                *(Nota de método: A, C y H están marcadas explícitamente como incorrectas en el PDF fuente y B está marcada como opción "killer". D, E, F y G no tienen marca individual; se completaron por manejo estándar de bronquiolitis leve ambulatoria, descartando G por no recomendarse alternar antitérmicos de rutina.)*
+            </div>
+        </div>
+
     </div>
 
     <!-- TAB 3: CONTROL DE PRÁCTICOS REFORMULADO -->
@@ -1886,7 +1964,7 @@ Equipo Docente de Pediatría</textarea>
         }
 
         // Filtro por semana: acota tanto las tarjetas visibles como el Modo Presentación
-        let efuWeekFilter = '2';
+        let efuWeekFilter = '3';
 
         function getEfuCards() {
             return Array.from(document.querySelectorAll('#tab-efu .card')).filter((card) => {
@@ -2629,7 +2707,7 @@ Equipo Docente de Pediatría</textarea>
         renderPracticos();
         initSyncRoom();
 
-        // Aplica el filtro de semana por defecto (Semana 2) al cargar la página
+        // Aplica el filtro de semana por defecto (Semana 3) al cargar la página
         filterEfuWeek(efuWeekFilter, document.querySelector('#efu-week-filter .subtab-btn.active'));
 
         // Polling automático cada 10s y al cambiar visibilidad
