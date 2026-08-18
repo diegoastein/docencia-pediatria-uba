@@ -418,5 +418,202 @@ Al examen físico luce en buen estado general, rosada. Frecuencia cardíaca 136/
 
 ---
 
-*Nota: la Semana 3 según el plan de repaso incluye también Neumonía y Coqueluche — casos pendientes de incorporar.*
+## 📌 VIERNES 28 DE AGOSTO (SEMANA 4) — Nefro e Infecto Severa: ITU, SUH, Meningitis
+
+### 📝 PREGUNTA 1 (OFICIAL EFUS 2019 OCTUBRE) — Síndrome Nefrótico: Bruno
+
+**Enunciado:**  
+Bruno de 5 años de edad, concurre con su mamá al Centro de atención primaria de su barrio porque según ella refiere, no le entran los zapatos de uso habitual -edema. Comenzó 8 días antes con falta de apetito, malestar general, deposiciones desligadas y estornudos, por lo cual le administró ibuprofeno, sin una periodicidad fija. Nos cuenta que tiene los ojos un poco hinchados desde ayer, dolor alrededor del ombligo y que orina poco. Al examen físico presenta un peso en Pc 25 y talla en Pc 10, TA 130/70 mmHg, presenta edemas en miembros inferiores, bolsas periorbitarias, eritema en mejillas. En los resultados de laboratorio se observa: hemograma: 7500 glóbulos blancos, hemoglobina 14.5, hematocrito 42%, plaquetas 350000. Bioquímica: albúmina 2.1 g/dl, urea 18 mg/dl, creatinina 0.8 mg/dl, colesterol total 420 mg/dl, HDL 20 mg/dl, LDL 350 mg/dl, triglicéridos 250 mg/dl, glucemia 98 mg/dl. Orina: pH 6.5, proteinuria 4+, cilindros hialinos 15/campo, nitritos negativos. Ecografía renal: riñones de tamaño normal, ecoestructura conservada.
+
+**Pregunta:** Ante estos resultados, los razonamientos clínicos más adecuados son: *(Marque hasta 4 opciones)*
+
+- **A.** La hipoalbuminemia e hipercolesterolemia se deben a un déficit de síntesis hepática.
+- **B.** La hipoalbuminemia se debe a un síndrome de malabsorción.
+- **C.** El mixedema y urea elevada se deben a hipotiroidismo.
+- **D.** La elevación de la urea se debe a un síndrome nefrítico secundaria a la escabiosis de ambos hermanos.
+- **E.** La eosinofilia confirma edema de etiología alérgica secundaria al antitérmico suministrado.
+- **F.** La proteinuria asociada a hipoalbuminemia explican los edemas.
+- **G.** La ecografía abdominal normal aleja la posibilidad de peritonitis primaria como causa del dolor abdominal.
+- **H.** El aumento de la urea se debe a contracción de volumen corporal total.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación</b></summary>
+
+* **Opciones Correctas:** **F, H**
+* **Justificación Clínica:**
+  * **F (Proteinuria + hipoalbuminemia explican edemas):** Síndrome nefrótico clásico (proteinuria masiva 4+, hipoalbuminemia severa 2.1 g/dl, edemas periorbitarios e miembros inferiores, hipercolesterolemia). La pérdida renal de proteínas causa hipoalbuminemia → reducción de presión oncótica → edemas.
+  * **H (Aumento urea por contracción volumen):** Urea leve (18 mg/dl) con creatinina normal indica hemoconcentración por pérdida proteica, no insuficiencia renal.
+  * **A (Incorrecta):** La síntesis hepática está conservada (albúmina sintetizada es normal, pero se pierde por orina).
+  * **B, C, E (Incorrectas):** No hay malabsorción, ni hipotiroidismo, ni alergia evidente.
+  * **D (Incorrecta):** No hay síndrome nefrítico secundario; es síndrome nefrótico primario.
+  * **G (Incorrecta):** No se menciona ecografía abdominal.
+
+</details>
+
+---
+
+### 📝 PREGUNTA 2 (OFICIAL EFUS 2019 OCTUBRE) — Infección Urinaria: Sabrina
+
+**Enunciado:**  
+Concurre a la consulta Sabrina de 9 años acompañada por su mamá, Elisa de 29 años. Se trata de una niña previamente sana hasta los 6 años en el que registra su último control en salud. Refiere como motivo de consulta un dolor abdominal de varios meses de evolución. Si bien no puede precisar con exactitud el comienzo de los dolores, lo sitúa aproximadamente a principios de año (4 meses atrás) coincidiendo con el inicio de las clases. Elisa los atribuyó a que el cambio de turno (ahora concurre a la escuela por la tarde) la tiene ansiosa. Sin embargo, en el último mes la sintomatología se ha intensificado: dolor cólico periumbilical, fiebre vespertina de 37,8-38°C que cede con antitérmicos, polaquiuria y disuria. Al examen físico: peso Pc 3, talla Pc 5, TA 115/70 mmHg. Laboratorio: hemograma con leve eosinofilia (8%). Bioquímica: urea 28 mg/dl, creatinina 1 mg/dl. Orina: pH 7, proteinuria 2+, leucocituria 4+, bacteriuria, nitritos positivos, cultivo de orina pendiente.
+
+**Pregunta:** De acuerdo a la sospecha diagnóstica inicial, cuáles son las conductas diagnósticas iniciales más adecuadas: *(Marque hasta 3 opciones)*
+
+- **A.** Hemograma, hepatograma, urea, creatinina y glucemia.
+- **B.** IgA antitransglutaminasa y determinación de IgA sérica.
+- **C.** Orina completa y urocultivo.
+- **D.** Radiografía de abdomen de pie.
+- **E.** Coproparasitológico.
+- **F.** Videocolonoscopia.
+- **G.** Ecografía abdominal.
+- **H.** Tomografía abdominal computada con contraste de abdomen y pelvis.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación</b></summary>
+
+* **Opciones Correctas:** **A, C, G**
+* **Justificación Clínica:**
+  * **A (Hemograma, bioquímica):** Evaluación de inflamación sistémica y función renal; creatinina elevada (1 mg/dl) sugiere posible daño renal crónico.
+  * **C (Orina completa + urocultivo):** Ya realizado y positivo (nitritos+, bacteriuria, leucocituria). Cultivo pendiente confirma ITU.
+  * **G (Ecografía abdominal):** Estudio de primera línea para descartar malformaciones renales/del tracto urinario; esencial en ITU recurrente en niña de 9 años.
+  * **B (Incorrecta):** No hay clínica de enfermedad celíaca (diarrea, falla de medro marcada).
+  * **D, E, F, H (Incorrectas):** No hay indicación de radiografía simple, parásitos, colonoscopia ni TAC en primer abordaje de ITU.
+
+</details>
+
+---
+
+### 📝 PREGUNTA 3 (OFICIAL EFUS 2019 OCTUBRE) — Talla Baja: Mario
+
+**Enunciado:**  
+Horacio y Ana traen a su consultorio por primera vez a su hijo Mario, de 3 años y medio de edad, para control. Mario es el primer hijo de un embarazo controlado. Nació a las 40 semanas de edad gestacional con 3500 gramos por parto vaginal con presentación cefálica. Lloró enseguida. Alta conjunta a las 48 horas con lactancia materna. Fue internado a la semana por mal progreso de peso y succión débil. Completó 10 días de tratamiento antibiótico parenteral con hemocultivos, urocultivo y cultivo de líquido cefalorraquídeo positivos para Streptococcus agalactiae. Egresó en buenas condiciones clínicas. Actualmente pesa 12 kg (Pc 3), mide 87 cm (Pc <3). Desde los 18 meses concurre a la escuela. En los últimos 6 meses ha presentado otitis media aguda no supurativa, dos episodios de conjuntivitis alérgica y una bronquitis. Come "poco y lentamente" según su madre. La frecuencia cardíaca es 96/min, frecuencia respiratoria 20/min, TA 95/65 mmHg. Presenta facies tosca, hipertelorismo, orejas de implantación baja, paladar ojival. Resto del examen físico sin particularidades.
+
+**Pregunta:** ¿Cuáles son sus conductas iniciales con este paciente? *(Marque hasta 3 opciones)*
+
+- **A.** Indicar la BCG.
+- **B.** Indicar primer dosis de vacuna oral atenuada contra rotavirus.
+- **C.** Tranquilizar a los padres porque asume que el retraso madurativo está relacionado con la reciente mudanza e imposibilidad adaptativa.
+- **D.** Solicitar glucemia, perfil lipídico.
+- **E.** Profundizar la anamnesis sobre el sueño de Mario.
+- **F.** Solicitar una resonancia magnética de encéfalo.
+- **G.** Solicitar interconsulta con servicio de Genética.
+- **H.** Interconsulta a dermatología.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación</b></summary>
+
+* **Opciones Correctas:** **D, E, F, G**
+* **Justificación Clínica:**
+  * **D (Glucemia, perfil lipídico):** Sospecha de síndrome genético (facies tosca, hipertelorismo, orejas bajas, paladar ojival) + talla muy baja. Descartar alteraciones metabólicas.
+  * **E (Anamnesis sueño):** Apnea del sueño es comorbilidad frecuente en síndromes genéticos; afecta crecimiento y desarrollo.
+  * **F (RMN encéfalo):** Indispensable dado antecedente de meningitis neonatal por S. agalactiae; descartar secuelas neurológicas (ventriculomegalia, malformación del SNC).
+  * **G (Interconsulta Genética):** Rasgos dismórficos sugestivos de síndrome genético (posible Turner, Marfan, Williams, etc.).
+  * **A (Incorrecta):** Mario ya tiene BCG (5 casos neonatales reciben BCG).
+  * **B (Incorrecta):** Rotavirus se administra hasta 32 semanas; Mario tiene 3.5 años.
+  * **C (Incorrecta):** Los retrasos no se explican por mudanza; hay datos clínicos de patología estructural/genética.
+  * **H (Incorrecta):** Sin indicación dermatológica evidente.
+
+</details>
+
+---
+
+## 📌 VIERNES 04 DE SEPTIEMBRE (SEMANA 5) — Gastroenterología y Diarreas: Deshidratación, Plan A/B/C
+
+### 📝 PREGUNTA 1 (OFICIAL EFUS 2019 OCTUBRE) — Estenosis de Píloro: Emilio
+
+**Enunciado:**  
+Emilio de 1 mes y 17 días de vida asiste a guardia junto a sus padres, Claudia y Marcos. Refieren que Emilio, único hijo, hace 12 horas está decaído y presentaba vómitos postprandiales desde hace 1 semana. Toma pecho con mayor avidez. En las últimas horas presentó 4 vómitos en chorro. Siempre afebril. Como antecedentes, Emilio es un recién nacido de término de peso adecuado para la edad gestacional (3100 gr), nacido por parto vaginal en presentación cefálica. Estuvo 4 días internado en neonatología por ictericia. Antecedentes familiares: tío paterno con historia de estenosis de píloro. En el momento de la consulta, se observa un lactante decaído, con peso de 2850 gramos (representa una pérdida del 8% de su peso de nacimiento). Presenta los ojos hundidos, llanto débil, mucosa oral seca. Frecuencia cardíaca 160/min, frecuencia respiratoria 50/min. Palpación abdominal con peristaltismo débil. No se palpa masa en epigastrio.
+
+**Pregunta:** De acuerdo a su hipótesis diagnóstica, ¿cuál es la conducta diagnóstica adecuada? *(Marque hasta 3 opciones)*
+
+- **A.** Ecografía abdominal.
+- **B.** EAB, ionograma, glucemia, urea, creatinina.
+- **C.** Interconsulta por cirugía infantil.
+- **D.** Hemograma, PCR, procalcitonina.
+- **E.** 2 hemocultivos.
+- **F.** Orina completa y urocultivo.
+- **G.** Punción lumbar para citoquímico y cultivo.
+- **H.** pHmetría de 24 horas.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación</b></summary>
+
+* **Opciones Correctas:** **A, B, C**
+* **Justificación Clínica:**
+  * **A (Ecografía abdominal):** Gold standard para diagnóstico de estenosis de píloro. Imágenes típicas: "aceituna" pilórica, hipertrofia muscular, canal pilórico elongado.
+  * **B (EAB, ionograma, bioquímica):** Evaluar alcalosis hipoclorémica hipopotasémica característica (por pérdidas de HCl gástrico en vómitos); deshidratación; función renal.
+  * **C (Interconsulta cirugía):** Estenosis de píloro requiere corrección quirúrgica (piloromiotomía de Ramstedt).
+  * **D, E, F (Incorrectas):** No hay datos de infección sistémica (afebril, PCR/procalcitonina no indicadas).
+  * **G (Incorrecta):** Punción lumbar no está indicada (sin meningitis).
+  * **H (Incorrecta):** pHmetría no está indicada en este contexto.
+
+</details>
+
+---
+
+### 📝 PREGUNTA 2 (OFICIAL EFUS 2019 OCTUBRE) — Abdomen Agudo: Kiara
+
+**Enunciado:**  
+Kiara de 14 años de edad, refiere dolor en hemiabdomen derecho de características cólicas, de 16 horas de evolución, se encuentra inapetente, presentó 2 deposiciones desligadas, escasas en el día de la consulta, refiere disuria y tuvo 3 vómitos en la última hora. En el momento del examen físico, refiere un dolor moderado. La paciente se encuentra en regular estado general, temperatura 38,3ºC. La palpación abdominal muestra un abdomen levemente distendido, dolor generalizado a predominio en fosa iliaca derecha, sin rebound, sin ruidos hidroaéreos exagerados. PA 120/70 mmHg. Laboratorio: hemograma 11500 glóbulos blancos con predominio de PMN, PCR 15 mg/l. Orina: leucocitos +, nitritos positivos, bacteriuria, pH 7. Ecografía ginecológica: ovarios normales, útero normal. Ecografía abdominal: apendiceal normal (3 mm), no ascitis, sin imágenes sugestivas de invaginación.
+
+**Pregunta:** De acuerdo a su diagnóstico presuntivo ¿cuáles son las conductas iniciales más apropiadas? *(Marque hasta 3 opciones)*
+
+- **A.** Realizar prueba de tolerancia oral.
+- **B.** Ecografía abdominal y ginecológica.
+- **C.** Indicar metoclopramida.
+- **D.** Examen ginecológico.
+- **E.** Orina completa y urocultivo.
+- **F.** Hemograma, PCR, 2 hemocultivos, urea, creatinina.
+- **G.** Hemograma, PCR, coagulograma, BHCG.
+- **H.** Solicitar cultivo de flujo vaginal.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación</b></summary>
+
+* **Opciones Correctas:** **B, D, E**
+* **Justificación Clínica:**
+  * **B (Ecografía abdominal + ginecológica):** Ya realizado; apéndice normal, sin invaginación descarta patología quirúrgica aguda.
+  * **D (Examen ginecológico):** A los 14 años, dolor hemiabdomen derecho con disuria sugiere patología ginecológica (dolor pélvico, quiste ovárico) que requiere evaluación directa.
+  * **E (Orina completa + urocultivo):** Disuria, leucocituria y nitritos positivos → ITU. Cultivo identifica el patógeno.
+  * **A (Incorrecta):** Paciente con vómitos; prueba tolerancia oral es contraproducente en fase aguda.
+  * **C (Incorrecta):** Metoclopramida puede ser contraproducente en abdomen agudo no diagnosticado.
+  * **F (Incorrecta):** No hay datos de sepsis sistémica evidente; hemocultivos no están indicados de rutina.
+  * **G (Incorrecta):** Coagulograma y BHCG sin indicación clara en este contexto.
+  * **H (Incorrecta):** No hay síntomas de infección vaginal.
+
+</details>
+
+---
+
+### 📝 PREGUNTA 3 (OFICIAL EFUS 2019 OCTUBRE) — Gastroenteritis Aguda: Pedro
+
+**Enunciado:**  
+Pedro es un niño de 9 meses que es llevado a la guardia de un hospital del conurbano bonaerense por presentar vómitos. La madre relata que comenzó hace 48 horas con deposiciones líquidas, sin contenido hemático, moco o pus, frecuentes y que posteriormente presentó vómitos inicialmente de tipo alimentarios y escasos, incrementando en frecuencia y magnitud. En el día de hoy lo nota molesto, pálido e irritable. Antecedentes: nacido de término, de un embarazo controlado, parto vaginal, Apgar 9/10, peso 3400 gr. Lactancia materna exclusiva hasta los 4 meses, posteriormente agregó papillas con buena progresión. Actualmente pesa 8 kg (Pc 50). Antecedentes epidemiológicos: asiste a guardería desde los 3 meses. Examen físico: FC 148/min, FR 38/min, TA 90/60 mmHg, temperatura 37.8°C, pliegue cutáneo se retrae lentamente (>2 seg), mucosa oral levemente seca, llanto con pocas lágrimas.
+
+**Pregunta:** De acuerdo a lo expuesto hasta el momento, cuál es su impresión diagnóstica: *(Marque hasta 3 opciones)*
+
+- **A.** Shock séptico.
+- **B.** Deshidratación grave.
+- **C.** Deshidratación moderada.
+- **D.** Enfermedad celíaca.
+- **E.** Enfermedad inflamatoria intestinal.
+- **F.** Invaginación intestinal.
+- **G.** Síndrome urémico hemolítico.
+- **H.** Parasitosis intestinal.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación</b></summary>
+
+* **Opciones Correctas:** **B, C, F**
+* **Justificación Clínica:**
+  * **B/C (Deshidratación grave o moderada):** Signos clínicos: pliegue cutáneo retrae >2 seg (grave), mucosa seca, llanto con pocas lágrimas, taquicardia 148/min, TA disminuida 90/60 mmHg. Pérdida estimada 9-10% del peso (grave) o 5-9% (moderada); criterios de rehidratación EV inmediata.
+  * **F (Invaginación intestinal):** Edad 9-36 meses (pico incidencia); vómitos progresivos, irritabilidad, palidez, heces con sangre (aunque no refiere, la diarrea podría progresar). Invaginación es diagnóstico diferencial importante en lactante con gastroenteritis severa.
+  * **A (Incorrecta):** Sin datos de shock séptico franco (presión normal para edad, aunque baja).
+  * **D, E, G, H (Incorrectas):** Enfermedad celíaca típicamente progresa lentamente, no presenta acutamente. EII poco frecuente en lactantes. SUH requiere pródromo de diarrea hemorrágica. Parasitosis no explica cuadro agudo.
+
+</details>
+
+---
+
+*Nota: Semanas 6-9 pendientes de incorporación (Fiebre Sin Foco, Neurología, Neonatología avanzada, Exantemáticas, Emergencias y Cirugía).*
 

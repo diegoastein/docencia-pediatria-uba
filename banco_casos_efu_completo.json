@@ -1,0 +1,2773 @@
+{
+  "metadata": {
+    "titulo": "Casos Clínicos EFU - Pediatría UBA",
+    "total": 52,
+    "fuentes": [
+      "1.1 COMPILADO EFUS con rta.pdf",
+      "EFU POR TEMAS (resuelto).docx.pdf"
+    ],
+    "cumplimiento_CLAUDE_MD": {
+      "máx_8_opciones": "SÍ ✓",
+      "sin_inventar_opciones": "SÍ ✓",
+      "trazabilidad_documentada": "SÍ ✓"
+    },
+    "cantidad_total": 51
+  },
+  "casos": [
+    {
+      "id": "efu-compilado-01",
+      "numero": 1,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 1",
+      "enunciado": "Milo tiene 1 año y 3 meses de vida, es sano, se alimenta con dieta general (comidas saludables y seguras) más pecho por la mañana y por la tarde, la madre suspendió la administración de vitaminas ADC y de sulfato ferroso hace un mes. Actualmente Milo se encuentra en percentilo 10 de peso y talla, el control del año también tenía los mismos percentilos, habiendo aumentado 300 gramos los últimos 3 meses. La mamá mide 1,55 M y el papá 1,67 M. En el último tiempo no tuvo problemas de salud. Presenta",
+      "pregunta": "Le consulta a usted sobre los cuidados de Milo y las conductas a seguir. Ud. Sugiere y explica: (Marque",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Enriquecer las comidas con crema de leche, manteca y queso untable. (No, porque no hay indicación)"
+        },
+        {
+          "letra": "B",
+          "texto": "Solicitar hemograma, determinación de IgA e IgA antitransglutaminasa. (No, porque no hay contexto)"
+        },
+        {
+          "letra": "C",
+          "texto": "Indicar nuevamente vitaminas y hierro hasta los 18 meses. (No, hasta 1 año)"
+        },
+        {
+          "letra": "D",
+          "texto": "Interconsulta con nutrición infantil."
+        },
+        {
+          "letra": "E",
+          "texto": "Explica que el crecimiento de Millo es normal para su edad."
+        },
+        {
+          "letra": "F",
+          "texto": "Reducir la lactancia dado que probablemente interfiera con la correcta alimentación."
+        },
+        {
+          "letra": "G",
+          "texto": "Refuerza pautas de alimentación saludable y mantiene pecho materno."
+        },
+        {
+          "letra": "H",
+          "texto": "Indica vacuna anti-varicela y antimeningocóccica."
+        }
+      ],
+      "respuestas_correctas": [
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-02",
+      "numero": 2,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 2",
+      "enunciado": "Tomy, de 17 meses y medio, concurre a control en salud en el mes de octubre. Es un RNT, 40 semanas de edad gestacional, hijo de madre diabética. No presenta otros antecedentes perinatológicos de importancia. Peso y talla al nacer en percentilo 97. Ambos padres son sanos. El padre fuma, según referencia materna, “solamente fuera de casa”. Tomy inició jardín maternal a los 11 meses de vida con buena adaptación. Al examen físico el niño presenta rinorrea anterior y posterior, fauces eritematosas, s",
+      "pregunta": "¿Cuál de las siguientes opciones es correcta? (Marque hasta 3 opciones)",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "BCG"
+        },
+        {
+          "letra": "B",
+          "texto": "Contraindica la vacunación hasta superar el cuadro respiratorio. KILLER"
+        },
+        {
+          "letra": "C",
+          "texto": "Interconsulta con inmunología. (No, no es necesario)"
+        },
+        {
+          "letra": "D",
+          "texto": "Sabin y Triple bacteriana acelular."
+        },
+        {
+          "letra": "E",
+          "texto": "Triple viral, hepatitis A, antineumocóccica conjugada."
+        },
+        {
+          "letra": "F",
+          "texto": "Reiniciar el plan de vacunación dado el tiempo transcurrido. (No,no es necesario, solamente se continua el"
+        },
+        {
+          "letra": "G",
+          "texto": "Antivaricela y antimeningocóccica conjugada."
+        },
+        {
+          "letra": "H",
+          "texto": "Hepatitis B y antigripal."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "D",
+        "E",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-03",
+      "numero": 3,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 3",
+      "enunciado": "Ud. atiende en su consultorio a Pablo un neonato de 14 días de vida que concurre para control. Es un nacido de término, de un embarazo controlado y sin patologías del embarazo. Pesó 2800 grs al nacer y fue dado de alta al 3° día con 2600 grs. Las vacunas están completas. Se alimenta con lactancia materna exclusiva. Presenta deposiciones diarias color amarillo oro y la diuresis está conservada. Al examen físico se encuentra vigoroso, con ictericia en cara, no se auscultan soplos cardíacos, el abd",
+      "pregunta": "¿Cuáles son las conductas más adecuadas? (Marque hasta 3 opciones) Sospecha ictericia fisiologica por",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Suplementar con fórmula de inicio."
+        },
+        {
+          "letra": "B",
+          "texto": "Solicitar orina completa y urocultivo."
+        },
+        {
+          "letra": "C",
+          "texto": "Solicitar serologías. (embarazo controlado y sin patologías del embarazo.)"
+        },
+        {
+          "letra": "D",
+          "texto": "Citar a control de peso."
+        },
+        {
+          "letra": "E",
+          "texto": "Promover la lactancia materna exclusiva."
+        },
+        {
+          "letra": "F",
+          "texto": "Suplementar con sulfato ferroso. (a partir de 4 meses porque es un RNT)"
+        },
+        {
+          "letra": "G",
+          "texto": "Solicitar dosaje de bilirrubina."
+        },
+        {
+          "letra": "H",
+          "texto": "Evaluar técnica de amamantamiento."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-04",
+      "numero": 4,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 4",
+      "enunciado": "Jacinto es un paciente de 12 años y 10 meses, que concurre al pediatra con su madre porque nota que en el último año sus compañeros lo han superado en altura. Refiere estar muy preocupado por su talla y se compara constantemente con sus compañeros, aunque no lo molestan ni le hacen bullying. A su vez la madre refiere que los hermanos mayores a su misma edad habían alcanzado mayor talla. Antecedentes: parto cesárea, Apgar 9/10 7-10; PN 3200 grs, longitud: 50 cm. Epilepsia tratada desde los 4 años",
+      "pregunta": "Además del examen físico completo, con los datos obtenidos cuáles son las conductas iniciales más",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Calcular la Talla Objetivo Genética."
+        },
+        {
+          "letra": "B",
+          "texto": "Indicar dieta suplementaria hiperproteica y deportes de alto impacto."
+        },
+        {
+          "letra": "C",
+          "texto": "Valoración de talla y estadío de desarrollo puberal."
+        },
+        {
+          "letra": "D",
+          "texto": "Valorar la edad ósea. (No, no hay indicación- criterio)"
+        },
+        {
+          "letra": "E",
+          "texto": "Solicitar estudios parasitológicos en materia fecal."
+        },
+        {
+          "letra": "F",
+          "texto": "Interconsulta con endocrinología."
+        },
+        {
+          "letra": "G",
+          "texto": "Solicitar determinación de IgA sérica e IgA antitransglutaminasa."
+        },
+        {
+          "letra": "H",
+          "texto": "Solicitar TSH y T4 libre."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-05",
+      "numero": 5,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 5",
+      "enunciado": "Ud se encuentra otorgando el alta de Ián, un recién nacido de 39 semanas de edad gestacional, que pesó 2500 gr al nacer, peso actual 2400 gr. La familia está formada por madre, padre y dos hermanitos que concurren a la escuela, uno de ellos está con fiebre y cursando una virosis respiratoria.",
+      "pregunta": "Además de aconsejar y supervisar la técnica de lactancia, cuáles son las conductas adecuadas en este",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Verificar que se haya realizado la pesquisa metabólica neonatal."
+        },
+        {
+          "letra": "B",
+          "texto": "Postergar la realización de la pesquisa neonatal en virtud del peso del bebé."
+        },
+        {
+          "letra": "C",
+          "texto": "Verificar la aplicación de vacuna de hepatitis B y demorar la BCG hasta alcanzar los 3000 gramos de peso."
+        },
+        {
+          "letra": "D",
+          "texto": "Verificar la aplicación de vacuna de Hepatitis B en el momento del nacimiento y aplicar BCG antes del alta."
+        },
+        {
+          "letra": "E",
+          "texto": "Indicar a Ián vacuna antigripal antes del alta. (a partir de los ¨6meses)"
+        },
+        {
+          "letra": "F",
+          "texto": "Indicar que incorporen en los primeros días de vida el chupete. (no, no están indicados en los primeros 15 dias)"
+        },
+        {
+          "letra": "G",
+          "texto": "Indicar colocarlo a dormir en posición supina."
+        },
+        {
+          "letra": "H",
+          "texto": "Recomendar que duerma inicialmente en otra habitación."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-06",
+      "numero": 6,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 6",
+      "enunciado": "Kiara de 14 años de edad , refiere dolor en hemiabdomen derecho de características cólicas, de 16 horas de evolución, se encuentra inapetente, presentó 2 deposiciones desligadas, escasas en el día de la consulta, refiere disuria y tuvo 3 vómitos en la última hora. En el momento del examen físico, refiere un dolor moderado. La paciente se encuentra en regular estado general, temperatura 38,3ºC. La palpación abdominal muestra un abdomen levemente distendido, dolor generalizado a predominio en fosa",
+      "pregunta": "De acuerdo a su diagnóstico presuntivo ¿cuáles son las conductas iniciales más apropiadas? (Marque",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Realizar prueba de tolerancia oral."
+        },
+        {
+          "letra": "B",
+          "texto": "Ecografía abdominal y ginecológica."
+        },
+        {
+          "letra": "C",
+          "texto": "Indicar metoclopramida."
+        },
+        {
+          "letra": "D",
+          "texto": "Examen ginecológico."
+        },
+        {
+          "letra": "E",
+          "texto": "Orina completa y urocultivo."
+        },
+        {
+          "letra": "F",
+          "texto": "Hemograma, PCR, 2 hemocultivos, urea, creatinina."
+        },
+        {
+          "letra": "G",
+          "texto": "Hemograma, PCR, coagulograma, BHCG. (Coagulograma si pienso que es apendicitis y necesita de cx)."
+        },
+        {
+          "letra": "H",
+          "texto": "Solicitar cultivo de flujo vaginal. (No, porque no hay contexto)"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-07",
+      "numero": 7,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 7",
+      "enunciado": "Emilio de 1 mes y 17 días de vida asiste a guardia junto a sus padres, Claudia y Marcos. Refieren que Emilio, único hijo, hace 12 horas está decaído y presentaba vómitos postprandiales desde hace 1 semana. Toma pecho con mayor avidez. En las últimas horas presentó 4 vómitos en chorro. Siempre afebril. Como antecedentes, Emilio es un recién nacido de término de peso adecuado para la edad gestacional (3100 gr), nacido por parto vaginal en presentación cefálica. Estuvo 4 días internado en neonatolo",
+      "pregunta": "De acuerdo a su hipótesis diagnóstica, ¿cuál es la conducta diagnóstica adecuada? ( Marque hasta 3",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Ecografía abdominal."
+        },
+        {
+          "letra": "B",
+          "texto": "EAB, ionograma, glucemia, urea, creatinina."
+        },
+        {
+          "letra": "C",
+          "texto": "Interconsulta por cirugía infantil."
+        },
+        {
+          "letra": "D",
+          "texto": "Hemograma, PCR, procalcitonina."
+        },
+        {
+          "letra": "E",
+          "texto": "2 hemocultivos."
+        },
+        {
+          "letra": "F",
+          "texto": "Orina completa y urocultivo."
+        },
+        {
+          "letra": "G",
+          "texto": "Punción lumbar para citoquímico y cultivo. KILLER"
+        },
+        {
+          "letra": "H",
+          "texto": "pHmetría de 24 horas."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-08",
+      "numero": 8,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 8",
+      "enunciado": "Concurre a la guardia José de 12 años de edad que consulta por dolor exquisito y puntual en una zona ubicada en el 1/ 3 inferior del muslo derecho e impotencia funcional y fiebre durante las últimas 48 horas. Como antecedente refiere haber sufrido un traumatismo hace 7 días jugando al fútbol. En el examen físico se observa área de tumefacción con una lesión en piel del ⅓ inferior del muslo derecho, cubierta actualmente por una costra hemática, evaluación de la articulación de la rodilla normal. ",
+      "pregunta": "Además de indicar analgesia, de acuerdo a su diagnóstico presuntivo, cuáles son las conductas iniciales",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Internación, 2 hemocultivos y tratamiento antibiótico endovenoso."
+        },
+        {
+          "letra": "B",
+          "texto": "Control ambulatorio en 48hs y tratamiento con cefalexina vía oral. KILLER"
+        },
+        {
+          "letra": "C",
+          "texto": "Inmovilización, analgesia y control ambulatorio en 48 horas. KILLER"
+        },
+        {
+          "letra": "D",
+          "texto": "Solicitar resonancia magnética del miembro."
+        },
+        {
+          "letra": "E",
+          "texto": "Solicitar ecografía de partes blandas."
+        },
+        {
+          "letra": "F",
+          "texto": "Solicitar tomografía computada del miembro."
+        },
+        {
+          "letra": "G",
+          "texto": "Toma de cultivo por piel sana de la costra. (No, porque el cultivo se hace del liquido articular)"
+        },
+        {
+          "letra": "H",
+          "texto": "Solicitar centellograma corporal total. (No, no es conducta inicial)"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "D",
+        "E",
+        "F"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-09",
+      "numero": 9,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 9",
+      "enunciado": "Bruno de 5 años de edad, concurre con su mamá al Centro de atención primaria de su barrio porque según ella refiere, no le entran los zapatos de uso habitual -edema. Comenzó 8 días antes con falta de apetito, malestar general, deposiciones desligadas y estornudos, por lo cual le administró ibuprofeno, sin una periodicidad fija. Nos cuenta que tiene los ojos un poco hinchados desde ayer, dolor alrededor del ombligo y que orina poco. Al examen físico presenta un peso en Pc 25 y talla en Pc 10, TA ",
+      "pregunta": "Ante estos resultados, los razonamientos clínicos más adecuados son: (Marque hasta 4 opciones) pcte con",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "La hipoalbuminemia e hipercolesterolemia se deben a un déficit de síntesis hepática."
+        },
+        {
+          "letra": "B",
+          "texto": "La hipoalbuminemia se debe a un síndrome de malabsorción."
+        },
+        {
+          "letra": "C",
+          "texto": "El mixedema y urea elevada se deben a hipotiroidismo."
+        },
+        {
+          "letra": "D",
+          "texto": "La elevación de la urea se debe a un síndrome nefrítico secundaria a la escabiosis de ambos hermanos."
+        },
+        {
+          "letra": "E",
+          "texto": "La eosinofilia confirma edema de etiología alérgica secundaria al antitérmico suministrado."
+        },
+        {
+          "letra": "F",
+          "texto": "La proteinuria asociada a hipoalbuminemia explican los edemas."
+        },
+        {
+          "letra": "G",
+          "texto": "La ecografía abdominal normal aleja la posibilidad de peritonitis primaria como causa del dolor abdominal."
+        },
+        {
+          "letra": "H",
+          "texto": "El aumento de la urea se debe a contracción de volumen corporal total."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-10",
+      "numero": 10,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 10",
+      "enunciado": "Horacio y Ana traen a su consultorio por primera vez a su hijo Mario, de 3 años y medio de edad, para control. Mario es el primer hijo de un embarazo controlado. Nació a las 40 semanas de edad gestacional con 3500 gramos por parto vaginal con presentación cefálica. Lloró enseguida. Alta conjunta a las 48 horas con lactancia materna. Fue internado a la semana por mal progreso de peso y succión débil. Completó 10 días de tratamiento antibiótico parenteral con hemocultivos, urocultivo y cultivo de ",
+      "pregunta": "¿Cuáles son sus conductas iniciales con este paciente? (Marque hasta 3 opciones).",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Indicar la BCG. ( No porque el pcte ya tiene vacuna BCG)"
+        },
+        {
+          "letra": "B",
+          "texto": "Indicar primer dosis de vacuna oral atenuada contra rotavirus. (No, porque despues de los 3 años es probable"
+        },
+        {
+          "letra": "C",
+          "texto": "Tranquilizar a los padres porque asume que el retraso madurativo está relacionado con la reciente mudanza e"
+        },
+        {
+          "letra": "D",
+          "texto": "Solicitar glucemia, perfil lipídico. (peso >97 buscar alteracion metabolica)"
+        },
+        {
+          "letra": "E",
+          "texto": "Profundizar la anamnesis sobre el sueño de Mario. (busqueda por apnea de sueño por obesidad y FR baja)"
+        },
+        {
+          "letra": "F",
+          "texto": "Solicitar una resonancia magnética de encéfalo."
+        },
+        {
+          "letra": "G",
+          "texto": "Solicitar interconsulta con servicio de Genética."
+        },
+        {
+          "letra": "H",
+          "texto": "Interconsulta a dermatología."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-69",
+      "numero": 69,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 69",
+      "enunciado": "95, frecuencia respiratoria 14 por minuto 13-15. Examen físico: Niña de aspecto agradable. Piel es seca, fría y áspera al tacto. Implantación baja de orejas, párpados caídos, micro y retrognatia, cuello corto y ancho, cúbito valgo, manos y pies cortos. Pecho ancho y plano, precordio calmo, 2 ruidos en 4 focos, sin soplos, pulsos femorales presentes y levemente disminuidos.",
+      "pregunta": "De acuerdo a su hipótesis diagnóstica inicial, cuáles son las conductas más adecuadas? (Marque hasta 3",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Citar a control en 6 meses. KILLER (No, hay investigar y confirmar dx)"
+        },
+        {
+          "letra": "B",
+          "texto": "Solicitar radiografía de muñeca y mano para determinar edad ósea. (Si, por baja talla y clinica)"
+        },
+        {
+          "letra": "C",
+          "texto": "Solicitar Interconsulta con endocrinología. (No, porque no seria una conducta inicial)"
+        },
+        {
+          "letra": "D",
+          "texto": "Comentar a la madre que Beatriz ha comenzado su pubertad. (No, porque la tiene mamas en Tanner 1 o sea no"
+        },
+        {
+          "letra": "E",
+          "texto": "Solicitar determinación de hormona de crecimiento (No, porque la sospecha dx es una alteración genética)"
+        },
+        {
+          "letra": "F",
+          "texto": "Solicitar interconsulta con genética. (Por toda la clinica)"
+        },
+        {
+          "letra": "G",
+          "texto": "Solicitar espinograma. (No, porque es una radiografia que se usa para ver anomalias de columna, no seria una"
+        },
+        {
+          "letra": "H",
+          "texto": "Solicitar interconsulta a cardiología. (Si, Por riesgo de coartación de aorta en dx de turner)"
+        }
+      ],
+      "respuestas_correctas": [
+        "B",
+        "F",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-12",
+      "numero": 12,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 12",
+      "enunciado": "Camila, de 6 años de edad, llega a la consulta del servicio de emergencias, por presentar desde hace 5 días, lesiones en piel de miembros inferiores y dolor abdominal periumbilical de 48 horas de evolución. Ha manifestado asimismo, dolor en las rodillas y los tobillos durante los últimos tres días y desde esta mañana tiene dificultades para caminar. Refiere buena actitud alimentaria y tolerancia oral. La diuresis está conservada y las deposiciones son normales. Examen físico: Frecuencia cardiaca",
+      "pregunta": "Con la información disponible, los exámenes complementarios más apropiados para relizarle a Camila son:",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Hemograma con recuento de plaquetas y exudado de fauces."
+        },
+        {
+          "letra": "B",
+          "texto": "Colagenograma."
+        },
+        {
+          "letra": "C",
+          "texto": "Punción de médula ósea. KILLER"
+        },
+        {
+          "letra": "D",
+          "texto": "Coagulograma. (No, porque es normal)"
+        },
+        {
+          "letra": "E",
+          "texto": "Función renal y orina completa. (para descartar compromiso renal )"
+        },
+        {
+          "letra": "F",
+          "texto": "Ecografía articular y de partes blandas. (No, solo se suspecho de artritis, nuestra pcte tiene una purpura)"
+        },
+        {
+          "letra": "G",
+          "texto": "Punción articular. (No, no es conducta)"
+        },
+        {
+          "letra": "H",
+          "texto": "Ecografía abdominal.(util en dolor abd, para descartar compromiso enteral)"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "E",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-13",
+      "numero": 13,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 13",
+      "enunciado": "Concurre a la consulta Sabrina de 9 años acompañada por su mamá, Elisa de 29 años. Se trata de una niña previamente sana hasta los 6 años en el que registra su último control en salud. Refiere como motivo de consulta un dolor abdominal de varios meses de evolución. Si bien no puede precisar con exactitud el comienzo de los dolores, lo sitúa aproximadamente a principios de año (4 meses atrás) coincidiendo con el inicio de las clases. Elisa los atribuyó a que el cambio de turno (ahora concurre a l",
+      "pregunta": "De acuerdo a la sospecha diagnóstica inicial, cuáles son las conductas diagnósticas iniciales más",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Hemograma, hepatograma, urea, creatinina y glucemia. (Hepatograma porque -otras enf que simulan"
+        },
+        {
+          "letra": "B",
+          "texto": "IgA antitransglutaminasa y determinación de IgA sérica. ( No, porque no hay clinica para eso)"
+        },
+        {
+          "letra": "C",
+          "texto": "Orina completa y urocultivo. (Para descartar litiasis ureteral, debido a dolor intenso en flaco izquierdo - por ser la"
+        },
+        {
+          "letra": "D",
+          "texto": "Radiografía de abdomen de pie."
+        },
+        {
+          "letra": "E",
+          "texto": "Coproparasitológico."
+        },
+        {
+          "letra": "F",
+          "texto": "Videocolonoscopia."
+        },
+        {
+          "letra": "G",
+          "texto": "Ecografía abdominal."
+        },
+        {
+          "letra": "H",
+          "texto": "Tomografía abdominal computada con contraste de abdomen y pelvis."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-15",
+      "numero": 15,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 15",
+      "enunciado": "Antonio es un niño de 6 meses de edad, que concurre acompañado por su madre de 16 años y su padre de 18 años a la consulta del control del 6to mes. Conviven con abuelos paternos. Sin antecedentes perinatológicos de importancia, Peso de nacimiento: 3,500 Kg , Talla : 49 cm y Perímetro cefálico : 35 cm. Al examen físico presenta un peso de 8500 grs (Pc 50-75) , mide 68 cm (Pc 25- 50) y el perímetro cefálico de 43 cm (Pc 25-50).",
+      "pregunta": "En este paciente ¿qué pautas del neurodesarrollo debe haber logrado? (Marque hasta 3 opciones)",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Intenta dar pasos con sostén. (10-11m)"
+        },
+        {
+          "letra": "B",
+          "texto": "Presencia de tónico cervical asimétrico. (pauta de alarma)"
+        },
+        {
+          "letra": "C",
+          "texto": "Puede sentarse solo por medio de la posición de trípode."
+        },
+        {
+          "letra": "D",
+          "texto": "Lleva objetos a la boca."
+        },
+        {
+          "letra": "E",
+          "texto": "Rola."
+        },
+        {
+          "letra": "F",
+          "texto": "Repite sílabas ma ma, da da. (9M)"
+        },
+        {
+          "letra": "G",
+          "texto": "Pinza radial inferior. (Empieza a los 7-8M)"
+        },
+        {
+          "letra": "H",
+          "texto": "Saluda con la mano. (10-11M)"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-16",
+      "numero": 16,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 16",
+      "enunciado": "Consultan los padres de Carla de 3 años de edad porque desde hace 24 horas notan que renguea al caminar, y le duele el miembro inferior derecho al caminar. Refieren que el dolor parece haber aumentado en las últimas horas. No ha tenido fiebre, ni otros síntomas. No refieren antecedentes patológicos de importancia y ha recibido todas las vacunas del calendario oficial. Examen físico: niña eutrófica, peso y talla en percentilos 50 para dead y sexo. Temperatura axilar 36,5 grados. No se observan le",
+      "pregunta": "¿Cuáles de las siguientes conductas son las más adecuadas? (Marque hasta 3 opciones) Dx presuntivo:",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Solicitar resonancia magnética de caderas"
+        },
+        {
+          "letra": "B",
+          "texto": "Solicitar centellograma corporal total"
+        },
+        {
+          "letra": "C",
+          "texto": "Indicar internación"
+        },
+        {
+          "letra": "D",
+          "texto": "Indicar analgesia y reposo (si, porque puede evolucionar enf de perthes)"
+        },
+        {
+          "letra": "E",
+          "texto": "Indicar cefalexina"
+        },
+        {
+          "letra": "F",
+          "texto": "Citar a control en 24 horas (Si, porque si persistir el dolor se hace tracción es el tto de la enf de perthes)"
+        },
+        {
+          "letra": "G",
+          "texto": "Solicitar punción de cadera para cultivo y fisicoquímico"
+        },
+        {
+          "letra": "H",
+          "texto": "Solicitar hemocultivos, hemograma y PCR"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-17",
+      "numero": 17,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 17",
+      "enunciado": "En el mes de marzo, concurre a su consultorio Matías de 8 años para realizar el control en salud y confeccionar el apto físico para realizar actividad deportiva no competitiva. El niño carece de antecedentes perinatológicos de importancia. A partir de los 5 años de vida padeció 4 episodios broncoobstructivos que se resolvieron ambulatoriamente. Por tal motivo en la actualidad recibe tratamiento preventivo con budesonide. La mamá le comenta que la familia está pasando por un momento muy difícil y",
+      "pregunta": "Con respecto al registro de vacunas que presenta el paciente, Ud. piensa que: (Marque hasta 3 opciones)",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Está contraindicado indicar a Matías ningún tipo de vacunas hasta finalizar la inducción de su hermano."
+        },
+        {
+          "letra": "B",
+          "texto": "Está contraindicado que Matías reciba ningún tipo de vacuna a virus vivo atenuado."
+        },
+        {
+          "letra": "C",
+          "texto": "Matías tiene vacunas completas para su edad. KILLER"
+        },
+        {
+          "letra": "D",
+          "texto": "Matías debe recibir una dosis de vacuna Salk."
+        },
+        {
+          "letra": "E",
+          "texto": "Matías debe recibir una dosis de vacuna Sabin. KILLER"
+        },
+        {
+          "letra": "F",
+          "texto": "Matías debe recibir una dosis de vacuna Triple bacteriana celular. (hasta los 7 años)"
+        },
+        {
+          "letra": "G",
+          "texto": "Matías debe recibir una dosis de vacuna Triple Bacteriana acelular."
+        },
+        {
+          "letra": "H",
+          "texto": "Matías debe recibir una dosis de vacuna Triple Viral y antivaricela."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "D",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-18",
+      "numero": 18,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 18",
+      "enunciado": "Concurren por primera vez a su consulta Mariana de 14 años y su madre. La adolescente muestra actitud indiferente, cabeza inclinada mirando siempre a su celular. Al preguntarle a la niña el motivo de su consulta, la madre responde expresando que su hija debe obtener el apto para realizar educación física no competitiva. y además quiere que Ud. le explique a su hija que a esa edad no puede aplicarse piercing, no debería tatuarse ni asistir los fines de semana a locales bailables. Mariana no reali",
+      "pregunta": "Ante esta situación, señale entre las siguientes las conductas más adecuadas: (Marque hasta tres",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Le expresa a Mariana que le sugerirá algunas ideas como si se tratara de su propia hija."
+        },
+        {
+          "letra": "B",
+          "texto": "Propone que Mariana exprese sus propias opiniones sin interrupciones de su madre."
+        },
+        {
+          "letra": "C",
+          "texto": "En esta primera entrevista se debe consensuar con Mariana la presencia o no de la madre durante la entrevista."
+        },
+        {
+          "letra": "D",
+          "texto": "Le asegura a Mariana que a excepción de situaciones de riesgo asegura la confidencialidad de la entrevista."
+        },
+        {
+          "letra": "E",
+          "texto": "Le explica a Mariana que es necesario que ella se comprometa a aceptar las recomendaciones que Ud. le"
+        },
+        {
+          "letra": "F",
+          "texto": "Prohíbe a la adolescente ingerir alcohol y fumar por las consecuencias que ello trae a su salud."
+        },
+        {
+          "letra": "G",
+          "texto": "Informa a la adolescente que puede ingerir alcohol a dosis pequeñas. KILLER"
+        },
+        {
+          "letra": "H",
+          "texto": "Explica que en la primera entrevista es necesaria la presencia de la madre durante toda la consulta. (No, porque"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-19",
+      "numero": 19,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 19",
+      "enunciado": "Es traído por sus padres a la guardia externa, Juan de 8 años de edad. Se trata de un niño previamente sano, a quien se le diagnosticó otitis media aguda derecha hace 5 días y fue medicado con amoxicilina 90 mg/kg/día. En el día de hoy consulta por persistencia de la fiebre y dolor retroauricular. Al examen físico encuentra edema y eritema retroauricular con despegamiento y antepulsión del pabellón auricular derecho.",
+      "pregunta": "De acuerdo a su hipótesis diagnóstica inicial, ¿cuáles son las conductas prioritarias? (Marque hasta 3",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Rotar antibiótico a cefalexina vía oral por 10 días. KILLER (segun flor_co se rota ceftriaxona IV)"
+        },
+        {
+          "letra": "B",
+          "texto": "Solicitar Rx cráneo frente y perfil con foco en mastoides. (No, porque se solicita TAC)"
+        },
+        {
+          "letra": "C",
+          "texto": "Solicitar TAC de cerebro con contraste EV. (Frente complicacion el primer estudio que se pide por las"
+        },
+        {
+          "letra": "D",
+          "texto": "Rotar el antibiótico a amoxicilina-clavulánico y citar a control en 24hs. KILLER (No, el control es en 48 hrs)"
+        },
+        {
+          "letra": "E",
+          "texto": "Solicitar internación para tratamiento antibiótico EV."
+        },
+        {
+          "letra": "F",
+          "texto": "Indicar gotas óticas con tobramicina."
+        },
+        {
+          "letra": "G",
+          "texto": "Indicar lavados de conducto auditivo externo."
+        },
+        {
+          "letra": "H",
+          "texto": "Realizar interconsulta con ORL. (SI, por se tratar de una complicación)"
+        }
+      ],
+      "respuestas_correctas": [
+        "C",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-21",
+      "numero": 21,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 21",
+      "enunciado": "Se encuentra evaluando por primera vez a Mateo de 4 años de edad, que concurre para control en salud. La madre refiere que es un niño sano, aunque le llama la atención que en el último tiempo se cansa con facilidad cuando corre, lo cual le dificulta el juego con el resto de los niños de su edad. No surgen otros antecedentes familiares ni personales de relevancia. Mateo es un niño eutrófico, con peso y talla en percentilo 25 para su edad. Al examen físico se encuentra algo pálido, taquicárdico, t",
+      "pregunta": "En base a su diagnóstico presuntivo ¿qué estudios complementarios iniciales son de mayor utilidad?",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Ionograma y estado ácido-base."
+        },
+        {
+          "letra": "B",
+          "texto": "Hemograma."
+        },
+        {
+          "letra": "C",
+          "texto": "Ecocardiograma."
+        },
+        {
+          "letra": "D",
+          "texto": "Teleradiografía de tórax."
+        },
+        {
+          "letra": "E",
+          "texto": "Espirometría."
+        },
+        {
+          "letra": "F",
+          "texto": "Angiotomografía de tórax. KILLER"
+        },
+        {
+          "letra": "G",
+          "texto": "Ecografía abdominal."
+        },
+        {
+          "letra": "H",
+          "texto": "Electrocardiograma."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-22",
+      "numero": 22,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 22",
+      "enunciado": "Concurre a su consultorio Elisa, madre primeriza de 20 años, con su hijo Tomás de 7 meses de edad. Antecedentes: recién nacido prematuro, de 32 semanas de edad gestacional. Permaneció en neonatología 45 días. No tuvo grandes complicaciones, inició alimentación con leche materna a los 7 días de vida, que hubo que cambiar a fórmula para prematuros por hipogalactia. En neonatología recibió vitaminas ACD, hierro y complemento. Actualmente Elisa refiere que le cuesta que coma semisólidos por lo cual ",
+      "pregunta": "Según estos resultados, cuáles son las conductas iniciales prioritarias? (Marque hasta 3 opciones)",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Solicitar interconsulta con hematología."
+        },
+        {
+          "letra": "B",
+          "texto": "Recabar más datos sobre aporte de alimentos, hierro y vitaminas, dosis y duración."
+        },
+        {
+          "letra": "C",
+          "texto": "Indicar leche fortificada con hierro."
+        },
+        {
+          "letra": "D",
+          "texto": "Asumir el cuadro como anemia ferropénica por prematurez, hipoaporte y alimentación deficiente."
+        },
+        {
+          "letra": "E",
+          "texto": "Solicitar hemograma a la madre."
+        },
+        {
+          "letra": "F",
+          "texto": "Realizar medulograma. KILLER"
+        },
+        {
+          "letra": "G",
+          "texto": "Solicitar sangre oculta en materia fecal."
+        },
+        {
+          "letra": "H",
+          "texto": "Indicar hierro en forma intramuscular hasta evaluar causa."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-23",
+      "numero": 23,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 23",
+      "enunciado": "Isabel concurre a la consulta con su hijo Mauricio de 5 años de edad quien presenta lesiones compatibles con varicela desde hace 24 hs. Ella le comenta que en el jardín donde asiste se han presentado varios casos. La madre de Mauricio está sorprendida porque su hijo había recibido una dosis de vacuna antivaricela a los 3 años. Además está muy preocupada porque ella no sabe si tuvo varicela y está embarazada de término. Tiene otro hijo, Nicolás, de 7 años, que no recibió dicha vacuna y se encuent",
+      "pregunta": "Con los datos presentados, ¿cuáles son las opciones más apropiadas? (Marque hasta 3 opciones)",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Indicar cultivo del contenido de las lesiones."
+        },
+        {
+          "letra": "B",
+          "texto": "Mauricio seguramente cursará una varicela leve , ya que recibió vacuna."
+        },
+        {
+          "letra": "C",
+          "texto": "La madre debe recibir la vacuna antivaricela como profilaxis post exposición. KILLER (CI en embarazo a vacuna a"
+        },
+        {
+          "letra": "D",
+          "texto": "Si Isabel padeciera varicela perinatal, el recién nacido deberá recibir gammaglobulina específica."
+        },
+        {
+          "letra": "E",
+          "texto": "De haber recibido la vacuna a los 15 meses, se hubiera evitado que Mateo se enfermara de varicela."
+        },
+        {
+          "letra": "F",
+          "texto": "Nicolás debe recibir vacuna como profilaxis post exposición. (Nicolás no es considerado más inmunodeprimido"
+        },
+        {
+          "letra": "G",
+          "texto": "Nicolás debe recibir gammaglobulina por ser un inmunodeprimido."
+        },
+        {
+          "letra": "H",
+          "texto": "Solicitar serologías específicas para varicela. (NO, porque no es conducta una vez que tiene toda la clinica el DX"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-24",
+      "numero": 24,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 24",
+      "enunciado": "Mónica y su marido concurren muy preocupados a la guardia de Pediatría con su bebé de 30 días de vida. Refieren que la niña se encuentra molesta, que llora mucho y se calma al tomar el pecho. También les preocupa que no sostiene la cabeza. Es su primer bebé y no saben bien qué hacer. Antecedentes: Recién nacido de 40 semana de edad gestacional, peso al nacer: 3500 gr, G1 P1 Apgar 9/10 7-10. Embarazo controlado. Vacunas recibidas: BCG y hepatitis B. Serologías (HIV, VDRL, chagas, toxoplasmosis): ",
+      "pregunta": "De acuerdo a todos los datos aportados, qué recomendaciones daría a la familia? (marque hasta 3",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Indicar pecho más leche de fórmula. (No, porque pecho exclusivo)"
+        },
+        {
+          "letra": "B",
+          "texto": "Explicar a los padres que el llanto de la niña es normal."
+        },
+        {
+          "letra": "C",
+          "texto": "Administrar a la bebé gotas antiespasmódicas. KILLER"
+        },
+        {
+          "letra": "D",
+          "texto": "Indicar a la madre que continúe con pecho exclusivo."
+        },
+        {
+          "letra": "E",
+          "texto": "Interconsulta con neurología. (No, porque no hay contexto)"
+        },
+        {
+          "letra": "F",
+          "texto": "Realizar coprocultivo. (NO, porque no hay contexto)"
+        },
+        {
+          "letra": "G",
+          "texto": "Indicar a la madre líquidos y descanso adecuados."
+        },
+        {
+          "letra": "H",
+          "texto": "Definir horarios estrictos para alimentarlo. (libre demanda)"
+        }
+      ],
+      "respuestas_correctas": [
+        "B",
+        "D",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-25",
+      "numero": 25,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 25",
+      "enunciado": "Pedro es un niño de 9 meses que es llevado a la guardia de un hospital del conurbano bonaerense por presentar vómitos. La madre relata que comenzó hace 48 horas con deposiciones líquidas, sin contenido hemático, moco o pus, frecuentes y que posteriormente presentó vómitos inicialmente de tipo alimentarios y escasos, incrementando en frecuencia y magnitud. En el día de hoy lo nota molesto, pálido e irritable. Antecedentes: nacido de término, de un embarazo controlado, parto vaginal, Apgar 9/10, p",
+      "pregunta": "De acuerdo a lo expuesto hasta el momento, cual es su impresión diagnóstica? (Marque hasta 3 opciones)",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Shock séptico"
+        },
+        {
+          "letra": "B",
+          "texto": "Deshidratación grave (no tiene que tener dos criterios clinicos solo tiene uno llora sin lágrimas, el peso hay"
+        },
+        {
+          "letra": "C",
+          "texto": "Deshidratación moderada (perdio 6% de su peso)"
+        },
+        {
+          "letra": "D",
+          "texto": "Enfermedad celíaca"
+        },
+        {
+          "letra": "E",
+          "texto": "Enfermedad inflamatoria intestinal"
+        },
+        {
+          "letra": "F",
+          "texto": "Invaginación intestinal (vómitos tipo alimentario, el pcte esta lo nota molesto, pálido e irritableflor_co77)"
+        },
+        {
+          "letra": "G",
+          "texto": "Sme urémico hemolítico (hamburguesa, sangre materia fecal)"
+        },
+        {
+          "letra": "H",
+          "texto": "Parasitosis intestinal"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-26",
+      "numero": 26,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 26",
+      "enunciado": "Concurren a consultorios externos de un hospital general María con su hijo Federico de 6 años de edad por presentar fiebre de 38ºC de 48 horas de evolución y dolor de garganta, sin tos, ni rinitis. Ud. completa la anamnesis donde surge que convive con: el padre de 34 años, albañil, la madre de 30 años, ama de casa, una hermana de 2 años cursando un cuadro catarral y los abuelos maternos, ambos hipertensos. La vivienda se encuentra en el conurbano bonaerense, es de material con 2 habitaciones, co",
+      "pregunta": "De acuerdo a los datos obtenidos por anamnesis y examen físico, cuáles son las conductas más",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Indicar antitérmicos y dieta blanda."
+        },
+        {
+          "letra": "C",
+          "texto": "Indicar clindamicina vía oral. (No, porque la primer opcion seria amoxa, como 2 opcion seria erito o azitromicina)"
+        },
+        {
+          "letra": "D",
+          "texto": "Indicar penicilina vía oral."
+        },
+        {
+          "letra": "E",
+          "texto": "Indicar penicilina vía oral si el cultivo es positivo para estreptococo alfa hemolítico."
+        },
+        {
+          "letra": "F",
+          "texto": "Indicar Penicilina vía oral si el cultivo es positivo para estreptococo beta hemolítico."
+        },
+        {
+          "letra": "G",
+          "texto": "Indicar realización de cultivo de fauces a los convivientes para erradicar la portación. (No, porque ya tenemos el"
+        },
+        {
+          "letra": "H",
+          "texto": "Indicar penicilina benzatínica intramuscular. (No, porque el tto es VO)"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "D",
+        "E",
+        "F"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-28",
+      "numero": 28,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 28",
+      "enunciado": "Maia de 18 meses de vida fue llevada hace 48 horas a una guardia por ambos padres muy angustiados porque presentó un primer episodio de convulsión de aproximadamente 5 minutos de duración. No hay antecedentes familiares. Al examen físico inicial, se encontraba dormida y febril (38,3°C). Los padres previamente al episodio convulsivo le habían administrado ibuprofeno porque tenía fiebre (39,2°C). Luego de 20 minutos se despertó, en buen estado general, reactiva, conectada. El examen físico fue nor",
+      "pregunta": "De acuerdo a todos los datos aportados, Ud decide: (Marque hasta 3 opciones)",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Realizar hemograma, eritrosedimentación, proteína C reactiva."
+        },
+        {
+          "letra": "B",
+          "texto": "Realizar 2 hemocultivos y punción lumbar para citoquímico, cultivo y virológico."
+        },
+        {
+          "letra": "C",
+          "texto": "Luego de la toma de cultivos, iniciar tratamiento con Ceftriaxone 100 mg/kg EV."
+        },
+        {
+          "letra": "D",
+          "texto": "Internación hasta obtener resultados de cultivos."
+        },
+        {
+          "letra": "E",
+          "texto": "Solicitar imagen de cerebro. (No, porque no hay contexto se hubiera una complicacion si estaria adecuada la"
+        },
+        {
+          "letra": "F",
+          "texto": "Explicar a los padres que impresiona una infección banal posiblemente causada por el virus Herpes 6. (6 enf"
+        },
+        {
+          "letra": "G",
+          "texto": "Solicitar electroencefalograma. (No, porque la niña presentó una convulsion febril simple)"
+        },
+        {
+          "letra": "H",
+          "texto": "Indicar diazepam para prevención de próximos episodios convulsivos. (No, porque la niña presentó una"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "F"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-compilado-29",
+      "numero": 29,
+      "semana": null,
+      "fuente_examen": "EFUS 2019 OCTUBRE",
+      "fuente_pdf": "1.1 COMPILADO EFUS con rta.pdf",
+      "titulo": "Caso 29",
+      "enunciado": "Usted atiende en el sector de emergencias a Alan de 13 años, acompañado de su madre. Estando en una fiesta con amigos, le avisaron que se cayó porque se “descompuso”. Alan aparenta estar confundido y cuando lo quiere interrogar se torna agresivo y no colabora. Impresiona adelgazado, en regular estado general, sudoroso, con pupilas midriáticas. Tº axilar: 37.2 ºC, Frecuencia cardíaca: 100 / minuto70 -100, Frecuencia respiratoria: 20 por minuto.13-15 Antecedentes: La madre refiere que desde hace 3",
+      "pregunta": "¿Cuál es la conducta inicial más adecuada? (Marque hasta 4 opciones)",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "Solicitar intervención policial."
+        },
+        {
+          "letra": "B",
+          "texto": "Realizar punción lumbar. KILLER"
+        },
+        {
+          "letra": "C",
+          "texto": "Indicar hidratación endovenosa."
+        },
+        {
+          "letra": "D",
+          "texto": "Inducir el vómito. (No, porque es CI)"
+        },
+        {
+          "letra": "E",
+          "texto": "Solicitar tóxicos en orina."
+        },
+        {
+          "letra": "F",
+          "texto": "Indicar lavado gástrico."
+        },
+        {
+          "letra": "G",
+          "texto": "Solicitar TAC de cerebro con contraste. (No, porque se cayo de própria altura la conducta es observación por 6 hrs"
+        },
+        {
+          "letra": "H",
+          "texto": "Solicitar EEG."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "C",
+        "E",
+        "F",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas por ausencia de \"(No,\" o \"KILLER\""
+    },
+    {
+      "id": "efu-temas-01",
+      "numero": 1,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 1",
+      "enunciado": "Ud. atiende en su consultorio a Pablo un neonato de 14 días de vida que concurre para control. Es un nacido de término, de un embarazo controlado y sin patologías del embarazo. Pesó 2800 grs al nacer y fue dado de alta al 3° día con 2600 grs. Las vacunas están completas. Se alimenta con lactancia materna exclusiva. Presenta deposiciones diarias color amarillo oro y la diuresis está conservada. Al examen físico se encuentra vigoroso, con ictericia en cara, no se auscultan soplos cardíaco",
+      "pregunta": "¿Cuáles son las conductas más adecuadas? (Marque hasta 3 opciones)",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Suplementar con fórmula de inicio."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Solicitar orina completa y urocultivo."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Solicitar serologías. (embarazo controlado y sin patologías del embarazo.)"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Citar a control de peso."
+        },
+        {
+          "letra": "E",
+          "texto": "​ Promover la lactancia materna exclusiva"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Suplementar con sulfato ferroso."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Solicitar dosaje de bilirrubina."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Evaluar técnica de amamantamiento"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-02",
+      "numero": 2,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 2",
+      "enunciado": "Ud se encuentra otorgando el alta de Ián, un recién nacido de 39 semanas de edad gestacional, que pesó 2500 gr al nacer, peso actual 2400 gr. La familia está formada por madre, padre y dos hermanitos que concurren a la escuela, uno de ellos está con fiebre y cursando una virosis respiratoria.",
+      "pregunta": "Además de aconsejar y supervisar la técnica de lactancia, cuáles son las",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Verificar que se haya realizado la pesquisa metabólica neonatal"
+        },
+        {
+          "letra": "B",
+          "texto": "​ Postergar la realización de la pesquisa neonatal en virtud del peso del bebe"
+        },
+        {
+          "letra": "C",
+          "texto": "​ Verificar la aplicación de vacuna de hepatitis B y demorar la BCG hasta alcanzar los"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Verificar la aplicación de la hepatitis B en el momento del nacimiento y aplicar BCG"
+        },
+        {
+          "letra": "E",
+          "texto": "​ Indicar a Ián vacuna antigripal antes del alta."
+        },
+        {
+          "letra": "F",
+          "texto": "​ Indicar que incorporen en los primeros días de vida el chupete."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Indicar colocarlo a dormir en posición supina"
+        },
+        {
+          "letra": "H",
+          "texto": "​ Recomendar que duerma inicialmente en otra habitación."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-04",
+      "numero": 4,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 4",
+      "enunciado": "Lara es traída a la guardia por haber presentado un registro de temperatura axilar de 38,5°C grados constatada en el domicilio por sus padres. Es la primer hija de la pareja, tiene 21 días de vida. El embarazo cursó sin complicaciones, serologías y pesquisa para estreptococo negativas. Nació a término por cesárea por trabajo de parto prolongado y signos de sufrimiento fetal. Apgar 8/10 7-10. Peso de nacimiento 2940 gramos. Isogrupo, isofactor. Recibió vacuna antihepatitis B y BCG. No pre",
+      "pregunta": "¿Cuáles son las conductas iniciales más adecuadas? (Marque hasta 4",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Indicar paracetamol vía oral y control en 1 hora."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Indicar paracetamol vía oral y control en 24 horas"
+        },
+        {
+          "letra": "C",
+          "texto": "​ Internar a Iara"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Solicitar hemograma, PCR y orina completa"
+        },
+        {
+          "letra": "E",
+          "texto": "​ Solicitar hemocultivos, urocultivo"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Realizar punción lumbar para físico químico y cultivo"
+        },
+        {
+          "letra": "G",
+          "texto": "​ Solicitar panel respiratorio de vía aérea superior."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Solicitar coprocultivo e hisopado anal y nasal."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-05",
+      "numero": 5,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 5",
+      "enunciado": "Mónica y su marido concurren muy preocupados a la guardia de Pediatría con su bebé de 30 días de vida. Refieren que la niña se encuentra molesta, que llora mucho y se calma al tomar el pecho. También les preocupa que no sostiene la cabeza. Es su primer bebé y no saben bien qué hacer. Antecedentes: Recién nacido de 40 semana de edad gestacional, peso al nacer: 3500 gr, G1 P1 Apgar 9/10 7-10. Embarazo controlado. Vacunas recibidas: BCG y hepatitis B. Serologías (HIV, VDRL, chagas, toxopl",
+      "pregunta": "De acuerdo a todos los datos aportados, qué recomendaciones daría a la",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Indicar pecho más leche de fórmula."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Explicar a los padres que el llanto de la niña es normal."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Administrar a la bebé gotas antiespasmódicas."
+        },
+        {
+          "letra": "D",
+          "texto": "​ Indicar a la madre que continúe con pecho exclusivo."
+        },
+        {
+          "letra": "E",
+          "texto": "​ Interconsulta con neurología."
+        },
+        {
+          "letra": "F",
+          "texto": "​ Realizar coprocultivo."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Indicar a la madre líquidos y descanso adecuados."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Definir horarios estrictos para alimentarlo."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-06",
+      "numero": 6,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 6",
+      "enunciado": "La mamá de Sabrina de 20 días de vida, concurre a la consulta porque “la nota muy amarilla”. El embarazo y el parto fueron normales. Nació a término con 3200 gramos, Apgar vigoroso. Grupo sanguíneo de la madre y de Sabrina A +. Alta a las 48 horas sin problemas perinatales. Pesquisa metabólica neonatal pendiente, otoemisiones acústicas normales. Se alimenta a pecho exclusivo. En el control a los 7 días de vida presentaba leve ictericia en cara, buen aumento de peso. Resto del examen fís",
+      "pregunta": "Ante esta situación Ud cree que la conducta más apropiada es: (Marque",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Tranquilizar a la madre explicándole que la ictericia disminuirá gradualmente durante"
+        },
+        {
+          "letra": "B",
+          "texto": "​ Suspender temporalmente la alimentación materna."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Suspender la alimentación materna de modo permanente y continuar alimentando a"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Efectuar una prueba de compatibilidad para descartar incompatibilidad ABO."
+        },
+        {
+          "letra": "E",
+          "texto": "​ Efectuar una prueba de compatibilidad para descartar incompatibilidad Rh."
+        },
+        {
+          "letra": "F",
+          "texto": "​ Investigar cambios en la coloración de la orina y la materia fecal."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Solicitar ecografía hepática."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Internar a Sabrina para efectuar luminoterapia."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-01-2",
+      "numero": 1,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 1",
+      "enunciado": "Milo tiene 1 año y 3 meses de vida, es sano, se alimenta con dieta general (comidas saludables y seguras) más pecho por la mañana y por la tarde, la madre suspendió la administración de vitaminas ADC y de sulfato ferroso hace un mes.​ Actualmente Milo se encuentra en percentilo 10 de peso y talla, el control del año también tenía los mismos percentilos, habiendo aumentado 300 gramos los últimos 3 meses. La mamá mide 1,55 M y el papá 1,67 M. En el último tiempo no tuvo problemas de sa",
+      "pregunta": "Le consulta a usted sobre los cuidados de Milo y las conductas a seguir. Ud.",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Enriquecer las comidas con crema de leche, manteca y queso untable."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Solicitar hemograma, determinación de IgA e IgA antitransglutaminasa."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Indicar nuevamente vitaminas y hierro hasta los 18 meses."
+        },
+        {
+          "letra": "D",
+          "texto": "​ Interconsulta con nutrición infantil."
+        },
+        {
+          "letra": "E",
+          "texto": "​ Explicar que el crecimiento de Millo es normal para su edad."
+        },
+        {
+          "letra": "F",
+          "texto": "​ Reducir la lactancia dado que probablemente interfiera con la correcta alimentación."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Refuerza pautasmde alimentación saludable y mantener pecho materno."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Indica vacuna anti varicela y antimeningococcica."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-01-3",
+      "numero": 1,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 1",
+      "enunciado": "Horacio y Ana traen a su consultorio por primera vez a su hijo Mario, de 3 años y medio de edad, para control. Mario es el primer hijo de un embarazo controlado. Nació a las 40 semanas de edad gestacional con 3500 gramos por parto vaginal con presentación cefálica. Lloró enseguida. Alta conjunta a las 48 horas con lactancia materna. Fue internado a la semana por mal progreso de peso y succión débil. Completó 10 días de tratamiento antibiótico parenteral con hemocultivos, urocultivo y c",
+      "pregunta": "¿Cuáles son sus conductas iniciales con este paciente? (Marque hasta 3",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Indicar la BCG."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Indicar primer dosis de vacuna oral atenuada contra rotavirus."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Tranquilizar a los padres porque asume que el retraso madurativo está relacionado"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Solicitar glucemia, perfil lipídico"
+        },
+        {
+          "letra": "E",
+          "texto": "​ Profundizar la anamnesis sobre el sueño de Mario"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Solicitar una resonancia magnética de encéfalo"
+        },
+        {
+          "letra": "G",
+          "texto": "​ Solicitar interconsulta con servicio de Genética"
+        },
+        {
+          "letra": "H",
+          "texto": "​ Interconsulta a dermatología"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-08",
+      "numero": 8,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 8",
+      "enunciado": "Antonio es un niño de 6 meses de edad, que concurre acompañado por su madre de 16 años y su padre de 18 años a la consulta del control del 6to mes. Conviven con abuelos paternos. Sin antecedentes perinatológicos de importancia, Peso de nacimiento: 3,500 Kg , Talla : 49 cm y Perímetro cefálico : 35 cm. Al examen físico presenta un peso de 8500 grs (Pc 50-75) , mide 68 cm (Pc 25- 50) y el perímetro cefálico de 43 cm (Pc 25-50).",
+      "pregunta": "En este paciente ¿qué pautas del neurodesarrollo debe haber logrado?",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Intenta dar pasos con sostén."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Presencia de tónico cervical asimétrico."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Puede sentarse solo por medio de la posición de trípode."
+        },
+        {
+          "letra": "D",
+          "texto": "​ Lleva objetos a la boca"
+        },
+        {
+          "letra": "E",
+          "texto": "​ Rola"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Repite sílabas ma ma, da da."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Pinza radial inferior."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Saluda con la mano."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-05-2",
+      "numero": 5,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 5",
+      "enunciado": "PUBERTAD Y ADOLESCENCIA 34 1. Beatriz, de 13 años, consulta en un hospital de tercer nivel de complejidad, derivada por su pediatra de cabecera, por presentar baja talla y retraso puberal.​ Antecedentes personales: Edad gestacional 39 semanas, peso al nacer 2.900 gramos, talla 46 cm, sin antecedentes perinatológicos. Ha presentado episodios de diarrea esporádica y constipación durante el último año. Al interrogatorio la madre cuenta que se alimenta en forma adecuada y no presenta vómitos.",
+      "pregunta": "De acuerdo a su hipótesis diagnóstica inicial, cuáles son las conductas",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Citar a control en 6 meses"
+        },
+        {
+          "letra": "B",
+          "texto": "​ Solicitar radiografía de muñeca y mano para determinar edad ósea"
+        },
+        {
+          "letra": "C",
+          "texto": "​ Solicitar interconsulta con endocrinológica"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Comentar a la madre que Beatriz ha comenzado su pubertad"
+        },
+        {
+          "letra": "E",
+          "texto": "​ Solicitar determinación de hormona de crecimiento"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Solicitar interconsulta genética"
+        },
+        {
+          "letra": "G",
+          "texto": "​ Solicitar espinograma"
+        },
+        {
+          "letra": "H",
+          "texto": "​ Solicitar interconsulta a cardiología"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-03",
+      "numero": 3,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 3",
+      "enunciado": "Concurren por primera vez a su consulta Mariana de 14 años y su madre. La adolescente muestra actitud indiferente, cabeza inclinada mirando siempre a su celular. Al preguntarle a la niña el motivo de su consulta, la madre responde expresando que su hija debe obtener el apto para realizar educación física no competitiva. y además quiere que Ud. le explique a su hija que a esa edad no puede aplicarse piercing, no debería tatuarse ni asistir los fines de semana a locales bailables. Mariana no",
+      "pregunta": "Ante esta situación, señale entre las siguientes las conductas más",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Le expresa a Mariana que le sugerirá algunas ideas como si se tratara de su propia"
+        },
+        {
+          "letra": "B",
+          "texto": "​ Proponer que Mariana exprese sus propias opiniones sin interrupciones de su madre"
+        },
+        {
+          "letra": "C",
+          "texto": "​ En esta primera entrevista se debe consensuar con Mariana la presencia o no de la"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Le asegura a Mariana que a excepción de situaciones de riesgos asegura la"
+        },
+        {
+          "letra": "E",
+          "texto": "​ La explicación explica a Mariana que es necesario que ella se comprometa a aceptar"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Prohíbe la adolescente ingerir alcohol y fumar por las consecuencias que ello trae a"
+        },
+        {
+          "letra": "G",
+          "texto": "​ Informa a la adolescente que puede ingerir alcohol a dosis pequeñas."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Explica que en la primera entrevista es necesaria la presencia de la madre durante"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-01-4",
+      "numero": 1,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 1",
+      "enunciado": "Tomy, de 17 meses y medio, concurre a control en salud en el mes de octubre. Es un RNT, 40 semanas de edad gestacional, hijo de madre diabética. No presenta otros antecedentes perinatológicos de importancia. Peso y talla al nacer en percentilo 97.​ Ambos padres son sanos. El padre fuma, según referencia materna, “solamente fuera de casa”. Tomy inició jardín maternal a los 11 meses de vida con buena adaptación. Al examen físico el niño presenta rinorrea anterior y posterior, fauces eritem",
+      "pregunta": "¿Cuál de las siguientes opciones es correcta? (Marque hasta 3 opciones)",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ BCG Contraindicada la vacunación hasta superar el cuadro respiratorio"
+        },
+        {
+          "letra": "B",
+          "texto": "​ Interconsulta con inmunología."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Sabin y Triple bacteriana acelular."
+        },
+        {
+          "letra": "D",
+          "texto": "​ Triple viral, Hepatitis A, Anti Neumococcica conjugada."
+        },
+        {
+          "letra": "E",
+          "texto": "​ Reiniciar el plan de vacunación dado el tiempo transcurrido."
+        },
+        {
+          "letra": "F",
+          "texto": "​ Antivaricela y antimeningococcica conjugada."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Hepatitis B y antigripal."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Sabin y Cuadruple – Pentavalente"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-05-3",
+      "numero": 5,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 5",
+      "enunciado": "En el mes de marzo, concurre a su consultorio Matías de 8 años para realizar el control en salud y confeccionar el apto físico para realizar actividad deportiva no competitiva. El niño carece de antecedentes perinatológicos de importancia. A partir de los 5 años de vida padeció 4 episodios broncoobstructivos que se resolvieron ambulatoriamente. Por tal motivo en la actualidad recibe tratamiento preventivo con budesonide. La mamá le comenta que la familia está pasando por un momento muy ",
+      "pregunta": "Con respecto al registro de vacunas que presenta el paciente, Ud. piensa",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Está contraindicado indicar a Matías ningún tipo de vacunas hasta finalizar la"
+        },
+        {
+          "letra": "B",
+          "texto": "​ Está contraindicado que Matías reciba ningún tipo de vacuna a virus vivo atenuado."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Matías tiene vacunas completas para su edad"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Matías debe recibir una dosis de Salk"
+        },
+        {
+          "letra": "E",
+          "texto": "​ Matías debe recibir una dosis de vacuna Sabin"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Matías debe recibir una dosis de vacuna Triple bacteriana celular"
+        },
+        {
+          "letra": "G",
+          "texto": "​ Matías debe recibir una dosis de vacuna Triple bacteriana acelular"
+        },
+        {
+          "letra": "H",
+          "texto": "​ Matías debe recibir una dosis vacuna Triple Viral y antivaricela"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-01-5",
+      "numero": 1,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 1",
+      "enunciado": "Concurre a la consulta Sabrina de 9 años acompañada por su mamá, Elisa de 29 años.​ Se trata de una niña previamente sana hasta los 6 años en el que registra su último control en salud. Refiere como Motivo de consulta un dolor abdominal de varios meses de evolución. Si bien no puede precisar con exactitud el comienzo de los dolores, lo sitúa aproximadamente a principios de año (4 meses atrás) coincidiendo con el inicio de las clases. Elisa los atribuyó a que el cambio de turno (ahora",
+      "pregunta": "De acuerdo a la sospecha diagnóstica inicial, cuáles son las conductas",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Hemograma, hepatograma, urea, creatinina y glucemia"
+        },
+        {
+          "letra": "B",
+          "texto": "​ IgA antitransglutaminasa y determinación de IgA sérica"
+        },
+        {
+          "letra": "C",
+          "texto": "​ Orina completa y urocultivo"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Radiografía de abdomen de pie"
+        },
+        {
+          "letra": "E",
+          "texto": "​ Coproparasitologico"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Videocolonoscopia"
+        },
+        {
+          "letra": "G",
+          "texto": "​ Ecografía abdominal"
+        },
+        {
+          "letra": "H",
+          "texto": "​ Tomografía abdominal computada con contraste de abdomen y pelvis."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-09",
+      "numero": 9,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 9",
+      "enunciado": "Pedro es un niño de 9 meses que es llevado a la guardia de un hospital del conurbano bonaerense por presentar vómitos. La madre relata que comenzó hace 48 horas con deposiciones líquidas, sin contenido hemático, moco o pus, frecuentes y que posteriormente presentó vómitos inicialmente de tipo alimentarios y escasos, incrementando en frecuencia y magnitud. En el día de hoy lo nota molesto, pálido e irritable. Antecedentes: nacido de término, de un embarazo controlado, parto vaginal, Apg",
+      "pregunta": "De acuerdo a lo expuesto hasta el momento, cual es su impresión",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Shock séptico"
+        },
+        {
+          "letra": "B",
+          "texto": "​ Deshidratación grave"
+        },
+        {
+          "letra": "C",
+          "texto": "​ Deshidratación moderada"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Enfermedad celíaca"
+        },
+        {
+          "letra": "E",
+          "texto": "​ Enfermedad inflamatoria intestinal"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Invaginación intestinal"
+        },
+        {
+          "letra": "G",
+          "texto": "​ Sme urémico hemolítico"
+        },
+        {
+          "letra": "H",
+          "texto": "​ Parasitosis intestinal"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-01-6",
+      "numero": 1,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 1",
+      "enunciado": "Kiara de 14 años de edad , refiere dolor en hemiabdomen derecho de características cólicas, de 16 horas de evolución, se encuentra inapetente, presentó 2 deposiciones desligadas, escasas en el día de la consulta, refiere disuria y tuvo 3 vómitos en la última hora. En el momento del examen físico, refiere un dolor moderado. La paciente se encuentra en regular estado general, temperatura 38,3oC. La palpación abdominal muestra un abdomen levemente distendido, dolor generalizado a predomin",
+      "pregunta": "De acuerdo a su diagnóstico presuntivo ¿cuáles son las conductas",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Realizar prueba de tolerancia oral."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Ecografía abdominal y ginecológica"
+        },
+        {
+          "letra": "C",
+          "texto": "​ Indicar metoclopramida"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Examen ginecológico"
+        },
+        {
+          "letra": "E",
+          "texto": "​ Orina completa y urocultivo"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Hemograma, PCR, 2 hemocultivos, urea, creatinina."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Hemograma, PCR, coagulograma, BHCG"
+        },
+        {
+          "letra": "H",
+          "texto": "​ Solicitar cultivo de flujo vaginal."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-02-2",
+      "numero": 2,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 2",
+      "enunciado": "Se encuentra evaluando por primera vez a Mateo de 4 años de edad, que concurre para control en salud. La madre refiere que es un niño sano, aunque le llama la atención que en el último tiempo se cansa con facilidad cuando corre, lo cual le dificulta el juego con el resto de los niños de su edad. No surgen otros antecedentes familiares ni personales de relevancia.​ Mateo es un niño eutrófico, con peso y talla en percentilo 25 para su edad. Al examen físico se encuentra algo pálido, taquic",
+      "pregunta": "En base a su diagnóstico presuntivo ¿qué estudios complementarios",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Ionograma y estado ácido-base."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Hemograma."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Ecocardiograma."
+        },
+        {
+          "letra": "D",
+          "texto": "​ Teleradiografía de tórax."
+        },
+        {
+          "letra": "E",
+          "texto": "​ Espirometría."
+        },
+        {
+          "letra": "F",
+          "texto": "​ Angiotomografía de tórax."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Ecografía abdominal."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Electrocardiograma."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-01-7",
+      "numero": 1,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 1",
+      "enunciado": "Concurre a la guardia José de 12 años de edad que consulta por dolor exquisito y puntual en una zona ubicada en el 1/ 3 inferior del muslo derecho e impotencia funcional y fiebre durante las últimas 48 horas. Como antecedente refiere haber sufrido un traumatismo hace 7 días jugando al fútbol. En el examen físico se observa área de tumefacción con una lesión en piel del 1⁄3 inferior del muslo derecho, cubierta actualmente por una costra hemática, evaluación de la articulación de la ro",
+      "pregunta": "Además de indicar analgesia, de acuerdo a su diagnóstico presuntivo,",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Intención, 2 hemocultivos y tratamiento antibiótico endovenoso"
+        },
+        {
+          "letra": "B",
+          "texto": "​ Control ambulatorio en 48 hs y tratamiento con cefalexina, vía oral"
+        },
+        {
+          "letra": "C",
+          "texto": "​ Inmovilización, analgesia y control ambulatorio en 48 horas"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Solicitar resonancia magnética de miembro."
+        },
+        {
+          "letra": "E",
+          "texto": "​ Solicitar ecografía de partes blandas."
+        },
+        {
+          "letra": "F",
+          "texto": "​ Solicitar tomografía computada del miembro."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Toma de cultivo por piel sana de la costra."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Solicitar centellograma corporal total."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-05-4",
+      "numero": 5,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 5",
+      "enunciado": "Consultan los padres de Carla de 3 años de edad porque desde hace 24 horas notan que renguea al caminar, y le duele el miembro inferior derecho al caminar. Refieren que el dolor parece haber aumentado en las últimas horas. No ha tenido fiebre, ni otros síntomas. No refieren antecedentes patológicos de importancia y ha recibido todas las vacunas del calendario oficial. Examen físico: niña eutrófica, peso y talla en percentilos 50 para edad y sexo. Temperatura axilar 36,5 grados. No se obse",
+      "pregunta": "¿Cuáles de las siguientes conductas son las más adecuadas? (Marque",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Solicitar resonancia magnética de caderas"
+        },
+        {
+          "letra": "B",
+          "texto": "​ Solicitar centellograma corporal total"
+        },
+        {
+          "letra": "C",
+          "texto": "​ Indicar internación"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Indicar analgesia y reposo"
+        },
+        {
+          "letra": "E",
+          "texto": "​ Indicar cefalexina"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Citar a control en 24 horas"
+        },
+        {
+          "letra": "G",
+          "texto": "​ Solicitar punción de cadera para cultivo y fisicoquímico"
+        },
+        {
+          "letra": "H",
+          "texto": "​ Solicitar hemocultivos, hemograma y PCR"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-01-8",
+      "numero": 1,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 1",
+      "enunciado": "Concurren a consultorios externos de un hospital general María con su hijo Federico de 6 años de edad por presentar fiebre de 38oC de 48 horas de evolución y dolor de garganta, sin tos, ni rinitis. Ud. completa la anamnesis donde surge que convive con: el padre de 34 años, albañil, la madre de 30 años, ama de casa, una hermana de 2 años cursando un cuadro catarral y los abuelos maternos, ambos hipertensos. La vivienda se encuentra en el conurbano bonaerense, es de material con 2 habitacio",
+      "pregunta": "De acuerdo a los datos obtenidos por anamnesis y examen físico, cuáles",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Indicar antitérmicos y dieta blanda."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Indicar clindamicina vía oral."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Indicar penicilina vía oral."
+        },
+        {
+          "letra": "D",
+          "texto": "​ Indicar penicilina vía oral si el cultivo es positivo para estreptococo alfa hemolítico."
+        },
+        {
+          "letra": "E",
+          "texto": "​ Indicar Penicilina vía oral si el cultivo es positivo para estreptococo beta hemolítico."
+        },
+        {
+          "letra": "F",
+          "texto": "​ Indicar realización de cultivo de fauces a los convivientes para erradicar la portación."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Indicar penicilina benzatínica intramuscular."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Indicar colutorio bucofaríngeo con anestésico y antibiótico local."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-27",
+      "numero": 27,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 27",
+      "enunciado": "Jonathan de 3 meses de edad es traído a la guardia por cuadro de tos de 24 horas de evolución. Los padres refieren que comenzó con mocos claros por nariz y tos seca esporádica, con 37,7 oC de temperatura axilar pero les preocupa que está con tendencia al sueño e inapetente. En el día de hoy presentó dos regurgitaciones. Nació a las 35 semanas de edad gestacional, con peso de 2.170 gramos, dado de alta a las 48 hs. Se alimenta con pecho exclusivo con buena progresión de peso. No refiere",
+      "pregunta": "De acuerdo a su hipótesis diagnóstica inicial, ¿cuáles son las conductas",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Rotar antibiótico a cefalexina vía oral por 10 días."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Solicitar Rx cráneo frente y perfil con foco en mastoides."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Solicitar TAC de cerebro con contraste EV"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Rotar el antibiótico a amoxicilina-clavulánico y citar a control en 24hs."
+        },
+        {
+          "letra": "E",
+          "texto": "​ Solicitar internación para tratamiento antibiótico EV."
+        },
+        {
+          "letra": "F",
+          "texto": "​ Indicar gotas óticas con tobramicina."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Indicar lavados de conducto auditivo externo."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Realizar interconsulta con ORL."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-02-3",
+      "numero": 2,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 2",
+      "enunciado": "Maia de 18 meses de vida fue llevada hace 48 horas a una guardia por ambos padres muy angustiados porque presentó un primer episodio de convulsión de aproximadamente 5 minutos de duración. No hay antecedentes familiares.​ Al examen físico inicial, se encontraba dormida y febril (38,3°C). Los padres previamente al episodio convulsivo le habían administrado ibuprofeno porque tenía fiebre (39,2°C). Luego de 20 minutos se despertó, en buen estado general, reactiva, conectada. El examen físic",
+      "pregunta": "De acuerdo a todos los datos aportados, Ud decide: (Marque hasta 3",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Realizar hemograma, eritrosedimentación, proteína C reactiva."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Realizar 2 hemocultivos y punción lumbar para citoquímico, cultivo y virológico."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Luego de la toma de cultivos, iniciar tratamiento con Ceftriaxone 100 mg/kg EV."
+        },
+        {
+          "letra": "D",
+          "texto": "​ Internación hasta obtener resultados de cultivos."
+        },
+        {
+          "letra": "E",
+          "texto": "​ Solicitar imagen de cerebro."
+        },
+        {
+          "letra": "F",
+          "texto": "​ Explicar a los padres que impresiona una infección banal posiblemente causada por"
+        },
+        {
+          "letra": "G",
+          "texto": "​ Solicitar electroencefalograma."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Indicar diazepam para prevención de próximos episodios convulsivos."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-04-2",
+      "numero": 4,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 4",
+      "enunciado": "Santino, de 5 años, es traído al consultorio debido a haber presentado manchas en la piel que comenzaron 24hs antes de la consulta. La madre relata que las “manchas” comenzaron súbitamente como máculas rosadas y pruriginosas, distribuyéndose de manera asimétrica y generalizada. Estas lesiones tienen tendencia a confluir y formar placas eritematosas. Además se acompaña de intenso prurito. El niño se encuentra afebril y en buen estado general. Diuresis conservada de características norma",
+      "pregunta": "Teniendo en cuenta su hipótesis diagnóstica, cuáles son las conductas",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Solicitar serología para rubéola."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Indicar talco mentolado 2 veces por día."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Tranquilizar a la madre explicando que es una situación transitoria y benigna."
+        },
+        {
+          "letra": "D",
+          "texto": "​ Solicitar hemograma y dosaje de inmunoglobulinas (GAME)."
+        },
+        {
+          "letra": "E",
+          "texto": "​ Indicar antihistamínicos."
+        },
+        {
+          "letra": "F",
+          "texto": "​ Excluir al niño del jardín hasta la desaparición total de las lesiones."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Realizar denuncia epidemiológica a la autoridad sanitaria local."
+        },
+        {
+          "letra": "H",
+          "texto": "​ Suspender tratamiento antibiótico."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-05-5",
+      "numero": 5,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 5",
+      "enunciado": "Isabel concurre a la consulta con su hijo Mauricio de 5 años de edad quien presenta lesiones compatibles con varicela desde hace 24 hs.​ Ella le comenta que en el jardín donde asiste se han presentado varios casos.​ La madre de Mauricio está sorprendida porque su hijo había recibido una dosis de vacuna antivaricela a los 3 años. Además está muy preocupada porque ella no sabe si tuvo varicela y está embarazada de término. Tiene otro hijo, Nicolás, de 7 años, que no recibió dicha vacun",
+      "pregunta": "Con los datos presentados, ¿cuáles son las opciones más apropiadas?",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Indicar cultivo del contenido de las lesiones."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Mauricio seguramente cursará una varicela leve , ya que recibió vacuna."
+        },
+        {
+          "letra": "C",
+          "texto": "​ La madre debe recibir la vacuna antivaricela como profilaxis post exposición."
+        },
+        {
+          "letra": "D",
+          "texto": "​ Si Isabel padeciera varicela perinatal, el recién nacido deberá recibir"
+        },
+        {
+          "letra": "E",
+          "texto": "​ De haber recibido la vacuna a los 15 meses, se hubiera evitado que Mateo se"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Nicolás debe recibir vacuna como profilaxis post exposición."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Nicolás debe recibir gammaglobulina por ser un inmunodeprimido."
+        },
+        {
+          "letra": "H",
+          "texto": "​ solicitar serologías específicas para varicela."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-02-4",
+      "numero": 2,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 2",
+      "enunciado": "Usted atiende en el sector de emergencias a Alan de 13 años, acompañado de su madre. Estando en una fiesta con amigos, le avisaron que se cayó porque se “descompuso”. Alan aparenta estar confundido y cuando lo quiere interrogar se torna agresivo y no colabora. Impresiona adelgazado, en regular estado general, sudoroso, con pupilas midriáticas. To axilar: 37.2 oC, Frecuencia cardíaca: 100 / minuto70 -100, Frecuencia respiratoria: 20 por minuto.13-15 Antecedentes: La madre refiere que desde h",
+      "pregunta": "¿Cuál es la conducta inicial más adecuada? (Marque hasta 4 opciones)",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Solicitar intervención policial."
+        },
+        {
+          "letra": "B",
+          "texto": "​ Realizar punción lumbar."
+        },
+        {
+          "letra": "C",
+          "texto": "​ Indicar hidratación endovenosa."
+        },
+        {
+          "letra": "D",
+          "texto": "​ Inducir el vómito."
+        },
+        {
+          "letra": "E",
+          "texto": "​ Solicitar tóxicos en orina."
+        },
+        {
+          "letra": "F",
+          "texto": "​ Indicar lavado gástrico."
+        },
+        {
+          "letra": "G",
+          "texto": "​ Solicitar TAC de cerebro con contraste"
+        },
+        {
+          "letra": "H",
+          "texto": "​ Solicitar EEG."
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    },
+    {
+      "id": "efu-temas-21",
+      "numero": 21,
+      "semana": null,
+      "fuente_examen": "EFU POR TEMAS",
+      "fuente_pdf": "EFU POR TEMAS (resuelto).docx.pdf",
+      "titulo": "Caso 21",
+      "enunciado": "TEMAS VARIOS Consulta por guardia Natalia quien trae a su hija Olivia de 4 años por presentar fiebre (38°C) de 24 hora de evolución y dolor que refiere en codo y hombro izquierdo desde hace aproximadamente una semana y cede con ibuprofeno a 10mg/kg/dosis.​ Sin antecedentes de importancia. Vacunas completas para la edad según calendario oficial. Concurre a jardín de infantes sala de 4 sin ninguna dificultad. Examen físico: Buen estado general, febril (38.3°C), normo hidratada, palidez de muc",
+      "pregunta": "¿Cuáles son sus conductas iniciales con este paciente? (Marque hasta 3",
+      "opciones": [
+        {
+          "letra": "A",
+          "texto": "​ Solicitar dos hemocultivos"
+        },
+        {
+          "letra": "B",
+          "texto": "​ Expandir con solución fisiológica"
+        },
+        {
+          "letra": "C",
+          "texto": "​ Solicitar su internación"
+        },
+        {
+          "letra": "D",
+          "texto": "​ Solicitar hemoglucotest (glucemia capilar)"
+        },
+        {
+          "letra": "E",
+          "texto": "​ Indicar metoclopramida"
+        },
+        {
+          "letra": "F",
+          "texto": "​ Indicar Ceftriaxone y Aciclovir EV"
+        },
+        {
+          "letra": "G",
+          "texto": "​ Expandir con solución dextrosada al 5%"
+        },
+        {
+          "letra": "H",
+          "texto": "​ Indicar líquidos fraccionados y controlar en 6 horas"
+        }
+      ],
+      "respuestas_correctas": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G",
+        "H"
+      ],
+      "nota_metodo": "Respuestas identificadas automáticamente"
+    }
+  ]
+}
