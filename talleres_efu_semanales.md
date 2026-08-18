@@ -343,3 +343,80 @@ Usted se encuentra en una guardia de emergencias. Recibe a Rosendo, un niño de 
   * *(Salbutamol y corticoides — opción B — estaban marcados como **"killer"** en la grilla: tratar el cuadro como bronquiolitis retrasa el manejo de una emergencia cardiológica.)*
 </details>
 
+---
+
+## 📌 VIERNES 21 DE AGOSTO (SEMANA 3) — Respiratorio: Bronquiolitis
+
+⚠️ *Nota de método: para estos dos casos, el PDF fuente (`1.1 COMPILADO EFUS con rta.pdf`) no trae una grilla oficial letra-por-letra, sino anotaciones manuscritas parciales de un compañero de cursada (marcas explícitas de "NO" y de gravedad en algunas opciones). El diagnóstico y la gravedad (Score de Tal) surgen sin ambigüedad de los datos clínicos del enunciado; las opciones sin anotación explícita se resolvieron por manejo estándar de bronquiolitis, sin que ninguna contradiga las marcas de la fuente. Mismo criterio aplicado al caso "Rosendo" de la Semana 2.*
+
+---
+
+### 📝 PREGUNTA 1 (EFU 23/07/2021) — Bronquiolitis grave (Score de Tal 9)
+
+**Enunciado:**
+Jonathan de 3 meses de edad es traído a la guardia por cuadro de tos de 24 horas de evolución. Los padres refieren que comenzó con mocos claros por nariz y tos seca esporádica, con 37,7 ºC de temperatura axilar pero les preocupa que está con tendencia al sueño e inapetente. En el día de hoy presentó dos regurgitaciones. Nació a las 35 semanas de edad gestacional, con peso de 2.170 gramos, dado de alta a las 48 hs. Se alimenta con pecho exclusivo con buena progresión de peso. No refiere otros antecedentes de importancia.
+Su hermano de 5 años de edad está resfriado desde hace 4 días pero sin fiebre y sin tos. El padre sano de 32 años, empleado fuma 15 cigarrillos por día pero no en el hogar. Madre sana 30 años no fumadora, ama de casa. Viven en un departamento de dos ambientes, con todas las necesidades básicas.
+Al examen físico se aprecia aletargado, algo pálido, temperatura axilar 37,4 ºC, frecuencia respiratoria: 66 por minuto (VN 40-60), frecuencia cardiaca: 148 por minuto (VN 120-180), auscultación cardiaca normal. Presenta tiraje intercostal y supraesternal con aleteo nasal intermitente y se auscultan sibilancias inspiratorias y espiratorias con rales subcrepitantes diseminados bilaterales. Abdomen algo globuloso pero depresible e indoloro, se palpa borde hepático a 3 cm del reborde costal y se percibe polo de bazo. Resto del examen físico sin particularidades.
+
+**Pregunta:** ¿Cuáles son las conductas iniciales más adecuadas frente a este cuadro? *(Puede marcar hasta 3 opciones)*
+
+- **A.** Colocar sonda nasogástrica para alimentación.
+- **B.** Desobstruir las narinas y colocar en posición semisentada.
+- **C.** Continuar con pecho en forma frecuente y fraccionada para que tolere mejor.
+- **D.** Indicar kinesioterapia respiratoria.
+- **E.** Internar en sala y colocar oxígeno por cánula nasal.
+- **F.** Indicar salbutamol en aerosol cada 20 minutos durante una hora y revalorar.
+- **G.** Solicitar radiografía de tórax.
+- **H.** Enviar al domicilio con salbutamol aerosol y betametasona y citar a las 24 horas.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación</b></summary>
+
+* **Opciones Correctas:** **B, E, F**
+* **Justificación:**
+  * **Diagnóstico:** Bronquiolitis con Score de Tal ≈ 9 (grave): taquipnea > 60/min para la edad, tiraje intercostal y supraesternal, aleteo nasal, sibilancias con rales subcrepitantes bilaterales, sensorio deprimido (letárgico) y mal registro alimentario. Es un lactante con factores de riesgo (pretérmino de 35 semanas, 3 meses de vida). Cumple criterio de internación.
+  * **B (Desobstruir narinas y posición semisentada):** Medida de sostén de primera línea que mejora el trabajo respiratorio en todo lactante con obstrucción de la vía aérea alta.
+  * **E (Internar con oxígeno):** El score de gravedad y el trabajo respiratorio aumentado son criterio de internación; requiere oxigenoterapia para mantener saturación adecuada.
+  * **F (Prueba con salbutamol y revalorar):** En cuadros graves está indicado un ensayo terapéutico con broncodilatador, revalorando la respuesta clínica a la hora.
+  * **C (incorrecta):** Con este grado de dificultad respiratoria e hipoxia, alimentar por vía oral aumenta el riesgo de aspiración; no corresponde continuar el pecho de manera habitual.
+  * **D, G, H (incorrectas):** La kinesioterapia respiratoria no tiene indicación de rutina en bronquiolitis; la radiografía de tórax no es un estudio inicial sistemático; y un cuadro grave no se maneja de forma ambulatoria ni con corticoides (no indicados en bronquiolitis).
+  * *(Trazabilidad a la fuente: C y H están marcadas explícitamente como incorrectas en el PDF ["esta grave, criterio de internación" / "no se dan corticoides"]; F tiene la anotación explícita "Grave" señalando el ensayo terapéutico en casos graves. B y E no tienen marca individual pero se derivan sin ambigüedad del criterio de internación anotado en el enunciado de la pregunta; A, D y G se completaron por manejo estándar de bronquiolitis, sin anotación en la fuente.)*
+</details>
+
+---
+
+### 📝 PREGUNTA 2 (EFU 23/07/2021) — Bronquiolitis leve (Score de Tal 3)
+
+**Enunciado:**
+Concurre a la guardia donde usted trabaja, Amalia, de 9 meses, por fiebre (38-38,5 ºC) que cede transitoriamente con medios físicos y tos durante las últimas 72 horas que interrumpió su sueño durante la última noche. Ha mantenido una buena actitud alimentaria.
+Antecedentes personales: Vacunas completas. Tuvo un resfrío, dos otitis medias agudas y una gastroenteritis aguda, todos con buena evolución. Su padre, 24 años, albañil, su madre, 27 años, ama de casa, ambos sanos. Viven a 12 cuadras del hospital.
+Al examen físico luce en buen estado general, rosada. Frecuencia cardíaca 136/minuto (VN 100-130). Presión arterial 90/56 mm Hg. Frecuencia respiratoria 44 por minuto (VN 20-40). Saturometría con aire ambiental 96 %. Temperatura axilar 37,6 °C. Fauces levemente congestivas, ambos tímpanos rosados con triángulo luminoso presente. Sin aleteo nasal, leve tiraje intercostal, murmullo vesicular presente, sibilancias al final de la espiración en ambas bases pulmonares. Resto del examen sin particularidades.
+
+**Pregunta:** ¿Cuáles son las conductas iniciales más adecuadas? *(Puede marcar hasta 3 opciones)*
+
+- **A.** Solicitar aspirado nasofaríngeo de secreciones respiratorias.
+- **B.** Indicar nebulizaciones con budesonide cada 8 horas.
+- **C.** Internar al paciente con oxígeno.
+- **D.** Indicar paracetamol por vía oral si tuviera fiebre.
+- **E.** Continuar con la alimentación por vía oral.
+- **F.** Citar a control en 24-48 horas.
+- **G.** Indicar ibuprofeno y paracetamol alternados si tuviera fiebre.
+- **H.** Indicar bromuro de ipratropio por aerocámara cada 12 horas.
+
+<details>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación</b></summary>
+
+* **Opciones Correctas:** **D, E, F**
+* **Justificación:**
+  * **Diagnóstico:** Bronquiolitis leve, Score de Tal ≈ 3 (buen estado general, leve tiraje, sibilancias espiratorias, saturación 96% con aire ambiental, buena tolerancia oral). No presenta criterios de internación → manejo ambulatorio.
+  * **D (Paracetamol si fiebre):** Manejo sintomático estándar.
+  * **E (Continuar alimentación por vía oral):** Tolera adecuadamente, no hay dificultad respiratoria significativa que la contraindique.
+  * **F (Control en 24-48 horas):** Todo lactante con bronquiolitis manejado ambulatoriamente requiere reevaluación cercana por riesgo de progresión.
+  * **A, B, C, G, H (incorrectas):** El aspirado nasofaríngeo no cambia la conducta clínica; los corticoides inhalados (budesonide) y el bromuro de ipratropio no están indicados en bronquiolitis; no hay criterio de internación ni de oxígeno; y no se recomienda alternar antitérmicos (ibuprofeno/paracetamol) de rutina.
+  * *(Trazabilidad a la fuente: A, C y H están marcadas explícitamente como incorrectas en el PDF ["no es conducta" / "no hay criterio" / "el dx es bronquiolitis"], y B está marcada como opción "killer". D, E, F y G no tienen marca individual; se completaron por manejo estándar de bronquiolitis leve ambulatoria, descartando G por no recomendarse alternar antitérmicos de rutina.)*
+</details>
+
+---
+
+*Nota: la Semana 3 según el plan de repaso incluye también Neumonía y Coqueluche — casos pendientes de incorporar.*
+
