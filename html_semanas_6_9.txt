@@ -1,0 +1,378 @@
+        <!-- SEMANA 6: Fiebre Sin Foco y Neurología -->
+        <div class="card" data-semana="6" data-tema="convulsión febril, meningitis, fiebre sin foco, lactante">
+            <span class="badge">Viernes 11 de Septiembre — EFU Temas</span>
+            <h2>Caso EFU 1: Convulsión Febril y Meningitis - Maia (18 meses)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial:</strong><br>
+                Maia de 18 meses de vida fue llevada hace 48 horas a una guardia por ambos padres muy angustiados porque presentó un primer episodio de convulsión de aproximadamente 5 minutos de duración. No hay antecedentes familiares. Al examen físico inicial, se encontraba dormida y febril (38,3°C). Los padres previamente al episodio convulsivo le habían administrado ibuprofeno porque tenía fiebre (39,2°C). Luego de 20 minutos se despertó, en buen estado general, reactiva, conectada. El examen físico completo fue normal.
+                <br><br>
+                <strong>Pregunta:</strong> De acuerdo a todos los datos aportados, ¿Ud. decide? <em>(Marque hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li data-correct="true"><strong>A.</strong> Realizar hemograma, eritrosedimentación, proteína C reactiva.</li>
+                <li data-correct="true"><strong>B.</strong> Realizar 2 hemocultivos y punción lumbar para citoquímico, cultivo y virológico.</li>
+                <li data-correct="true"><strong>C.</strong> Luego de la toma de cultivos, iniciar tratamiento con Ceftriaxone 100 mg/kg EV.</li>
+                <li data-correct="true"><strong>D.</strong> Internación hasta obtener resultados de cultivos.</li>
+                <li><strong>E.</strong> Solicitar imagen de cerebro.</li>
+                <li data-correct="true"><strong>F.</strong> Explicar a los padres que impresiona una infección banal posiblemente causada por virus Herpes 6.</li>
+                <li><strong>G.</strong> Solicitar electroencefalograma.</li>
+                <li><strong>H.</strong> Indicar diazepam para prevención de próximos episodios convulsivos.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans6_1')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans6_1" class="answer-box">
+                <strong>✅ Respuestas Correctas: A, B, C, D, F</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>A (Hemograma, ESR, PCR):</strong> Evaluación de inflamación sistémica en contexto de convulsión febril con alto riesgo de meningitis.<br>
+                • <strong>B (Hemocultivos + LP):</strong> Descartar meningitis viral o bacteriana. Criterios de Rochester: edad 12-36 meses + fiebre + convulsión → LP obligatoria.<br>
+                • <strong>C (Ceftriaxone EV):</strong> Cobertura antibiótica inmediata para meningitis bacteriana post-cultivos.<br>
+                • <strong>D (Internación):</strong> Convulsión febril prolongada + sospecha meningitis = internación obligatoria.<br>
+                • <strong>F (Probable herpes 6):</strong> Causa más frecuente de convulsión febril a esta edad si se descarta meningitis.
+            </div>
+        </div>
+
+        <div class="card" data-semana="6" data-tema="fiebre neonatal, lactante pequeño, infección">
+            <span class="badge">Viernes 11 de Septiembre — EFU Temas</span>
+            <h2>Caso EFU 2: Fiebre Neonatal - Lara (21 días)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial:</strong><br>
+                Lara es traída a la guardia por haber presentado un registro de temperatura axilar de 38,5°C. Es la primer hija, tiene 21 días de vida. El embarazo cursó sin complicaciones, serologías negativas. Nació a término por cesárea. Apgar 8/10. Peso de nacimiento 2940 gramos. Recibió vacuna antihepatitis B y BCG. Se alimenta con lactancia materna exclusiva. Resto del examen físico sin particularidades.
+                <br><br>
+                <strong>Pregunta:</strong> ¿Cuáles son las conductas iniciales más adecuadas? <em>(Marque hasta 4 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li><strong>A.</strong> Indicar paracetamol vía oral y control en 1 hora.</li>
+                <li><strong>B.</strong> Indicar paracetamol vía oral y control en 24 horas.</li>
+                <li data-correct="true"><strong>C.</strong> Internar a Lara.</li>
+                <li data-correct="true"><strong>D.</strong> Solicitar hemograma, PCR y orina completa.</li>
+                <li data-correct="true"><strong>E.</strong> Solicitar hemocultivos y urocultivo.</li>
+                <li data-correct="true"><strong>F.</strong> Realizar punción lumbar para físico químico y cultivo.</li>
+                <li data-correct="true"><strong>G.</strong> Solicitar panel respiratorio de vía aérea superior.</li>
+                <li data-correct="true"><strong>H.</strong> Solicitar coprocultivo e hisopado anal y nasal.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans6_2')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans6_2" class="answer-box">
+                <strong>✅ Respuestas Correctas: C, D, E, F, G, H</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>C (Internación):</strong> Todo RN < 28 días con fiebre (≥38°C rectal) es emergencia. Requiere hospitalización e investigación exhaustiva.<br>
+                • <strong>D (Hemograma, PCR, orina):</strong> Evaluación basal de inflamación y descartar ITU.<br>
+                • <strong>E (Hemocultivos + urocultivo):</strong> Búsqueda activa de bacteriemia e infección urinaria.<br>
+                • <strong>F (Punción lumbar):</strong> Obligatoria en neonato febril; descartar meningitis bacteriana.<br>
+                • <strong>G (Panel respiratorio):</strong> Identifica virus respiratorios (RSV, influenza, parainfluenza).<br>
+                • <strong>H (Cultivos deposicionales):</strong> Búsqueda de Salmonella o Listeria.
+            </div>
+        </div>
+
+        <!-- SEMANA 7: Neonatología y Desarrollo -->
+        <div class="card" data-semana="7" data-tema="neonato, ictericia, bilirrubina, lactancia, peso">
+            <span class="badge">Viernes 18 de Septiembre — EFU Temas</span>
+            <h2>Caso EFU 1: Ictericia Neonatal - Pablo (14 días)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial:</strong><br>
+                Ud. atiende en su consultorio a Pablo, neonato de 14 días de vida que concurre para control. Es un nacido de término, de un embarazo controlado. Pesó 2800 grs al nacer y fue dado de alta al 3° día con 2600 grs. Las vacunas están completas. Se alimenta con lactancia materna exclusiva. Presenta deposiciones diarias color amarillo oro y la diuresis está conservada. Al examen físico se encuentra vigoroso, con ictericia en cara. El peso actual es de 2780 grs.
+                <br><br>
+                <strong>Pregunta:</strong> ¿Cuáles son las conductas más adecuadas? <em>(Marque hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li><strong>A.</strong> Suplementar con fórmula de inicio.</li>
+                <li><strong>B.</strong> Solicitar orina completa y urocultivo.</li>
+                <li><strong>C.</strong> Solicitar serologías.</li>
+                <li data-correct="true"><strong>D.</strong> Citar a control de peso.</li>
+                <li data-correct="true"><strong>E.</strong> Promover la lactancia materna exclusiva.</li>
+                <li><strong>F.</strong> Suplementar con sulfato ferroso.</li>
+                <li><strong>G.</strong> Solicitar dosaje de bilirrubina.</li>
+                <li data-correct="true"><strong>H.</strong> Evaluar técnica de amamantamiento.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans7_1')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans7_1" class="answer-box">
+                <strong>✅ Respuestas Correctas: D, E, H</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>D (Control de peso):</strong> Neonato próximo a recuperar su peso de nacimiento. Citar en 48-72 hs para verificar curva ascendente.<br>
+                • <strong>E (Promover lactancia):</strong> Paciente vigoroso, normohidratado, con diuresis y catarsis conservadas.<br>
+                • <strong>H (Evaluar técnica):</strong> Supervisión de amamantamiento es fundamental en el primer mes de vida.
+            </div>
+        </div>
+
+        <div class="card" data-semana="7" data-tema="neonato, ictericia prolongada, bilirrubina, lactancia">
+            <span class="badge">Viernes 18 de Septiembre — EFU Temas</span>
+            <h2>Caso EFU 2: Ictericia Prolongada - Sabrina (20 días)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial:</strong><br>
+                La mamá de Sabrina de 20 días de vida concurre a la consulta porque "la nota muy amarilla". El embarazo y el parto fueron normales. Nació a término con 3200 gramos, Apgar vigoroso. Grupo sanguíneo A+. Alta a las 48 horas sin problemas perinatales. Se alimenta a pecho exclusivo desde el nacimiento. En el control a los 7 días presentaba leve ictericia en cara, buen aumento de peso.
+                <br><br>
+                <strong>Pregunta:</strong> Ante esta situación, ¿cuál es la conducta más apropiada? <em>(Marque hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li data-correct="true"><strong>A.</strong> Tranquilizar a la madre explicándole que la ictericia disminuirá gradualmente durante el primer mes.</li>
+                <li><strong>B.</strong> Suspender temporalmente la alimentación materna.</li>
+                <li><strong>C.</strong> Suspender la alimentación materna de modo permanente y continuar alimentando con fórmula.</li>
+                <li><strong>D.</strong> Efectuar una prueba de compatibilidad para descartar incompatibilidad ABO.</li>
+                <li><strong>E.</strong> Efectuar una prueba de compatibilidad para descartar incompatibilidad Rh.</li>
+                <li data-correct="true"><strong>F.</strong> Investigar cambios en la coloración de la orina y la materia fecal.</li>
+                <li data-correct="true"><strong>G.</strong> Solicitar ecografía hepática.</li>
+                <li><strong>H.</strong> Internar a Sabrina para efectuar luminoterapia.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans7_2')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans7_2" class="answer-box">
+                <strong>✅ Respuestas Correctas: A, F, G</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>A (Tranquilizar y explicar):</strong> Ictericia a los 20 días en RNT con buen ganancia ponderal es ictericia del lactante. Regresa a niveles normales.<br>
+                • <strong>F (Investigar coloración):</strong> Orienta sobre calidad de deposiciones y orina. Heces oscuras sugieren colestasis neonatal.<br>
+                • <strong>G (Ecografía hepática):</strong> Descarta malformaciones o hepatitis neonatal si ictericia continúa.
+            </div>
+        </div>
+
+        <div class="card" data-semana="7" data-tema="desarrollo, psicomotor, 6 meses, neurodesarrollo">
+            <span class="badge">Viernes 18 de Septiembre — EFU Temas</span>
+            <h2>Caso EFU 3: Desarrollo Psicomotor - Antonio (6 meses)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial:</strong><br>
+                Antonio es un niño de 6 meses de edad que concurre acompañado por su madre de 16 años y su padre de 18 años a la consulta del control del 6to mes. Sin antecedentes perinatológicos de importancia. Peso de nacimiento: 3,500 kg, Talla: 49 cm. Al examen físico presenta un peso de 8500 grs (Pc 50-75), mide 68 cm (Pc 25-50).
+                <br><br>
+                <strong>Pregunta:</strong> En este paciente, ¿qué pautas del neurodesarrollo debe haber logrado? <em>(Marque hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li><strong>A.</strong> Intenta dar pasos con sostén.</li>
+                <li><strong>B.</strong> Presencia de tónico cervical asimétrico.</li>
+                <li data-correct="true"><strong>C.</strong> Puede sentarse solo por medio de la posición de trípode.</li>
+                <li data-correct="true"><strong>D.</strong> Lleva objetos a la boca.</li>
+                <li data-correct="true"><strong>E.</strong> Rola.</li>
+                <li data-correct="true"><strong>F.</strong> Repite sílabas "ma ma", "da da".</li>
+                <li data-correct="true"><strong>G.</strong> Pinza radial inferior.</li>
+                <li><strong>H.</strong> Saluda con la mano.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans7_3')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans7_3" class="answer-box">
+                <strong>✅ Respuestas Correctas: C, D, E, F, G</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>C (Sentarse en trípode):</strong> Pauta motora gruesa de los 6 meses.<br>
+                • <strong>D (Lleva objetos a la boca):</strong> Exploración oral característica de los 6 meses.<br>
+                • <strong>E (Rola):</strong> Cambio de decúbito dorsal a ventral esperable a los 5-6 meses.<br>
+                • <strong>F (Ba-ba, da-da):</strong> Balbuceo silábico esperable a partir de los 4-6 meses.<br>
+                • <strong>G (Pinza radial):</strong> Motricidad fina emergente a los 6 meses.
+            </div>
+        </div>
+
+        <!-- SEMANA 8: Infecciones y Exantemáticas -->
+        <div class="card" data-semana="8" data-tema="varicela, exantema, virus, inmunización">
+            <span class="badge">Viernes 25 de Septiembre — EFU Temas</span>
+            <h2>Caso EFU 1: Varicela - Mauricio (5 años)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial:</strong><br>
+                Isabel concurre a la consulta con su hijo Mauricio de 5 años de edad quien presenta lesiones compatibles con varicela desde hace 24 hs. Ella le comenta que en el jardín donde asiste se han presentado varios casos. La madre de Mauricio está sorprendida porque su hijo había recibido una dosis de vacuna antivaricela a los 3 años. Además está muy preocupada porque ella no sabe si tuvo varicela y está embarazada de término.
+                <br><br>
+                <strong>Pregunta:</strong> Con los datos presentados, ¿cuáles son las opciones más apropiadas? <em>(Marque hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li data-correct="true"><strong>A.</strong> Indicar cultivo del contenido de las lesiones.</li>
+                <li data-correct="true"><strong>B.</strong> Mauricio seguramente cursará una varicela leve, ya que recibió vacuna.</li>
+                <li><strong>C.</strong> La madre debe recibir la vacuna antivaricela como profilaxis post exposición.</li>
+                <li data-correct="true"><strong>D.</strong> Si Isabel padeciera varicela perinatal, el recién nacido deberá recibir gammaglobulina específica.</li>
+                <li data-correct="true"><strong>E.</strong> De haber recibido la vacuna a los 15 meses, se hubiera evitado que Mauricio se enfermara de varicela.</li>
+                <li data-correct="true"><strong>F.</strong> Nicolás debe recibir vacuna como profilaxis post exposición.</li>
+                <li><strong>G.</strong> Nicolás debe recibir gammaglobulina por ser un inmunodeprimido.</li>
+                <li><strong>H.</strong> Solicitar serologías específicas para varicela.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans8_1')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans8_1" class="answer-box">
+                <strong>✅ Respuestas Correctas: A, B, D, E, F</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>A (Cultivo de lesiones):</strong> Gold standard para confirmación de varicela (PCR o cultivo viral).<br>
+                • <strong>B (Varicela leve por vacuna):</strong> Varicela modificada — curso más leve, menos lesiones, menor riesgo de complicaciones.<br>
+                • <strong>D (Gammaglobulina neonatal):</strong> Si madre tiene varicela perinatal, RN requiere inmunoglobulina específica.<br>
+                • <strong>E (Vacuna a los 15 meses):</strong> Probablemente hubiera prevenido o atenuado la infección.<br>
+                • <strong>F (Nicolás recibe profilaxis):</strong> Vacuna post-exposición ofrece protección dentro de 72 hs.
+            </div>
+        </div>
+
+        <div class="card" data-semana="8" data-tema="urticaria, exantema, prurito, alergia">
+            <span class="badge">Viernes 25 de Septiembre — EFU Temas</span>
+            <h2>Caso EFU 2: Exantema Pruriginoso - Santino (5 años)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial:</strong><br>
+                Santino, de 5 años, es traído al consultorio por haber presentado manchas en la piel que comenzaron 24 hs antes. La madre relata que las "manchas" comenzaron súbitamente como máculas rosadas y pruriginosas, distribuyéndose de manera asimétrica y generalizada. Estas lesiones tienen tendencia a confluir y formar placas eritematosas. Además se acompaña de intenso prurito. El niño se encuentra afebril y en buen estado general.
+                <br><br>
+                <strong>Pregunta:</strong> Teniendo en cuenta su hipótesis diagnóstica (urticaria aguda), ¿cuáles son las conductas más adecuadas? <em>(Marque hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li><strong>A.</strong> Solicitar serología para rubéola.</li>
+                <li><strong>B.</strong> Indicar talco mentolado 2 veces por día.</li>
+                <li data-correct="true"><strong>C.</strong> Tranquilizar a la madre explicando que es una situación transitoria y benigna.</li>
+                <li><strong>D.</strong> Solicitar hemograma y dosaje de inmunoglobulinas.</li>
+                <li data-correct="true"><strong>E.</strong> Indicar antihistamínicos.</li>
+                <li><strong>F.</strong> Excluir al niño del jardín hasta la desaparición total de las lesiones.</li>
+                <li><strong>G.</strong> Realizar denuncia epidemiológica a la autoridad sanitaria local.</li>
+                <li data-correct="true"><strong>H.</strong> Suspender tratamiento antibiótico (si lo hubiera estado recibiendo).</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans8_2')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans8_2" class="answer-box">
+                <strong>✅ Respuestas Correctas: C, E, H</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>C (Tranquilizar y explicar):</strong> Urticaria aguda es autolimitada, desaparece en horas a días.<br>
+                • <strong>E (Antihistamínicos):</strong> Primera línea terapéutica. Control rápido del prurito.<br>
+                • <strong>H (Suspender antibiótico):</strong> Los antibióticos (especialmente penicilinas) son causa frecuente de urticaria alérgica aguda.
+            </div>
+        </div>
+
+        <div class="card" data-semana="8" data-tema="faringitis, infección, estreptococo, antibiótico">
+            <span class="badge">Viernes 25 de Septiembre — EFU Temas</span>
+            <h2>Caso EFU 3: Faringitis Estreptocóccica - Federico (6 años)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial:</strong><br>
+                Concurren a consultorios externos María con su hijo Federico de 6 años de edad por presentar fiebre de 38°C de 48 horas de evolución y dolor de garganta, sin tos ni rinitis. En la anamnesis surge que convive con el padre (albañil), madre (ama de casa), una hermana de 2 años cursando un cuadro catarral. Examen físico: Buen estado general. Faringe eritematosa, exudado amarillento bilateral en amígdalas, adenopatía cervical anterior dolorosa bilateral.
+                <br><br>
+                <strong>Pregunta:</strong> De acuerdo a los datos obtenidos por anamnesis y examen físico, ¿cuáles son las conductas más adecuadas? <em>(Marque hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li data-correct="true"><strong>A.</strong> Indicar antitérmicos y dieta blanda.</li>
+                <li><strong>B.</strong> Indicar clindamicina vía oral.</li>
+                <li data-correct="true"><strong>C.</strong> Indicar penicilina vía oral.</li>
+                <li><strong>D.</strong> Indicar penicilina vía oral si el cultivo es positivo para estreptococo alfa hemolítico.</li>
+                <li data-correct="true"><strong>E.</strong> Indicar penicilina vía oral si el cultivo es positivo para estreptococo beta hemolítico.</li>
+                <li><strong>F.</strong> Indicar realización de cultivo de fauces a los convivientes para erradicar la portación.</li>
+                <li><strong>G.</strong> Indicar penicilina benzatínica intramuscular.</li>
+                <li><strong>H.</strong> Indicar colutorio bucofaríngeo con anestésico y antibiótico local.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans8_3')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans8_3" class="answer-box">
+                <strong>✅ Respuestas Correctas: A, C, E</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>A (Antitérmicos, dieta blanda):</strong> Manejo sintomático estándar de faringitis aguda.<br>
+                • <strong>C (Penicilina VO):</strong> Tratamiento de primera línea para faringitis bacteriana (probable Streptococcus pyogenes).<br>
+                • <strong>E (Penicilina si cultivo positivo beta hemolítico):</strong> Confirmación de S. pyogenes (grupo A, beta hemolítico). Penicilina es antibiótico de elección.
+            </div>
+        </div>
+
+        <!-- SEMANA 9: Emergencias y Cirugía -->
+        <div class="card" data-semana="9" data-tema="trauma, intoxicación, emergencia, adolescente, shock">
+            <span class="badge">Viernes 02 de Octubre — EFU Temas</span>
+            <h2>Caso EFU 1: Intoxicación y Trauma - Alan (13 años)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial:</strong><br>
+                Usted atiende en el sector de emergencias a Alan de 13 años. Estando en una fiesta con amigos, le avisaron que se cayó porque se "descompuso". Alan aparenta estar confundido, se torna agresivo y no colabora. Impresiona adelgazado, en regular estado general, sudoroso, con pupilas midriáticas. Temperatura axilar: 37,2°C, FC: 100/minuto, FR: 20/minuto. Antecedentes: La madre refiere que desde hace 3 meses nota cambios conductuales, baja de peso progresiva, aislamiento social y rechazo a la escuela.
+                <br><br>
+                <strong>Pregunta:</strong> ¿Cuál es la conducta inicial más adecuada? <em>(Marque hasta 4 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li data-correct="true"><strong>A.</strong> Solicitar intervención policial.</li>
+                <li><strong>B.</strong> Realizar punción lumbar.</li>
+                <li data-correct="true"><strong>C.</strong> Indicar hidratación endovenosa.</li>
+                <li><strong>D.</strong> Inducir el vómito.</li>
+                <li data-correct="true"><strong>E.</strong> Solicitar tóxicos en orina.</li>
+                <li data-correct="true"><strong>F.</strong> Indicar lavado gástrico.</li>
+                <li><strong>G.</strong> Solicitar TAC de cerebro con contraste.</li>
+                <li data-correct="true"><strong>H.</strong> Solicitar EEG.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans9_1')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans9_1" class="answer-box">
+                <strong>✅ Respuestas Correctas: A, C, E, F, H</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>A (Intervención policial):</strong> Probable consumo de drogas con síntomas de intoxicación, antecedentes de cambios conductuales.<br>
+                • <strong>C (Hidratación EV):</strong> Estabilización de signos vitales; taquicardia leve y diaforesis sugieren estado de shock relativo.<br>
+                • <strong>E (Tóxicos en orina):</strong> Identificación del tóxico (cocaína, anfetaminas, opioides, alucinógenos).<br>
+                • <strong>F (Lavado gástrico):</strong> Si hubiera ingesta oral reciente (dentro de 1-2 hs) de tóxico.<br>
+                • <strong>H (EEG):</strong> Evaluación de actividad eléctrica cerebral tras trauma y cambios conductuales.
+            </div>
+        </div>
+
+        <div class="card" data-semana="9" data-tema="trauma, osteomielitis, post-traumática, cirugía">
+            <span class="badge">Viernes 02 de Octubre — EFU Temas</span>
+            <h2>Caso EFU 2: Trauma Post-Lesión - José (12 años)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial:</strong><br>
+                Concurre a la guardia José de 12 años que consulta por dolor exquisito y puntual en el 1/3 inferior del muslo derecho e impotencia funcional y fiebre durante las últimas 48 horas. Como antecedente refiere haber sufrido un traumatismo hace 7 días jugando al fútbol. En el examen físico se observa área de tumefacción con una lesión en piel del 1/3 inferior del muslo derecho, cubierta actualmente por una costra hemática.
+                <br><br>
+                <strong>Pregunta:</strong> Además de indicar analgesia, ¿cuáles son las conductas iniciales más adecuadas? <em>(Marque hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li data-correct="true"><strong>A.</strong> Internación, 2 hemocultivos y tratamiento antibiótico endovenoso.</li>
+                <li><strong>B.</strong> Control ambulatorio en 48 hs y tratamiento con cefalexina vía oral.</li>
+                <li><strong>C.</strong> Inmovilización, analgesia y control ambulatorio en 48 horas.</li>
+                <li data-correct="true"><strong>D.</strong> Solicitar resonancia magnética del miembro.</li>
+                <li data-correct="true"><strong>E.</strong> Solicitar ecografía de partes blandas.</li>
+                <li data-correct="true"><strong>F.</strong> Solicitar tomografía computada del miembro.</li>
+                <li><strong>G.</strong> Toma de cultivo por piel sana de la costra.</li>
+                <li><strong>H.</strong> Solicitar centellograma corporal total.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans9_2')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans9_2" class="answer-box">
+                <strong>✅ Respuestas Correctas: A, D, E, F</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>A (Internación + hemocultivos + ATB EV):</strong> Osteomielitis es emergencia quirúrgica. Fiebre + tumefacción + antecedente de trauma = alto riesgo de infección ósea.<br>
+                • <strong>D (Resonancia de miembro):</strong> Gold standard para visualizar edema de médula ósea, absceso, colecciones de pus.<br>
+                • <strong>E (Ecografía de partes blandas):</strong> Detecta líquido/pus en espacios tisulares.<br>
+                • <strong>F (TAC del miembro):</strong> Complemento para evaluar cortical ósea, planificar drenaje quirúrgico.
+            </div>
+        </div>
+
+        <div class="card" data-semana="9" data-tema="estenosis píloro, abdomen agudo, cirugía, vómitos">
+            <span class="badge">Viernes 02 de Octubre — EFU Compilado</span>
+            <h2>Caso EFU 3: Estenosis de Píloro - Emilio (1 mes 17 días)</h2>
+
+            <div class="efu-vignette">
+                <strong>Enunciado Oficial:</strong><br>
+                Emilio de 1 mes y 17 días de vida asiste a guardia junto a sus padres. Refieren que Emilio, único hijo, hace 12 horas está decaído y presentaba vómitos postprandiales desde hace 1 semana. Toma pecho con mayor avidez. En las últimas horas presentó 4 vómitos en chorro. Siempre afebril. Nació a término, de peso adecuado para la edad gestacional (3100 gr). Antecedentes familiares: tío paterno con historia de estenosis de píloro. En el momento de la consulta: peso 2850 gr (pérdida del 8%), ojos hundidos, llanto débil, mucosa oral seca. FC 160/min, FR 50/min.
+                <br><br>
+                <strong>Pregunta:</strong> De acuerdo a su hipótesis diagnóstica (estenosis de píloro), ¿cuál es la conducta diagnóstica adecuada? <em>(Marque hasta 3 opciones)</em>
+            </div>
+
+            <ul class="efu-options">
+                <li data-correct="true"><strong>A.</strong> Ecografía abdominal.</li>
+                <li data-correct="true"><strong>B.</strong> EAB, ionograma, glucemia, urea, creatinina.</li>
+                <li data-correct="true"><strong>C.</strong> Interconsulta por cirugía infantil.</li>
+                <li><strong>D.</strong> Hemograma, PCR, procalcitonina.</li>
+                <li><strong>E.</strong> 2 hemocultivos.</li>
+                <li><strong>F.</strong> Orina completa y urocultivo.</li>
+                <li><strong>G.</strong> Punción lumbar para citoquímico y cultivo.</li>
+                <li><strong>H.</strong> pHmetría de 24 horas.</li>
+            </ul>
+
+            <button class="reveal-btn" onclick="toggleAnswer('ans9_3')">Ver Respuestas Correctas y Explicación</button>
+
+            <div id="ans9_3" class="answer-box">
+                <strong>✅ Respuestas Correctas: A, B, C</strong><br><br>
+                <strong>Justificación Clínica Oficial:</strong><br>
+                • <strong>A (Ecografía abdominal):</strong> Gold standard diagnóstico. Imágenes típicas: "aceituna" pilórica, hipertrofia muscular, canal pilórico elongado.<br>
+                • <strong>B (EAB, ionograma, bioquímica):</strong> Evaluar alcalosis hipoclorémica hipopotasémica por vómitos en chorro, deshidratación (8% pérdida), función renal.<br>
+                • <strong>C (Interconsulta cirugía):</strong> Estenosis de píloro requiere corrección quirúrgica (piloromiotomía de Ramstedt). Debe ser evaluado por cirugía pediátrica.
+            </div>
+        </div>
