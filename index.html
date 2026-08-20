@@ -2447,13 +2447,47 @@ Equipo Docente de Pediatría</textarea>
             }, 4000);
         }
 
-        // Filtro por semana: acota tanto las tarjetas visibles como el Modo Presentación
+        // Filtro por semana: acota tanto las tarjetas visibles como el Modo Presentación.
+        // Si hay una búsqueda por tema activa (buscador de codigo_buscador.js), ésta tiene
+        // prioridad sobre el filtro de semana: se busca en todos los casos, sin importar la semana.
         let efuWeekFilter = '3';
+        let efuSearchQuery = '';
+
+        function cardMatchesEfuSearch(card, query) {
+            let tema = (card.dataset.tema || '').toLowerCase();
+            let titulo = card.querySelector('h2') ? card.querySelector('h2').innerText.toLowerCase() : '';
+            return tema.includes(query) || titulo.includes(query);
+        }
 
         function getEfuCards() {
-            return Array.from(document.querySelectorAll('#tab-efu .card')).filter((card) => {
+            return Array.from(document.querySelectorAll('#tab-efu .card[data-semana]')).filter((card) => {
+                if (efuSearchQuery) return cardMatchesEfuSearch(card, efuSearchQuery);
                 return efuWeekFilter === 'all' || card.dataset.semana === efuWeekFilter;
             });
+        }
+
+        function refreshEfuVisibility() {
+            document.querySelectorAll('#tab-efu .card[data-semana]').forEach((card) => {
+                let visible;
+                if (efuSearchQuery) {
+                    visible = cardMatchesEfuSearch(card, efuSearchQuery);
+                } else {
+                    visible = (efuWeekFilter === 'all' || card.dataset.semana === efuWeekFilter);
+                }
+                card.style.display = visible ? '' : 'none';
+            });
+
+            document.querySelectorAll('#efu-week-filter .subtab-btn').forEach(b => {
+                b.disabled = !!efuSearchQuery;
+            });
+
+            let count = getEfuCards().length;
+            let label = document.getElementById('efu-week-count');
+            if (label) {
+                label.textContent = efuSearchQuery
+                    ? count + (count === 1 ? ' resultado de la búsqueda' : ' resultados de la búsqueda')
+                    : count + (count === 1 ? ' caso en pantalla' : ' casos en pantalla');
+            }
         }
 
         function filterEfuWeek(week, btn) {
@@ -2462,16 +2496,7 @@ Equipo Docente de Pediatría</textarea>
             document.querySelectorAll('#efu-week-filter .subtab-btn').forEach(b => b.classList.remove('active'));
             if (btn) btn.classList.add('active');
 
-            document.querySelectorAll('#tab-efu .card').forEach((card) => {
-                let visible = (week === 'all' || card.dataset.semana === week);
-                card.style.display = visible ? '' : 'none';
-            });
-
-            let count = getEfuCards().length;
-            let label = document.getElementById('efu-week-count');
-            if (label) {
-                label.textContent = count + (count === 1 ? ' caso en pantalla' : ' casos en pantalla');
-            }
+            refreshEfuVisibility();
         }
 
         function initPresentationData() {

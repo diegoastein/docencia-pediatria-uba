@@ -59,6 +59,9 @@ function initThemeSearcher() {
 }
 
 // Función principal de búsqueda por tema
+// NOTA: delega el filtrado a `refreshEfuVisibility()` (definida en index.html) a través de la
+// variable compartida `efuSearchQuery`, para que el Modo Presentación de EFU también respete
+// la búsqueda activa en vez de seguir mostrando los casos de la semana.
 function searchByTheme() {
     const searchInput = document.getElementById('theme-search-input').value.toLowerCase().trim();
     const resultsDiv = document.getElementById('theme-search-results');
@@ -69,25 +72,17 @@ function searchByTheme() {
         return;
     }
 
-    // Obtener todas las tarjetas
+    efuSearchQuery = searchInput;
+    refreshEfuVisibility();
+
+    // Resaltar las tarjetas que coincidieron (refreshEfuVisibility ya resolvió qué mostrar/ocultar)
     const cards = document.querySelectorAll('#tab-efu .card[data-tema]');
     let matchCount = 0;
-
-    // Filtrar tarjetas
     cards.forEach(card => {
-        const tema = card.getAttribute('data-tema').toLowerCase();
-        const titulo = card.querySelector('h2').textContent.toLowerCase();
-
-        // Búsqueda en tema, título y enunciado
-        const match = tema.includes(searchInput) || titulo.includes(searchInput);
-
-        if (match) {
-            card.style.display = 'block';
+        if (card.style.display !== 'none') {
             card.style.borderLeft = '5px solid #4caf50';
             card.style.boxShadow = '0 0 10px rgba(76, 175, 80, 0.2)';
             matchCount++;
-        } else {
-            card.style.display = 'none';
         }
     });
 
@@ -96,7 +91,7 @@ function searchByTheme() {
         resultsDiv.innerHTML = `❌ No se encontraron casos con el tema "<strong>${searchInput}</strong>". Intenta con otras palabras clave.`;
         resultsDiv.style.color = '#c62828';
     } else {
-        resultsDiv.innerHTML = `✅ Se encontraron <strong>${matchCount}</strong> caso${matchCount !== 1 ? 's' : ''} con el tema "<strong>${searchInput}</strong>"`;
+        resultsDiv.innerHTML = `✅ Se encontraron <strong>${matchCount}</strong> caso${matchCount !== 1 ? 's' : ''} con el tema "<strong>${searchInput}</strong>" — el Modo Presentación usará estos casos.`;
         resultsDiv.style.color = '#2e7d32';
     }
 }
@@ -107,10 +102,12 @@ function clearThemeSearch() {
     const resultsDiv = document.getElementById('theme-search-results');
     resultsDiv.textContent = '';
 
-    // Mostrar todas las tarjetas
+    efuSearchQuery = '';
+    refreshEfuVisibility();
+
+    // Restaurar el estilo por defecto de las tarjetas
     const cards = document.querySelectorAll('#tab-efu .card[data-tema]');
     cards.forEach(card => {
-        card.style.display = 'block';
         card.style.borderLeft = '4px solid var(--primary)';
         card.style.boxShadow = '0 1px 3px rgba(0,0,0,0.08)';
     });
