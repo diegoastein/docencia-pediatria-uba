@@ -137,10 +137,22 @@ escribir contenido nuevo.
 
 ## 🗄️ Banco Estructurado de Casos EFU (`banco_casos_efu.json`)
 
-> ⚠️ **Estado real (verificado 21/08/2026): el flujo de abajo todavía NO se ejecutó.**
-> `prompt_extraccion_antigravity.md`, `validar_banco_casos_efu.py` y `banco_casos_efu.json` no
-> existen en el repo — es un plan, no algo en curso. No asumir que está hecho sólo porque este
-> archivo lo describe en detalle.
+> ⚠️ **Estado real (actualizado 21/08/2026): extracción parcial, en pausa por decisión del docente.**
+> `banco_casos_efu.json` y `validar_banco_casos_efu.py` **sí existen** y están cargados con
+> **194 casos de `EFU POR TEMAS (resuelto).docx.pdf`** (las 124 páginas de ese PDF, completas —
+> 138 `"verificado"`, 53 `"excede_opciones"`, 2 `"revisar_ocr"`, 1 `"sin_grilla"`). Los otros dos
+> PDFs de `fuentes_pdf/` (`1.1 COMPILADO EFUS con rta.pdf`, 141 páginas, y
+> `EFU 29-02-24 con GRILLA.pdf`, 14 páginas escaneadas) **no se procesaron** — el docente decidió
+> que el volumen actual alcanza por ahora. Retomar esos dos con el mismo flujo de abajo si más
+> adelante hace falta más contenido; no es necesario para que el banco actual sea usable.
+>
+> **Antigravity queda descartado como método de extracción** (decisión del docente, 21/08/2026):
+> pide permisos demasiado amplios y sus resultados no son confiables. La extracción la hace
+> **Claude Code directamente**, caso por caso, con el skill de PDF — más lento y con más costo en
+> tokens que delegarla a otra IA, pero es el trade-off aceptado a cambio de no depender de una
+> herramienta externa y de mantener el mismo nivel de cuidado que ya se usó en la auditoría del
+> 21/08/2026 (ver más abajo). `prompt_extraccion_antigravity.md` ya no aplica y no hace falta
+> crearlo.
 >
 > Lo que sí existe, y **no hay que confundir con este plan**, es una extracción distinta y
 > anterior: `banco_casos_efu_completo.json` (+ `README_CASOS_EFU.md`, `RESUMEN_CASOS_EFU.md`,
@@ -166,21 +178,21 @@ caro en tokens y crece mal a medida que se agrega material nuevo. Por eso se mig
 intermedio estructurado en JSON, que actúa como fuente de verdad rápida de consultar (por
 módulo/tema, sin reprocesar PDFs) pero manteniendo trazabilidad total al PDF y página de origen.
 
-**Flujo de trabajo (estado actual, en curso):**
+**Flujo de trabajo (revisado 21/08/2026 — sin Antigravity, ver callout arriba):**
 1. Se agregan PDFs nuevos a `fuentes_pdf/`.
-2. El trabajo grueso de extracción (parsing/OCR de PDF → JSON) se delega a **Antigravity** (IA
-   externa), NO a Claude, por costo/tiempo. El prompt de extracción a usar está en
-   `prompt_extraccion_antigravity.md` (copiar y pegar tal cual en Antigravity).
-3. Antigravity entrega `banco_casos_efu.json` en la raíz del repo.
+2. Claude Code hace la extracción directamente (con el skill de PDF para lectura/OCR confiable),
+   caso por caso, citando siempre `fuente_pdf` + `pagina`. Nada de texto ni de opciones se
+   completa de memoria — todo sale de lo que Claude efectivamente lee en el PDF de esa tanda.
+3. Claude arma/actualiza `banco_casos_efu.json` en la raíz del repo con el esquema de abajo.
 4. **Antes de confiar en el archivo**, correr:
    ```bash
    python3 validar_banco_casos_efu.py
    ```
-   Corrige errores bloqueantes (exit code ≠ 0) antes de seguir. Las advertencias se revisan a mano.
-5. Una vez validado, Claude (u otra sesión) hace una revisión puntual de una muestra de casos
-   `"verificado"` contra el PDF fuente (usando `fuente_pdf` + `pagina` de cada caso) antes de que
-   el JSON reemplace a `banco_preguntas_efu_pediatria.md` como fuente para generar
-   `talleres_efu_semanales.md`.
+   Chequeo mecánico (máximo 8 opciones, campos obligatorios, `estado` válido) — no reemplaza la
+   revisión humana, sólo atrapa errores de forma. Corregir errores bloqueantes antes de seguir.
+5. Revisión puntual de una muestra de casos `"verificado"` contra el PDF fuente (usando
+   `fuente_pdf` + `pagina` de cada caso) antes de que el JSON reemplace a
+   `banco_preguntas_efu_pediatria.md` como fuente para generar `talleres_efu_semanales.md`.
 
 **Esquema de cada caso en `banco_casos_efu.json`:**
 ```json
@@ -207,6 +219,9 @@ módulo/tema, sin reprocesar PDFs) pero manteniendo trazabilidad total al PDF y 
   hasta confirmar contra el PDF original.
 - Todo caso debe ser trazable a `fuente_pdf` + `pagina` para poder verificarlo manualmente.
 
-**Próximo paso pendiente:** una vez que `banco_casos_efu.json` esté generado y validado, migrar
-la generación de `talleres_efu_semanales.md` para que lea de este JSON en vez de releer los PDFs
-o depender de `banco_preguntas_efu_pediatria.md`.
+**Próximo paso pendiente:** `banco_casos_efu.json` ya existe y está validado (194 casos de
+`EFU POR TEMAS`), pero todavía no se usó para generar ni ampliar `talleres_efu_semanales.md` —
+ese archivo sigue viniendo de una lectura directa de PDFs hecha antes de que este banco
+existiera. Migrar la generación de talleres nuevos para que lea de este JSON (filtrando por
+`modulo_tematico` y `estado: "verificado"`) es el siguiente paso real, cuando haga falta ampliar
+el cuadernillo.
