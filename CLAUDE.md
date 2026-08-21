@@ -137,6 +137,30 @@ escribir contenido nuevo.
 
 ## 🗄️ Banco Estructurado de Casos EFU (`banco_casos_efu.json`)
 
+> ⚠️ **Estado real (verificado 21/08/2026): el flujo de abajo todavía NO se ejecutó.**
+> `prompt_extraccion_antigravity.md`, `validar_banco_casos_efu.py` y `banco_casos_efu.json` no
+> existen en el repo — es un plan, no algo en curso. No asumir que está hecho sólo porque este
+> archivo lo describe en detalle.
+>
+> Lo que sí existe, y **no hay que confundir con este plan**, es una extracción distinta y
+> anterior: `banco_casos_efu_completo.json` (+ `README_CASOS_EFU.md`, `RESUMEN_CASOS_EFU.md`,
+> `EXTRACCION_CASOS_EFU_INFO.md`), generada el 18/08/2026 por una sesión de Claude Code ad hoc,
+> sin pasar por Antigravity. Tiene otro nombre, otro esquema (sin `estado`/`modulo_tematico`,
+> sin distinción `sin_grilla`), y **no la lee ni `index.html` ni `talleres_efu_semanales.md` ni
+> ningún script** — es un archivo huérfano. Además, completa `respuestas_correctas` en el 100%
+> de los casos con una heurística de texto (ausencia de `"(No,"` o `"KILLER"` en la opción), lo
+> cual no cumple el estándar de "grilla oficial inequívoca" de este proyecto — tratarlo como
+> borrador a revisar, no como banco verificado, si se lo va a reutilizar.
+>
+> De paso: una auditoría puntual de `talleres_efu_semanales.md` (21/08/2026) encontró que los
+> casos "Jonathan" y "Amalia" (Semana 3) tienen algunas letras completadas por criterio clínico
+> en vez de grilla — queda documentado inline con "⚠️ Nota de método" en ese archivo, sin
+> resolver del todo (no hay forma de cerrarlo sin más anotaciones en la fuente). El caso
+> "Rosendo" (Semana 2) tenía además un diagnóstico que contradecía una anotación explícita de la
+> fuente ("BRONQUIOLITIS" según un compañero de cursada); quedó **confirmado por el docente de
+> la cátedra** como crisis hipoxémica (paciente cardíaco conocido, salbutamol incorrecto) — ya
+> cerrado, la anotación de la fuente queda sólo de referencia.
+
 **Motivación:** releer los PDFs de `fuentes_pdf/` cada vez que se genera o amplía un taller es lento,
 caro en tokens y crece mal a medida que se agrega material nuevo. Por eso se migró a un banco
 intermedio estructurado en JSON, que actúa como fuente de verdad rápida de consultar (por

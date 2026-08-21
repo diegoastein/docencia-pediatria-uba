@@ -331,7 +331,9 @@ Usted se encuentra en una guardia de emergencias. Recibe a Rosendo, un niño de 
 - **H.** Tranquiliza a la tía dado que el episodio cederá en pocos minutos.
 
 <details>
-<summary><b>🔑 Ver Respuestas Correctas y Justificación Oficial</b></summary>
+<summary><b>🔑 Ver Respuestas Correctas y Justificación</b></summary>
+
+⚠️ *Nota de método: la fuente (`1.1 COMPILADO EFUS con rta.pdf`) trae una anotación manuscrita de un compañero de cursada que iba en sentido contrario a esta justificación: marcaba el diagnóstico como "BRONQUIOLITIS" y anotaba junto a la opción B que "salbutamol" era correcto hasta ahí (sólo el agregado de corticoides invalidaba la opción completa, marcada "killer"). No es grilla oficial de la cátedra, sino la lectura (errada) de un alumno. El diagnóstico de "crisis hipoxémica" — Rosendo es un paciente cardíaco conocido, por eso salbutamol es incorrecto — está **confirmado por el docente de la cátedra** (21/08/2026); la anotación de la fuente queda documentada acá sólo como referencia de trazabilidad, no como duda abierta.*
 
 * **Opciones Correctas:** **C, D, G**
 * **Justificación:**
@@ -340,14 +342,14 @@ Usted se encuentra en una guardia de emergencias. Recibe a Rosendo, un niño de 
   * **C (Oxígeno):** Primera medida ante la desaturación grave.
   * **D (Posición de cuclillas / genupectoral):** Aumenta la resistencia vascular sistémica, disminuye el cortocircuito derecha-izquierda y redirige flujo hacia el pulmón.
   * **G (Ambiente tranquilo):** El llanto y la agitación perpetúan la crisis; calmar al niño es parte del tratamiento inicial.
-  * *(Salbutamol y corticoides — opción B — estaban marcados como **"killer"** en la grilla: tratar el cuadro como bronquiolitis retrasa el manejo de una emergencia cardiológica.)*
+  * *(Opción B — salbutamol y corticoides — se descarta acá por tratarse de manejo de bronquiolitis, no de crisis hipoxémica; ver nota de método arriba sobre la anotación de la fuente que la marca distinto.)*
 </details>
 
 ---
 
 ## 📌 VIERNES 21 DE AGOSTO (SEMANA 3) — Respiratorio: Bronquiolitis
 
-⚠️ *Nota de método: para estos dos casos, el PDF fuente (`1.1 COMPILADO EFUS con rta.pdf`) no trae una grilla oficial letra-por-letra, sino anotaciones manuscritas parciales de un compañero de cursada (marcas explícitas de "NO" y de gravedad en algunas opciones). El diagnóstico y la gravedad (Score de Tal) surgen sin ambigüedad de los datos clínicos del enunciado; las opciones sin anotación explícita se resolvieron por manejo estándar de bronquiolitis, sin que ninguna contradiga las marcas de la fuente. Mismo criterio aplicado al caso "Rosendo" de la Semana 2.*
+⚠️ *Nota de método: para estos dos casos, el PDF fuente (`1.1 COMPILADO EFUS con rta.pdf`) no trae una grilla oficial letra-por-letra, sino anotaciones manuscritas parciales de un compañero de cursada (marcas explícitas de "NO" y de gravedad en algunas opciones). El diagnóstico y la gravedad (Score de Tal) surgen sin ambigüedad de los datos clínicos del enunciado; las opciones sin anotación explícita se resolvieron por manejo estándar de bronquiolitis, sin que ninguna contradiga las marcas de la fuente. (El caso "Rosendo" de la Semana 2 tiene su propia nota de método aparte: ahí la fuente sí trae una anotación, pero en sentido contrario a la respuesta presentada — no es el mismo tipo de vacío que estos dos.)*
 
 ---
 
