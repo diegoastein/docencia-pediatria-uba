@@ -998,6 +998,134 @@
             cursor: pointer;
         }
 
+        /* Actividades Abiertas en Vivo (Nube de Palabras / Muro de Preguntas / Pulso de Cierre) */
+        .activity-modal-box {
+            text-align: left;
+        }
+
+        .activity-type-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 14px 0;
+        }
+
+        .activity-type-btn {
+            padding: 12px 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: none;
+            color: inherit;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .activity-type-btn.selected {
+            border-color: #7c3aed;
+            background: #f5f3ff;
+            color: #5b21b6;
+        }
+
+        .activity-prompt-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+
+        .activity-status-pill {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background: #e6f4ea;
+            color: #137333;
+            margin-bottom: 10px;
+        }
+
+        .activity-status-pill.closed {
+            background: #f1f3f4;
+            color: #5f6368;
+        }
+
+        .activity-results-box {
+            max-height: 40vh;
+            overflow-y: auto;
+            margin: 10px 0;
+        }
+
+        .wordcloud-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            align-items: baseline;
+            padding: 8px 0;
+        }
+
+        .wordcloud-tag {
+            font-weight: 800;
+            color: #5b21b6;
+        }
+
+        .pulse-average {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #5b21b6;
+            text-align: center;
+        }
+
+        .pulse-comment-list, .qna-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+        }
+
+        .pulse-comment-list li, .qna-list li {
+            padding: 8px 10px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qna-count-badge {
+            flex-shrink: 0;
+            font-weight: 800;
+            color: #5b21b6;
+            background: #f5f3ff;
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.8rem;
+        }
+
+        .activity-modal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .activity-modal-actions button {
+            flex: 1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .activity-type-btn.selected { background: #182a4d; color: #8ab4f8; border-color: #8ab4f8; }
+            .wordcloud-tag { color: #8ab4f8; }
+            .pulse-average { color: #8ab4f8; }
+            .pulse-comment-list li, .qna-list li { background: #2b2e35; }
+            .qna-count-badge { background: #182a4d; color: #8ab4f8; }
+            .activity-status-pill.closed { background: #2b2e35; color: #9aa0a6; }
+        }
+
         /* Selección de casos para armar una presentación a medida (combinando búsquedas) */
         .efu-select-toggle {
             position: absolute;
@@ -2808,6 +2936,14 @@ Equipo Docente de Pediatría</textarea>
         let votePollInterval = null;
         let liveVoteCounts = [];
         let liveVoteTotal = 0;
+        let opinionMode = false; // Modo Opinión: vota igual que un caso EFU pero sin marcar correcto/incorrecto ni sumar puntaje
+
+        // Actividades Abiertas en Vivo (Nube de Palabras / Muro de Preguntas / Pulso de Cierre):
+        // reutilizan la misma sala/QR de la Votación en Vivo, con su propio nodo en Firebase.
+        let activityState = null; // { type: 'wordcloud'|'qna'|'pulse', prompt, status: 'open'|'closed', key }
+        let activityPollInterval = null;
+        let activityAnsweredQna = new Set(); // ids de preguntas marcadas "respondida" (sólo local, lado docente)
+        let pendingActivityType = 'wordcloud'; // selección en el panel antes de abrir la actividad
 
         function efuVotingEnabled() {
             return !!EFU_FIREBASE_DB_URL;
@@ -2891,10 +3027,17 @@ Equipo Docente de Pediatría</textarea>
                     </div>
                     <button class="vote-toolbar-btn btn-secondary" onclick="copyVoteLink()">🔗 Copiar Link</button>
                     ${voteMode === 'equipos' ? '<button class="vote-toolbar-btn btn-secondary" onclick="showRankingModal()">🏆 Ranking</button>' : ''}
+                    <button class="vote-toolbar-btn btn-secondary" onclick="openActivityPanel()">${activityStatusLabel()}</button>
                     <button class="vote-toolbar-btn btn-danger-outline" onclick="deactivateVotingRoom()">✕ Desactivar</button>
                 </div>
             `;
             renderVoteQr('efuVoteQrCanvas', voteUrl);
+        }
+
+        function activityStatusLabel() {
+            if (activityState && activityState.status === 'open') return '💬 Actividad Abierta (en vivo)';
+            if (activityState && activityState.status === 'closed') return '💬 Ver resultados';
+            return '💬 Actividad Abierta';
         }
 
         function renderVoteQr(elementId, url) {
@@ -2973,9 +3116,11 @@ Equipo Docente de Pediatría</textarea>
         }
 
         function deactivateVotingRoom() {
+            stopVotePolling();
+            exitOpenActivity();
             voteRoomActive = false;
             voteRoomId = '';
-            stopVotePolling();
+            opinionMode = false;
             renderVoteToolbar();
             if (presentationActive) renderSlide(false);
         }
@@ -2994,8 +3139,15 @@ Equipo Docente de Pediatría</textarea>
             efuFbPatch(`efuRooms/${voteRoomId}/meta`, {
                 currentCaseId: currentCase.caseId,
                 phase: currentPhase,
+                opinionMode: opinionMode,
                 updatedAt: Date.now()
             }).catch((err) => console.warn('No se pudo sincronizar la sala de votación:', err));
+        }
+
+        function toggleOpinionMode() {
+            opinionMode = !opinionMode;
+            syncVoteMeta();
+            renderSlide(false);
         }
 
         function computeLiveVoteCounts(votesObj) {
@@ -3108,6 +3260,261 @@ Equipo Docente de Pediatría</textarea>
         function closeRankingModal() {
             const backdrop = document.getElementById('ranking-modal-backdrop');
             if (backdrop) backdrop.remove();
+        }
+
+        // ==========================================================================
+        // ACTIVIDADES ABIERTAS EN VIVO (Nube de Palabras / Muro de Preguntas / Pulso)
+        // ==========================================================================
+        // Reutilizan la misma sala/QR de la Votación en Vivo (voteRoomId) para no pedirle a
+        // los alumnos que escaneen un segundo código. El ciclo de vida (activityState +
+        // activityPollInterval) es independiente de la presentación de casos: se puede abrir
+        // una actividad con la presentación cerrada (ej. al final de la clase) y sigue viva
+        // aunque el docente cierre/reabra este panel.
+
+        const ACTIVITY_TEMPLATES = {
+            wordcloud: { label: '☁️ Nube de Palabras', needsPrompt: true },
+            qna: { label: '❓ Muro de Preguntas Anónimas', needsPrompt: false },
+            pulse: { label: '🌡️ Pulso de Cierre de Clase', needsPrompt: false }
+        };
+
+        function activityModalBackdrop() {
+            return document.getElementById('activity-modal-backdrop');
+        }
+
+        function openActivityPanel() {
+            if (!voteRoomActive) {
+                alert('Primero activá la Votación en Vivo (necesita la misma sala/QR).');
+                return;
+            }
+            if (activityModalBackdrop()) {
+                renderActivityModalContent();
+                return;
+            }
+            const backdrop = document.createElement('div');
+            backdrop.className = 'ranking-modal-backdrop';
+            backdrop.id = 'activity-modal-backdrop';
+            backdrop.onclick = (e) => { if (e.target === backdrop) closeActivityModal(); };
+            backdrop.innerHTML = `<div class="ranking-modal-box activity-modal-box" id="activity-modal-content"></div>`;
+            document.body.appendChild(backdrop);
+            renderActivityModalContent();
+            if (activityState) pollActivityResults();
+        }
+
+        function closeActivityModal() {
+            // Sólo oculta el panel — si hay una actividad abierta, sigue viva (polling incluido)
+            // hasta que el docente la cierre explícitamente con "Cerrar" o "Finalizar y Salir".
+            const backdrop = activityModalBackdrop();
+            if (backdrop) backdrop.remove();
+        }
+
+        function selectActivityType(type) {
+            pendingActivityType = type;
+            renderActivityModalContent();
+        }
+
+        function renderActivityModalContent() {
+            const box = document.getElementById('activity-modal-content');
+            if (!box) return;
+
+            if (!activityState) {
+                box.innerHTML = `
+                    <h3>💬 Actividad Abierta en Vivo</h3>
+                    <p style="margin-top: -6px; opacity: 0.8; font-size: 0.9rem;">
+                        Los alumnos la ven en el mismo celular donde ya tienen la sala <strong>${voteRoomId}</strong> abierta, sin escanear nada nuevo.
+                    </p>
+                    <div class="activity-type-options">
+                        ${Object.entries(ACTIVITY_TEMPLATES).map(([key, tpl]) => `
+                            <button class="activity-type-btn ${pendingActivityType === key ? 'selected' : ''}" onclick="selectActivityType('${key}')">${tpl.label}</button>
+                        `).join('')}
+                    </div>
+                    ${ACTIVITY_TEMPLATES[pendingActivityType].needsPrompt ? `
+                        <input type="text" id="activityPromptInput" class="activity-prompt-input" maxlength="120"
+                            placeholder="Ej: En una palabra, ¿qué pensás al ver esta imagen?">
+                    ` : ''}
+                    <div class="activity-modal-actions">
+                        <button class="ranking-modal-close" onclick="startOpenActivity()">Abrir</button>
+                    </div>
+                    <button class="ranking-modal-close" style="margin-top: 8px; background: transparent; color: inherit; opacity: 0.7;" onclick="closeActivityModal()">Cerrar panel</button>
+                `;
+                return;
+            }
+
+            const tpl = ACTIVITY_TEMPLATES[activityState.type];
+            box.innerHTML = `
+                <h3>${tpl.label}</h3>
+                <span class="activity-status-pill ${activityState.status === 'closed' ? 'closed' : ''}">
+                    ${activityState.status === 'closed' ? '⏹️ Cerrada (ya no acepta respuestas)' : '🟢 Abierta — los alumnos pueden responder'}
+                </span>
+                ${activityState.prompt ? `<p><strong>Consigna:</strong> ${activityState.prompt}</p>` : ''}
+                <div class="activity-results-box" id="activity-results-box">Cargando resultados...</div>
+                <div class="activity-modal-actions">
+                    ${activityState.status === 'open' ? '<button class="ranking-modal-close" onclick="closeOpenActivity()">Cerrar actividad</button>' : ''}
+                    <button class="ranking-modal-close" onclick="exitOpenActivity()">Finalizar y Salir</button>
+                </div>
+                <button class="ranking-modal-close" style="margin-top: 8px; background: transparent; color: inherit; opacity: 0.7;" onclick="closeActivityModal()">Minimizar (seguir en vivo)</button>
+            `;
+        }
+
+        async function startOpenActivity() {
+            const tpl = ACTIVITY_TEMPLATES[pendingActivityType];
+            let prompt = '';
+            if (tpl.needsPrompt) {
+                const input = document.getElementById('activityPromptInput');
+                prompt = input ? input.value.trim() : '';
+                if (!prompt) {
+                    alert('Escribí una consigna para la Nube de Palabras.');
+                    return;
+                }
+            } else if (pendingActivityType === 'pulse') {
+                prompt = '¿Qué tan clara estuvo la clase de hoy? (y contanos qué pedís reforzar)';
+            } else if (pendingActivityType === 'qna') {
+                prompt = 'Mandá tus preguntas sobre la clase de hoy';
+            }
+
+            const newActivity = {
+                type: pendingActivityType,
+                prompt,
+                status: 'open',
+                key: String(Date.now())
+            };
+            try {
+                await efuFbPut(`efuRooms/${voteRoomId}/meta/activity`, newActivity);
+                activityState = newActivity;
+                activityAnsweredQna = new Set();
+                renderVoteToolbar();
+                renderActivityModalContent();
+                startActivityPolling();
+            } catch (err) {
+                alert('No se pudo abrir la actividad: ' + err.message);
+            }
+        }
+
+        async function pollActivityResults() {
+            if (!activityState) return;
+            const box = document.getElementById('activity-results-box');
+            try {
+                const responses = await efuFbGet(`efuRooms/${voteRoomId}/activity/${activityState.key}/responses`) || {};
+                if (activityState.type === 'wordcloud') {
+                    renderWordCloudResults(box, responses);
+                } else if (activityState.type === 'pulse') {
+                    renderPulseResults(box, responses);
+                } else if (activityState.type === 'qna') {
+                    const upvotes = await efuFbGet(`efuRooms/${voteRoomId}/activity/${activityState.key}/upvotes`) || {};
+                    renderQnaResults(box, responses, upvotes);
+                }
+            } catch (err) {
+                console.warn('No se pudo actualizar la actividad abierta:', err);
+            }
+        }
+
+        function normalizeWord(text) {
+            // Agrupa variantes por tilde (bronquiolítis/bronquiolitis) sin tocar la "ñ" — no es
+            // un diacrítico, es una letra distinta ("pañal" ≠ "panal").
+            return String(text || '').trim().toLowerCase()
+                .replace(/[áàäâ]/g, 'a')
+                .replace(/[éèëê]/g, 'e')
+                .replace(/[íìïî]/g, 'i')
+                .replace(/[óòöô]/g, 'o')
+                .replace(/[úùüû]/g, 'u');
+        }
+
+        function renderWordCloudResults(box, responses) {
+            if (!box) return;
+            const freq = {};
+            Object.values(responses).forEach((r) => {
+                const norm = normalizeWord(r.text);
+                if (!norm) return;
+                freq[norm] = (freq[norm] || 0) + 1;
+            });
+            const entries = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+            if (entries.length === 0) {
+                box.innerHTML = '<p style="opacity: 0.7;">Todavía no llegaron respuestas.</p>';
+                return;
+            }
+            const maxCount = entries[0][1];
+            box.innerHTML = `<div class="wordcloud-tags">${entries.map(([word, count]) => {
+                const size = 0.9 + 1.6 * (Math.sqrt(count) / Math.sqrt(maxCount));
+                return `<span class="wordcloud-tag" style="font-size: ${size.toFixed(2)}rem;" title="${count} respuesta${count === 1 ? '' : 's'}">${word}</span>`;
+            }).join('')}</div>`;
+        }
+
+        function renderPulseResults(box, responses) {
+            if (!box) return;
+            const list = Object.values(responses);
+            if (list.length === 0) {
+                box.innerHTML = '<p style="opacity: 0.7;">Todavía no llegaron respuestas.</p>';
+                return;
+            }
+            const scales = list.map((r) => Number(r.scale)).filter((n) => n >= 1 && n <= 5);
+            const avg = scales.length > 0 ? (scales.reduce((a, b) => a + b, 0) / scales.length) : null;
+            const comments = list.filter((r) => r.text && r.text.trim()).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+            box.innerHTML = `
+                ${avg !== null ? `<div class="pulse-average">${avg.toFixed(1)} / 5</div><p style="text-align:center; opacity:0.7; font-size:0.85rem;">${scales.length} respuesta${scales.length === 1 ? '' : 's'}</p>` : ''}
+                ${comments.length > 0 ? `<ul class="pulse-comment-list">${comments.map((r) => `<li>${r.text}</li>`).join('')}</ul>` : ''}
+            `;
+        }
+
+        function renderQnaResults(box, responses, upvotes) {
+            if (!box) return;
+            const list = Object.entries(responses)
+                .filter(([id]) => !activityAnsweredQna.has(id))
+                .map(([id, r]) => ({
+                    id, text: r.text,
+                    count: Object.keys(upvotes[id] || {}).length
+                }))
+                .sort((a, b) => b.count - a.count);
+            if (list.length === 0) {
+                box.innerHTML = '<p style="opacity: 0.7;">Todavía no llegaron preguntas.</p>';
+                return;
+            }
+            box.innerHTML = `<ul class="qna-list">${list.map((q) => `
+                <li>
+                    <span>${q.text}</span>
+                    <span style="display:flex; align-items:center; gap:8px;">
+                        <span class="qna-count-badge">▲ ${q.count}</span>
+                        <button class="ranking-modal-close" style="width:auto; padding:4px 10px; font-size:0.8rem;" onclick="markQnaAnswered('${q.id}')">✅</button>
+                    </span>
+                </li>
+            `).join('')}</ul>`;
+        }
+
+        function markQnaAnswered(id) {
+            activityAnsweredQna.add(id);
+            pollActivityResults();
+        }
+
+        function startActivityPolling() {
+            stopActivityPolling();
+            pollActivityResults();
+            activityPollInterval = setInterval(pollActivityResults, 2000);
+        }
+
+        function stopActivityPolling() {
+            if (activityPollInterval) clearInterval(activityPollInterval);
+            activityPollInterval = null;
+        }
+
+        async function closeOpenActivity() {
+            if (!activityState) return;
+            try {
+                await efuFbPatch(`efuRooms/${voteRoomId}/meta/activity`, { status: 'closed' });
+                activityState.status = 'closed';
+                renderVoteToolbar();
+                renderActivityModalContent();
+            } catch (err) {
+                alert('No se pudo cerrar la actividad: ' + err.message);
+            }
+        }
+
+        function exitOpenActivity() {
+            stopActivityPolling();
+            if (voteRoomActive && voteRoomId) {
+                efuFbPatch(`efuRooms/${voteRoomId}/meta`, { activity: null }).catch(() => {});
+            }
+            activityState = null;
+            activityAnsweredQna = new Set();
+            closeActivityModal();
+            renderVoteToolbar();
         }
 
         function resetControlsTimer() {
@@ -3429,6 +3836,16 @@ Equipo Docente de Pediatría</textarea>
                         if (fill) fill.style.width = pct + '%';
                         if (countLabel) countLabel.innerText = `${count} voto${count === 1 ? '' : 's'} (${pct}%)`;
                     }
+                } else if (opinionMode) {
+                    // Fase 2 en Modo Opinión: no hay "correcta" — se deja ver la distribución
+                    // final del grupo, igual que en fase 1, sin marcar acierto/error.
+                    li.classList.add('has-live-bar');
+                    let count = liveVoteCounts[idx] || 0;
+                    let pct = liveVoteTotal > 0 ? Math.round((count / liveVoteTotal) * 100) : 0;
+                    let fill = li.querySelector('.vote-bar-fill');
+                    let countLabel = li.querySelector('.vote-bar-count');
+                    if (fill) fill.style.width = pct + '%';
+                    if (countLabel) countLabel.innerText = `${count} voto${count === 1 ? '' : 's'} (${pct}%)`;
                 } else {
                     // Phase 2: Reveal answers
                     if (opt.isCorrect) {
@@ -3458,6 +3875,7 @@ Equipo Docente de Pediatría</textarea>
                     </div>
                     <div class="pres-controls-top">
                         ${voteMode === 'equipos' && voteRoomActive ? '<button class="pres-btn-top" onclick="showRankingModal()">🏆 Ranking</button>' : ''}
+                        ${voteRoomActive ? `<button class="pres-btn-top" onclick="toggleOpinionMode()">${opinionMode ? '🎭 Modo Opinión: ON' : '🎭 Modo Opinión'}</button>` : ''}
                         <button class="pres-btn-top" onclick="toggleTheme()">🌓 Tema Claro/Oscuro</button>
                         <button class="pres-btn-top" onclick="exitPresentation()">✕ Salir (Esc)</button>
                     </div>
@@ -3553,7 +3971,7 @@ Equipo Docente de Pediatría</textarea>
                 currentPhase = 2;
                 stopVotePolling(); // se dejó de votar: congelamos el conteo en pantalla
                 renderSlide(true);
-                scoreTeamsForCase(closingCase);
+                if (!opinionMode) scoreTeamsForCase(closingCase);
             } else if (currentPhase === 2) {
                 if (currentCaseIndex < presentationCases.length - 1) {
                     currentCaseIndex++;

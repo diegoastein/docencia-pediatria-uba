@@ -169,6 +169,56 @@
         font-size: 0.85rem;
         margin: 14px 0 0 0;
     }
+    .scale-picker {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+    .scale-btn {
+        flex: 1;
+        width: auto;
+        padding: 12px 0;
+        background: #e8eaed;
+        color: #5f6368;
+    }
+    .scale-btn.selected {
+        background: linear-gradient(135deg, #7c3aed, #5b21b6);
+        color: white;
+    }
+    .qna-student-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .qna-student-list li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 0;
+        border-bottom: 1px solid #dadce0;
+        font-size: 0.92rem;
+    }
+    .qna-student-list li:last-child { border-bottom: none; }
+    .upvote-btn {
+        width: auto;
+        flex-shrink: 0;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        background: #f5f3ff;
+        color: #5b21b6;
+    }
+    .upvote-btn.voted {
+        background: #ede9fe;
+        color: #7c3aed;
+        opacity: 0.7;
+    }
+    @media (prefers-color-scheme: dark) {
+        .scale-btn { background: #2b2e35; color: #e8eaed; }
+        .qna-student-list li { border-color: #3c4043; }
+        .upvote-btn { background: #182a4d; color: #8ab4f8; }
+        .upvote-btn.voted { background: #182a4d; color: #8ab4f8; }
+    }
     @media (prefers-color-scheme: dark) {
         body { background: #0a0b0d; color: #f1f3f4; }
         .box { background: #1e2025; border-color: #3c4043; }
@@ -214,6 +264,7 @@
     let pollTimer = null;
     let caseCache = {}; // caseId -> caso ya parseado (el contenido no cambia durante el taller)
     let lastSeenKey = ''; // evita re-renderizar/refetchear si no cambió nada desde el último poll
+    let activityDraftScale = null; // puntaje 1-5 elegido en el Pulso de Cierre, antes de enviar
 
     const content = document.getElementById('content');
 
@@ -230,6 +281,16 @@
             body: JSON.stringify(body)
         });
         if (!res.ok) throw new Error(`POST ${path} → ${res.status}`);
+        return res.json();
+    }
+
+    async function fbPut(path, body) {
+        const res = await fetch(`${EFU_FIREBASE_DB_URL}/${path}.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error(`PUT ${path} → ${res.status}`);
         return res.json();
     }
 
@@ -260,6 +321,33 @@
     function saveTeam(name) {
         localStorage.setItem(`efuTeam_${roomId}`, name);
         teamName = name;
+    }
+
+    // Actividades Abiertas en Vivo (Nube de Palabras / Muro de Preguntas / Pulso de Cierre):
+    // mismo patrón anti-doble-envío por localStorage que ya usan hasVoted/markVoted.
+    function hasSentActivity(activityKey) {
+        return !!localStorage.getItem(`efuActivitySent_${roomId}_${activityKey}`);
+    }
+
+    function markActivitySent(activityKey) {
+        localStorage.setItem(`efuActivitySent_${roomId}_${activityKey}`, '1');
+    }
+
+    function hasUpvoted(responseId) {
+        return !!localStorage.getItem(`efuUpvoted_${roomId}_${responseId}`);
+    }
+
+    function markUpvoted(responseId) {
+        localStorage.setItem(`efuUpvoted_${roomId}_${responseId}`, '1');
+    }
+
+    function getVoterId() {
+        let id = localStorage.getItem('efuVoterId');
+        if (!id) {
+            id = `v${Date.now()}${Math.floor(Math.random() * 100000)}`;
+            localStorage.setItem('efuVoterId', id);
+        }
+        return id;
     }
 
     function renderRoomPrompt(errorMsg) {
@@ -448,6 +536,155 @@
         `;
     }
 
+    // ==========================================================================
+    // ACTIVIDADES ABIERTAS EN VIVO (Nube de Palabras / Muro de Preguntas / Pulso)
+    // ==========================================================================
+    // Se renderizan en vez de la votación de casos cuando roomMeta.activity existe. No
+    // duplican ningún dato: usan la misma sala/QR y los mismos helpers fbGet/fbPost/fbPut.
+
+    function renderActivityForm(activity) {
+        if (activity.type === 'wordcloud') {
+            content.innerHTML = `
+                <div class="box">
+                    <span class="badge">☁️ Nube de Palabras</span>
+                    <p class="case-title">${activity.prompt}</p>
+                    <input type="text" id="activityTextInput" maxlength="40" placeholder="Una palabra o frase corta" style="text-transform: none;">
+                    <button onclick="submitActivityResponse()">Enviar</button>
+                </div>
+            `;
+        } else if (activity.type === 'pulse') {
+            activityDraftScale = null;
+            content.innerHTML = `
+                <div class="box">
+                    <span class="badge">🌡️ Pulso de Cierre</span>
+                    <p class="case-title">${activity.prompt}</p>
+                    <div class="scale-picker" id="scalePicker">
+                        ${[1, 2, 3, 4, 5].map(n => `<button type="button" class="scale-btn" data-n="${n}" onclick="window.__pickScale(${n})">${n}</button>`).join('')}
+                    </div>
+                    <input type="text" id="activityTextInput" placeholder="(Opcional) ¿Qué pedís reforzar?" style="text-transform: none; margin-top: 10px;">
+                    <button onclick="submitActivityResponse()">Enviar</button>
+                </div>
+            `;
+        }
+    }
+
+    window.__pickScale = function (n) {
+        activityDraftScale = n;
+        document.querySelectorAll('.scale-btn').forEach(b => b.classList.toggle('selected', Number(b.dataset.n) === n));
+    };
+
+    window.submitActivityResponse = async function () {
+        const activity = roomMeta.activity;
+        const textInput = document.getElementById('activityTextInput');
+        const text = textInput ? textInput.value.trim() : '';
+        if (activity.type === 'wordcloud' && !text) {
+            alert('Escribí algo antes de enviar.');
+            return;
+        }
+        if (activity.type === 'pulse' && !activityDraftScale) {
+            alert('Elegí un puntaje del 1 al 5.');
+            return;
+        }
+        const body = { ts: Date.now() };
+        if (text) body.text = text;
+        if (activity.type === 'pulse') body.scale = activityDraftScale;
+        try {
+            await fbPost(`efuRooms/${roomId}/activity/${activity.key}/responses`, body);
+            markActivitySent(activity.key);
+            lastSeenKey = ''; // fuerza re-render en el próximo poll para mostrar "ya enviaste"
+            renderStatus('✅', 'Respuesta enviada', 'Gracias por participar.');
+        } catch (err) {
+            alert('No se pudo enviar, probá de nuevo.');
+        }
+    };
+
+    function renderQnaShell(activity) {
+        content.innerHTML = `
+            <div class="box">
+                <span class="badge">❓ Muro de Preguntas</span>
+                <p class="case-title">${activity.prompt}</p>
+                ${activity.status === 'open' ? `
+                    <input type="text" id="qnaTextInput" maxlength="140" placeholder="Escribí tu pregunta" style="text-transform: none;">
+                    <button onclick="submitQnaQuestion()">Enviar pregunta</button>
+                ` : '<p style="opacity: 0.7;">Ya no se aceptan preguntas nuevas.</p>'}
+            </div>
+            <div class="box">
+                <p style="margin: 0 0 8px 0; font-weight: 700; font-size: 0.9rem;">Preguntas de la clase</p>
+                <ul class="qna-student-list" id="qnaStudentList"><li style="opacity: 0.6;">Cargando...</li></ul>
+            </div>
+        `;
+    }
+
+    window.submitQnaQuestion = async function () {
+        const activity = roomMeta.activity;
+        const input = document.getElementById('qnaTextInput');
+        const text = input ? input.value.trim() : '';
+        if (!text) return;
+        try {
+            await fbPost(`efuRooms/${roomId}/activity/${activity.key}/responses`, { text, ts: Date.now() });
+            if (input) input.value = ''; // sin bloqueo: se pueden mandar varias preguntas
+        } catch (err) {
+            alert('No se pudo enviar la pregunta, probá de nuevo.');
+        }
+    };
+
+    window.upvoteQuestion = async function (responseId) {
+        if (hasUpvoted(responseId)) return;
+        const activity = roomMeta.activity;
+        try {
+            await fbPut(`efuRooms/${roomId}/activity/${activity.key}/upvotes/${responseId}/${getVoterId()}`, true);
+            markUpvoted(responseId);
+            refreshQnaList(activity);
+        } catch (err) {
+            // se puede reintentar tocando de nuevo
+        }
+    };
+
+    async function refreshQnaList(activity) {
+        const listEl = document.getElementById('qnaStudentList');
+        if (!listEl) return;
+        try {
+            const responses = await fbGet(`efuRooms/${roomId}/activity/${activity.key}/responses`) || {};
+            const upvotes = await fbGet(`efuRooms/${roomId}/activity/${activity.key}/upvotes`) || {};
+            const list = Object.entries(responses)
+                .map(([id, r]) => ({ id, text: r.text, count: Object.keys(upvotes[id] || {}).length }))
+                .sort((a, b) => b.count - a.count);
+            if (list.length === 0) {
+                listEl.innerHTML = '<li style="opacity: 0.6;">Todavía no hay preguntas.</li>';
+                return;
+            }
+            listEl.innerHTML = list.map((q) => {
+                const voted = hasUpvoted(q.id);
+                return `
+                    <li>
+                        <span>${q.text}</span>
+                        <button class="upvote-btn ${voted ? 'voted' : ''}" ${voted ? 'disabled' : ''} onclick="upvoteQuestion('${q.id}')">▲ ${q.count}</button>
+                    </li>
+                `;
+            }).join('');
+        } catch (err) {
+            // silencioso: se reintenta en el próximo poll de 2s
+        }
+    }
+
+    function renderActivityShell(activity) {
+        if (activity.status === 'closed' && activity.type !== 'qna') {
+            renderStatus('⏹️', 'Esta actividad ya cerró', 'Gracias por participar.');
+            return;
+        }
+        if (activity.type === 'wordcloud' || activity.type === 'pulse') {
+            if (hasSentActivity(activity.key)) {
+                renderStatus('✅', 'Ya enviaste tu respuesta', 'Gracias por participar.');
+                return;
+            }
+            renderActivityForm(activity);
+            return;
+        }
+        if (activity.type === 'qna') {
+            renderQnaShell(activity);
+        }
+    }
+
     async function checkForNewCase() {
         try {
             roomMeta = await fbGet(`efuRooms/${roomId}/meta`);
@@ -466,6 +703,22 @@
         }
         if (roomMeta.mode === 'equipos') teamName = getSavedTeam();
 
+        // Actividad Abierta en Vivo activa: reemplaza a la votación de casos hasta que el
+        // docente la cierre (meta.activity vuelve a null) — mismo QR/sala, sin fetch extra.
+        const activity = roomMeta.activity;
+        if (activity && activity.type) {
+            const shellKey = `activity_${activity.type}_${activity.status}_${activity.key}`;
+            if (shellKey !== lastSeenKey) {
+                lastSeenKey = shellKey;
+                renderActivityShell(activity);
+            }
+            if (activity.type === 'qna' && activity.status === 'open') {
+                refreshQnaList(activity); // se actualiza cada poll, sin pisar el input de la pregunta
+            }
+            currentCase = null;
+            return;
+        }
+
         const caseId = roomMeta.currentCaseId;
         if (!caseId) {
             renderStatus('⏳', 'Esperando el primer caso...', 'El docente todavía no inició la votación de ningún caso.');
@@ -482,6 +735,12 @@
         if (roomMeta.phase === 2) {
             // El docente reveló las respuestas: mostrar si acertaste o no (nunca antes de esto).
             currentCase = null;
+            if (roomMeta.opinionMode) {
+                // Modo Opinión: no hay respuesta "correcta" — la distribución del grupo se ve
+                // en el proyector, acá sólo agradecemos la participación.
+                renderStatus('🗣️', 'Gracias por participar', 'Mirá la distribución del grupo en pantalla — este caso era una encuesta de opinión, sin respuesta correcta.');
+                return;
+            }
             const parsed = await extractCaseFromIndex(caseId);
             if (!parsed) {
                 renderStatus('⚠️', 'No se pudieron cargar las respuestas', 'Reintentando...');
