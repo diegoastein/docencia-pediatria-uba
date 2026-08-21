@@ -89,6 +89,7 @@
 
         /* Cards */
         .card {
+            position: relative;
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -873,6 +874,7 @@
             border-radius: 12px;
             padding: 8px 14px 8px 8px;
             z-index: 10001;
+            cursor: pointer;
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
@@ -965,6 +967,105 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
+        }
+
+        /* QR grande (clic sobre el QR de la presentación / toolbar) */
+        .big-qr-modal-box {
+            background: white;
+            color: #202124;
+            border-radius: 20px;
+            padding: 36px 44px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+
+        .big-qr-code {
+            font-size: 2.4rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #5b21b6;
+            margin-top: 20px;
+        }
+
+        .big-qr-hint {
+            font-size: 1rem;
+            color: #5f6368;
+            margin-top: 10px;
+            max-width: 340px;
+        }
+
+        .qr-box.clickable {
+            cursor: pointer;
+        }
+
+        /* Selección de casos para armar una presentación a medida (combinando búsquedas) */
+        .efu-select-toggle {
+            position: absolute;
+            top: 20px;
+            right: 24px;
+            background: #f1f3f4;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: #5f6368;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .efu-select-toggle:hover {
+            background: #e8eaed;
+        }
+
+        .efu-select-toggle.selected {
+            background: #fef7e0;
+            border-color: #f9ab00;
+            color: #b06000;
+        }
+
+        .card.efu-card-selected {
+            border-color: #f9ab00;
+            box-shadow: 0 0 0 2px rgba(249, 171, 0, 0.25);
+        }
+
+        .efu-selection-btn {
+            background: linear-gradient(135deg, #f9ab00, #b06000);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(249, 171, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .efu-selection-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(249, 171, 0, 0.4);
+        }
+
+        .efu-selection-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .efu-selection-clear-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 4px;
         }
 
         /* View Transition Animations */
@@ -1540,7 +1641,19 @@ Equipo Docente de Pediatría</textarea>
             </p>
             <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                 <div id="efu-vote-toolbar"></div>
-                <button class="pres-start-global-btn" onclick="startPresentation()">📺 Iniciar Modo Presentación</button>
+                <button class="pres-start-global-btn" onclick="startPresentation(false)">📺 Iniciar Modo Presentación</button>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 12px; background: #fffbeb; padding: 14px 24px; border-radius: 12px; border: 1px solid #fde68a;">
+            <p style="margin: 0; font-size: 0.92rem; color: #92400e;">
+                🎯 <strong>Armar presentación a medida:</strong> buscá por tema, tocá "☆ Agregar a selección" en los casos que te sirvan, repetí la búsqueda las veces que quieras (ej. ictericia, después bronquiolitis) — la selección se mantiene entre búsquedas.
+            </p>
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <button class="efu-selection-clear-btn" onclick="clearEfuSelection()">Vaciar selección</button>
+                <button class="efu-selection-btn" id="efu-present-selection-btn" onclick="startPresentation(true)" disabled>
+                    🎯 Presentar Selección (<span id="efu-selection-count">0</span>)
+                </button>
             </div>
         </div>
 
@@ -2771,7 +2884,7 @@ Equipo Docente de Pediatría</textarea>
             const voteUrl = `${window.location.origin}${window.location.pathname.replace(/index\.html$/, '')}votar.html?room=${voteRoomId}`;
             box.innerHTML = `
                 <div class="vote-room-active-box">
-                    <div id="efuVoteQrCanvas" class="qr-box" style="width: 66px; height: 66px;"></div>
+                    <div id="efuVoteQrCanvas" class="qr-box clickable" style="width: 66px; height: 66px;" onclick="showBigQrModal()" title="Tocar para agrandar"></div>
                     <div>
                         <span class="vote-room-mode-tag">${voteMode === 'equipos' ? '🏆 Equipos' : '🙈 Anónimo'}</span>
                         <span class="vote-room-code">${voteRoomId}</span>
@@ -2793,6 +2906,41 @@ Equipo Docente de Pediatría</textarea>
             } catch (err) {
                 console.warn('No se pudo generar el QR de votación:', err);
             }
+        }
+
+        // QR grande a pantalla completa: para que lo puedan escanear alumnos sentados lejos del
+        // proyector. Se abre tocando cualquiera de los dos QR chicos (barra del docente o panel
+        // flotante dentro de la presentación).
+        function showBigQrModal() {
+            if (!voteRoomActive) return;
+            const voteUrl = `${window.location.origin}${window.location.pathname.replace(/index\.html$/, '')}votar.html?room=${voteRoomId}`;
+
+            const backdrop = document.createElement('div');
+            backdrop.className = 'ranking-modal-backdrop';
+            backdrop.id = 'big-qr-modal-backdrop';
+            backdrop.onclick = (e) => { if (e.target === backdrop) closeBigQrModal(); };
+            backdrop.innerHTML = `
+                <div class="big-qr-modal-box">
+                    <div id="bigQrCanvas" class="qr-box" style="width: 320px; height: 320px; margin: 0 auto;"></div>
+                    <div class="big-qr-code">${voteRoomId}</div>
+                    <div class="big-qr-hint">Escaneá el código, o entrá a <strong>votar.html</strong> y escribí el código de sala a mano.</div>
+                    <button class="ranking-modal-close" onclick="closeBigQrModal()">Cerrar</button>
+                </div>
+            `;
+            document.body.appendChild(backdrop);
+            renderVoteQr('bigQrCanvas', voteUrl);
+
+            document.addEventListener('keydown', closeBigQrModalOnEsc);
+        }
+
+        function closeBigQrModalOnEsc(e) {
+            if (e.key === 'Escape') closeBigQrModal();
+        }
+
+        function closeBigQrModal() {
+            const backdrop = document.getElementById('big-qr-modal-backdrop');
+            if (backdrop) backdrop.remove();
+            document.removeEventListener('keydown', closeBigQrModalOnEsc);
         }
 
         async function activateVotingRoom() {
@@ -3031,9 +3179,82 @@ Equipo Docente de Pediatría</textarea>
             refreshEfuVisibility();
         }
 
-        function initPresentationData() {
+        // ==========================================================================
+        // SELECCIÓN DE CASOS "A MEDIDA" (combinar resultados de distintas búsquedas)
+        // ==========================================================================
+        // Permite buscar "ictericia", marcar los casos que sirven, buscar "bronquiolitis",
+        // marcar otros, y presentar todos juntos — independiente del filtro de semana o de
+        // la búsqueda activa en cada momento (se guarda por caseId, no por posición en pantalla).
+        let efuSelection = new Set(JSON.parse(localStorage.getItem('efuSelection') || '[]'));
+
+        function getCardCaseId(card) {
+            let box = card.querySelector('.answer-box');
+            return box ? box.id.replace(/^ans/, '') : null;
+        }
+
+        function saveEfuSelection() {
+            localStorage.setItem('efuSelection', JSON.stringify([...efuSelection]));
+        }
+
+        function toggleEfuSelection(caseId) {
+            if (efuSelection.has(caseId)) {
+                efuSelection.delete(caseId);
+            } else {
+                efuSelection.add(caseId);
+            }
+            saveEfuSelection();
+            updateEfuSelectionUI();
+        }
+
+        function clearEfuSelection() {
+            if (efuSelection.size === 0) return;
+            if (!confirm('¿Vaciar toda la selección de casos armada hasta ahora?')) return;
+            efuSelection.clear();
+            saveEfuSelection();
+            updateEfuSelectionUI();
+        }
+
+        function updateEfuSelectionUI() {
+            document.querySelectorAll('#tab-efu .card[data-semana]').forEach((card) => {
+                let id = getCardCaseId(card);
+                let btn = card.querySelector('.efu-select-toggle');
+                if (!id || !btn) return;
+                let isSelected = efuSelection.has(id);
+                btn.classList.toggle('selected', isSelected);
+                btn.innerText = isSelected ? '★ En la selección' : '☆ Agregar a selección';
+                card.classList.toggle('efu-card-selected', isSelected);
+            });
+            let countLabel = document.getElementById('efu-selection-count');
+            if (countLabel) countLabel.innerText = efuSelection.size;
+            let presentBtn = document.getElementById('efu-present-selection-btn');
+            if (presentBtn) presentBtn.disabled = efuSelection.size === 0;
+        }
+
+        function initEfuSelectionButtons() {
+            document.querySelectorAll('#tab-efu .card[data-semana]').forEach((card) => {
+                if (card.querySelector('.efu-select-toggle')) return; // ya inicializado
+                let id = getCardCaseId(card);
+                if (!id) return;
+                let btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'efu-select-toggle';
+                btn.onclick = () => toggleEfuSelection(id);
+                card.appendChild(btn);
+            });
+            updateEfuSelectionUI();
+        }
+
+        function getSelectedEfuCards() {
+            // Orden estable = orden de aparición en la página (orden de los casos), no orden de selección.
+            return Array.from(document.querySelectorAll('#tab-efu .card[data-semana]')).filter((card) => {
+                let id = getCardCaseId(card);
+                return id && efuSelection.has(id);
+            });
+        }
+
+        function initPresentationData(cards) {
             presentationCases = [];
-            getEfuCards().forEach((card) => {
+            (cards || getEfuCards()).forEach((card) => {
                 let badge = card.querySelector('.badge') ? card.querySelector('.badge').innerText : 'Taller EFU';
                 let title = card.querySelector('h2') ? card.querySelector('h2').innerText : '';
                 
@@ -3064,10 +3285,19 @@ Equipo Docente de Pediatría</textarea>
             });
         }
 
-        function startPresentation() {
-            initPresentationData();
-            if (presentationCases.length === 0) return;
-            
+        function startPresentation(useSelection = false) {
+            if (useSelection) {
+                initPresentationData(getSelectedEfuCards());
+            } else {
+                initPresentationData();
+            }
+            if (presentationCases.length === 0) {
+                alert(useSelection
+                    ? 'Todavía no armaste ninguna selección. Buscá casos y tocá "☆ Agregar a selección" en los que quieras sumar.'
+                    : 'No hay casos para presentar con el filtro/búsqueda actual.');
+                return;
+            }
+
             // Create overlay if it doesn't exist
             let overlay = document.getElementById('presentation-overlay');
             if (!overlay) {
@@ -3234,11 +3464,12 @@ Equipo Docente de Pediatría</textarea>
                 </div>
 
                 ${voteRoomActive ? `
-                    <div class="pres-vote-panel">
-                        <div id="presVoteQrCanvas" class="qr-box" style="width: 58px; height: 58px;"></div>
+                    <div class="pres-vote-panel" onclick="showBigQrModal()" title="Tocar para agrandar el QR">
+                        <div id="presVoteQrCanvas" class="qr-box clickable" style="width: 58px; height: 58px;"></div>
                         <div class="pres-vote-panel-info">
-                            🗳️ Votá en <strong>votar.html</strong><br>
-                            Sala: <strong>${voteRoomId}</strong>
+                            🗳️ Escaneá para votar<br>
+                            Sala: <strong>${voteRoomId}</strong><br>
+                            <span style="opacity: 0.7; font-size: 0.75rem;">🔍 Tocá para agrandar</span>
                         </div>
                     </div>
                 ` : ''}
@@ -3255,8 +3486,10 @@ Equipo Docente de Pediatría</textarea>
                     
                     <div class="pres-right">
                         <div class="pres-instructions-bar">
-                            ${currentPhase === 1 
-                                ? '🗳️ <strong>Fase de Votación:</strong> Vota usando teclas <strong>A-H</strong> o clic. <button class="pres-inline-reveal-btn" onclick="nextStep()">Ver Respuestas Correctas ✨</button>' 
+                            ${currentPhase === 1
+                                ? ('🗳️ <strong>Fase de Votación:</strong> ' + (voteRoomActive
+                                    ? 'Alumnos: escaneen el QR y voten desde el celular. Docente: A-H o clic para el marcado manual.'
+                                    : 'Vota usando teclas <strong>A-H</strong> o clic.') + ' <button class="pres-inline-reveal-btn" onclick="nextStep()">Ver Respuestas Correctas ✨</button>')
                                 : '📋 <strong>Fase de Respuestas:</strong> Claves oficiales EFU y justificación clínica en pantalla.'}
                         </div>
                         <ul class="pres-options-list" id="pres-options-list">
@@ -3352,6 +3585,7 @@ Equipo Docente de Pediatría</textarea>
         }
 
         renderVoteToolbar();
+        initEfuSelectionButtons();
     </script>
 
     <script>
