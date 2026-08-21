@@ -4,3 +4,8 @@ clases_drive/
 
 # Presentaciones pesadas: se comparten por Google Drive, no por el repositorio
 *.pptx
+
+# Nómina real de alumnos: nunca al repositorio (es público). La usa generar_planilla_excel.py.
+# La nómina "en vivo" del sitio (index.html, pestaña Control de Prácticos) vive sólo en
+# localStorage del navegador, cargada con el botón "✏️ Editar Nómina".
+nomina_alumnos.txt

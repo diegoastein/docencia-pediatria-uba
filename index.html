@@ -1728,6 +1728,84 @@
 </head>
 <body>
 
+    <!-- ==========================================================================
+         CONTROL DE INGRESO BÁSICO (client-side, sólo freno visual)
+         ==========================================================================
+         Este archivo es estático y público (GitHub Pages) — votar.html depende de poder
+         hacer fetch('index.html') para leer el caso activo, así que el HTML/JS de acá
+         SIEMPRE es descargable igual, con o sin esta pantalla. Esto no es seguridad real:
+         frena a alguien que no tenga la contraseña y mire la página en un navegador, pero
+         no oculta el código fuente (view-source / curl lo siguen viendo todo). Sirve para
+         que no entre cualquiera por curiosidad, no para proteger datos sensibles — por eso
+         la nómina de alumnos se sacó aparte a localStorage (ver studentRoster más abajo),
+         no alcanza con esta pantalla sola.
+    -->
+    <div id="access-gate" style="position:fixed; inset:0; z-index:99999; background:#0b1220; color:#e8eaed; display:flex; align-items:center; justify-content:center; padding:20px; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+        <div style="max-width:360px; width:100%; background:#151b2b; border:1px solid #2b3550; border-radius:14px; padding:32px 28px; text-align:center;">
+            <div style="font-size:2.2rem; margin-bottom:6px;">🔒</div>
+            <h2 style="margin:0 0 4px 0; font-size:1.2rem;">Portal Docente</h2>
+            <p style="margin:0 0 20px 0; font-size:0.85rem; opacity:0.7;">Acceso restringido</p>
+            <input type="password" id="accessGatePassword" placeholder="Contraseña" autocomplete="off"
+                style="width:100%; padding:12px 14px; border-radius:8px; border:1px solid #2b3550; background:#0b1220; color:#e8eaed; font-size:1rem; margin-bottom:12px; box-sizing:border-box;">
+            <button id="accessGateSubmit" onclick="attemptAccessUnlock()"
+                style="width:100%; padding:12px; border:none; border-radius:8px; background:var(--primary, #1a73e8); color:white; font-weight:700; font-size:0.95rem; cursor:pointer;">
+                Entrar
+            </button>
+            <div id="accessGateError" style="margin-top:12px; font-size:0.85rem; color:#f28b82; min-height:1.1em;"></div>
+        </div>
+    </div>
+    <script>
+        // SHA-256 de la contraseña — nunca se guarda en texto plano en el código fuente.
+        const ACCESS_GATE_HASH = 'c3a702a9669838bbbab7e0a3c202d3646ae29fea2fa9807328347525875327d6';
+        const ACCESS_GATE_STORAGE_KEY = 'pediatriaAccessUnlocked';
+
+        async function sha256Hex(text) {
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function revealApp() {
+            const gate = document.getElementById('access-gate');
+            const app = document.getElementById('app-content');
+            if (gate) gate.remove();
+            if (app) app.style.display = '';
+        }
+
+        async function attemptAccessUnlock() {
+            const input = document.getElementById('accessGatePassword');
+            const errorEl = document.getElementById('accessGateError');
+            const value = input.value;
+            if (!value) return;
+            const hash = await sha256Hex(value);
+            if (hash === ACCESS_GATE_HASH) {
+                localStorage.setItem(ACCESS_GATE_STORAGE_KEY, '1');
+                revealApp();
+            } else {
+                errorEl.textContent = 'Contraseña incorrecta.';
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        document.getElementById('accessGatePassword').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') attemptAccessUnlock();
+        });
+
+        // El chequeo automático se difiere a DOMContentLoaded: si se corre acá mismo (mitad del
+        // parseo del documento), #app-content todavía no existe todavía en el DOM porque está
+        // más abajo en el HTML — revealApp() sacaría el gate pero no podría mostrar el contenido,
+        // dejando la página en blanco en una recarga con sesión ya desbloqueada.
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem(ACCESS_GATE_STORAGE_KEY) === '1') {
+                revealApp();
+            } else {
+                document.getElementById('accessGatePassword').focus();
+            }
+        });
+    </script>
+
+    <div id="app-content" style="display:none;">
+
     <header>
         <h1>🏥 Docencia Pediatría UBA</h1>
         <div class="subtitle">Hospital Ramón Carrillo — Portal Docente (Anuncios, EFU y Asistencia Prácticos)</div>
@@ -6543,6 +6621,7 @@ Equipo Docente de Pediatría</textarea>
                     <span style="color: #64748b; font-size: 0.9rem;">Gestión integral de asistencia por rotación, grupos y exportación a Excel</span>
                 </div>
                 <div class="controls-btns">
+                    <button class="btn-export" onclick="openRosterEditor()">✏️ Editar Nómina</button>
                     <button class="btn-xlsx" onclick="exportToXLSX()">📥 Exportar a Excel (.xlsx)</button>
                     <button class="btn-export" onclick="exportToCSV()">📄 CSV</button>
                     <button class="btn-danger" onclick="clearAllData()">Resetear Datos</button>
@@ -7866,28 +7945,58 @@ Equipo Docente de Pediatría</textarea>
     </script>
 
     <script>
-        const studentGroups = {
-            "ACUÑA, Leila Carolina": "Grupo 1",
-            "BARILARO, Canela": "Grupo 1",
-            "CARUSO, Ailen": "Grupo 2",
-            "CASTRO, Candela": "Grupo 2",
-            "DAMIANI, Amanda": "Grupo 2",
-            "DELGADO PAVIA, Milena Yazmin": "Grupo 2",
-            "DIAZ MORENO, Milagros Anahi": "Grupo 3",
-            "GARCIA, Luna Mora": "Grupo 3",
-            "GENTILE, Florencia Belen": "Grupo 3",
-            "GUERREIRO CAPARICA BORGES, Rafaella": "Grupo 3",
-            "GUTIERREZ, Mailen Oriana": "Grupo 4",
-            "QUISPE PEÑA, Nicole Selene": "Grupo 4",
-            "ROJAS, Romina Rosana": "Grupo 4",
-            "TEIXEIRA CRUZ, Caroline": "Grupo 5",
-            "TELIAS, Giselle Marisol": "Grupo 5",
-            "GALLOTTO, Tomas Matias": "Grupo 5",
-            "LEGUIZAMON, Antonella Nerea": "Grupo 6",
-            "MARQUEZ, Sofia Ailen": "Grupo 6",
-            "MENDEZ, Mora": "Grupo 7",
-            "OLMOS MUÑOZ, Melina Evelyn": "Grupo 7"
-        };
+        // Nómina de alumnos: NUNCA se hardcodea acá (este archivo es público en GitHub Pages).
+        // Vive sólo en localStorage del navegador del docente — se carga una vez con
+        // openRosterEditor() y desde ahí en más persiste igual que attendanceData.
+        let studentRoster = JSON.parse(localStorage.getItem('pediatriaStudentRoster') || '[]');
+
+        function saveStudentRoster() {
+            localStorage.setItem('pediatriaStudentRoster', JSON.stringify(studentRoster));
+        }
+
+        function openRosterEditor() {
+            let backdrop = document.getElementById('roster-modal-backdrop');
+            if (!backdrop) {
+                backdrop = document.createElement('div');
+                backdrop.className = 'ranking-modal-backdrop';
+                backdrop.id = 'roster-modal-backdrop';
+                backdrop.onclick = (e) => { if (e.target === backdrop && studentRoster.length > 0) closeRosterEditor(); };
+                document.body.appendChild(backdrop);
+            }
+            backdrop.innerHTML = `
+                <div class="ranking-modal-box" style="max-width: 520px; text-align: left;">
+                    <h3>✏️ Nómina de alumnos</h3>
+                    <p style="margin-top: -6px; opacity: 0.8; font-size: 0.9rem;">
+                        Un nombre por línea, formato "APELLIDO, Nombre". Se guarda sólo en este navegador
+                        (localStorage) — nunca se sube al repositorio.
+                    </p>
+                    <textarea id="rosterTextarea" rows="12" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--border); font-family:inherit; font-size:0.9rem;">${studentRoster.join('\n')}</textarea>
+                    <div class="activity-modal-actions">
+                        <button class="ranking-modal-close" onclick="saveRosterFromEditor()">Guardar</button>
+                        ${studentRoster.length > 0 ? '<button class="ranking-modal-close" style="background: transparent; color: inherit; opacity: 0.7;" onclick="closeRosterEditor()">Cancelar</button>' : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function closeRosterEditor() {
+            const backdrop = document.getElementById('roster-modal-backdrop');
+            if (backdrop) backdrop.remove();
+        }
+
+        function saveRosterFromEditor() {
+            const raw = document.getElementById('rosterTextarea').value;
+            const nombres = raw.split('\n').map(l => l.trim()).filter(Boolean);
+            if (nombres.length === 0) {
+                alert('Cargá al menos un nombre.');
+                return;
+            }
+            studentRoster = [...new Set(nombres)].sort();
+            saveStudentRoster();
+            closeRosterEditor();
+            initData();
+            renderPracticos();
+        }
 
         let activePracticosSubtab = 'matrix';
         let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
@@ -8012,7 +8121,7 @@ Equipo Docente de Pediatría</textarea>
         function clearAllData() {
             if (confirm("¿Está seguro de que desea borrar todos los registros de asistencia?")) {
                 attendanceData = {};
-                Object.keys(studentGroups).forEach(st => attendanceData[st] = []);
+                studentRoster.forEach(st => attendanceData[st] = []);
                 saveData();
                 renderPracticos();
             }
@@ -8295,7 +8404,7 @@ Equipo Docente de Pediatría</textarea>
         }
 
         function initData() {
-            Object.keys(studentGroups).forEach(st => { if (!attendanceData[st]) attendanceData[st] = []; });
+            studentRoster.forEach(st => { if (!attendanceData[st]) attendanceData[st] = []; });
             saveDataLocalOnly();
         }
 
@@ -8303,6 +8412,7 @@ Equipo Docente de Pediatría</textarea>
         initData();
         renderPracticos();
         initSyncRoom();
+        if (studentRoster.length === 0) openRosterEditor(); // primer uso: pedir la nómina
 
         // Aplica el filtro de semana por defecto (Semana 3) al cargar la página
         filterEfuWeek(efuWeekFilter, document.querySelector('#efu-week-filter .subtab-btn.active'));
@@ -8321,5 +8431,7 @@ Equipo Docente de Pediatría</textarea>
     </script>
 
     <script src="codigo_buscador.js"></script>
+
+    </div><!-- /#app-content -->
 </body>
 </html>

@@ -11,36 +11,32 @@ import sys
 import datetime
 from pathlib import Path
 
-# Nómina oficial de alumnos
-ESTUDIANTES = [
-    "ACUÑA, Leila Carolina",
-    "BARILARO, Canela",
-    "CARUSO, Ailen",
-    "CASTRO, Candela",
-    "DAMIANI, Amanda",
-    "DELGADO PAVIA, Milena Yazmin",
-    "DIAZ MORENO, Milagros Anahi",
-    "GARCIA, Luna Mora",
-    "GENTILE, Florencia Belen",
-    "GUERREIRO CAPARICA BORGES, Rafaella",
-    "GUTIERREZ, Mailen Oriana",
-    "LEGUIZAMON, Antonella Nerea",
-    "MARQUEZ, Sofia Ailen",
-    "MENDEZ, Mora",
-    "OLMOS MUÑOZ, Melina Evelyn",
-    "QUISPE PEÑA, Nicole Selene",
-    "ROJAS, Romina Rosana",
-    "TEIXEIRA CRUZ, Caroline",
-    "TELIAS, Giselle Marisol",
-    "GALLOTTO, Tomas Matias",
-]
+# La nómina real de alumnos NUNCA se hardcodea acá (este repo es público). Se lee de
+# nomina_alumnos.txt en la raíz del proyecto (un nombre por línea, formato "APELLIDO, Nombre"),
+# archivo que está en .gitignore y que cada quien crea localmente. Si no existe, se avisa cómo
+# crearlo en vez de fallar en silencio.
+NOMINA_PATH = Path(__file__).parent / "nomina_alumnos.txt"
+
+
+def cargar_estudiantes():
+    if not NOMINA_PATH.exists():
+        print(f"❌ No se encontró {NOMINA_PATH.name}.")
+        print(f"   Creá el archivo '{NOMINA_PATH}' con un nombre por línea (formato \"APELLIDO, Nombre\").")
+        print("   Ese archivo está en .gitignore a propósito — la nómina real nunca se sube al repo.")
+        sys.exit(1)
+    nombres = [l.strip() for l in NOMINA_PATH.read_text(encoding="utf-8").splitlines() if l.strip()]
+    if not nombres:
+        print(f"❌ {NOMINA_PATH.name} existe pero está vacío.")
+        sys.exit(1)
+    return nombres
 
 def generar_csv_excel(output_filename="planilla_control_practicos_pediatria_2026.csv"):
     """
     Genera una planilla CSV optimizada para Excel con BOM UTF-8 (compatible con MS Excel sin caracteres corruptos)
     """
     filepath = Path(output_filename)
-    
+    estudiantes = cargar_estudiantes()
+
     with open(filepath, mode="w", encoding="utf-8-sig", newline="") as file:
         writer = csv.writer(file, delimiter=";")
         
@@ -64,7 +60,7 @@ def generar_csv_excel(output_filename="planilla_control_practicos_pediatria_2026
             "Firma / Observaciones"
         ])
         
-        for idx, alumno in enumerate(sorted(ESTUDIANTES), 1):
+        for idx, alumno in enumerate(sorted(estudiantes), 1):
             writer.writerow([
                 idx,
                 alumno,

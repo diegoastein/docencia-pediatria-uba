@@ -34,12 +34,54 @@ Este archivo configura las reglas de comportamiento y contexto de proyecto para 
 - `validar_banco_casos_efu.py`: Script de validación de `banco_casos_efu.json` contra las reglas del proyecto.
 - `prompt_extraccion_antigravity.md`: Prompt listo para pegar en Antigravity que genera `banco_casos_efu.json` desde `fuentes_pdf/`.
 - `index.html`: Herramienta interactiva publicada en GitHub Pages, con tres solapas: **Anuncios Classroom** (botón de copiado directo), **Talleres EFU** (modo presentación con votación de alumnos) y **Control de Prácticos** (matriz de asistencia con sincronización en la nube y exportación XLSX).
-- `generar_planilla_excel.py`: Generador de la planilla Excel de control de prácticos (incluye la nómina oficial de alumnos).
+- `generar_planilla_excel.py`: Generador de la planilla Excel de control de prácticos. Lee la
+  nómina real de `nomina_alumnos.txt` (no versionado, ver sección "Control de Ingreso y Datos
+  Sensibles" más abajo) — el script ya no trae nombres hardcodeados.
 - `inventario_clases_drive.md`: Repositorio dinámico de presentaciones en Google Drive.
 - `fuentes_pdf/`: PDFs oficiales de los exámenes EFU (fuente de verdad original para las preguntas).
 - `votar.html`: Página mobile-first para que los alumnos voten desde su celular durante el Modo Presentación (ver sección Votación en Vivo más abajo).
 
 > Las presentaciones `.pptx` están ignoradas por git (se comparten por Google Drive).
+
+---
+
+## 🔒 Control de Ingreso y Datos Sensibles (agregado 21/08/2026)
+
+`index.html` y `fuentes_pdf/` son **públicos** (repo público, GitHub Pages público) — no hay
+forma de ocultarlos sin pasar a un plan de GitHub pago y sin romper `votar.html`, que depende de
+poder hacer `fetch('index.html')` desde cualquier celular sin login (así funciona el QR). Dos
+medidas tomadas, con ese límite en mente:
+
+- **Pantalla de contraseña en `index.html`** (`#access-gate`, al principio de `<body>`): overlay
+  de JS que pide contraseña antes de mostrar el contenido (envuelto en
+  `<div id="app-content" style="display:none">`), compara un hash SHA-256 (no la contraseña en
+  texto plano) y guarda el desbloqueo en `localStorage`. **Esto NO es seguridad real** — el HTML
+  sigue siendo 100% descargable con `curl`/`view-source` con o sin la contraseña, a propósito,
+  porque si se ocultara el contenido real del DOM se rompería `votar.html`. Sirve sólo para que
+  no entre cualquiera navegando por curiosidad. Ojo si se retoca: el chequeo automático de
+  desbloqueo al cargar la página tiene que ir en un listener de `DOMContentLoaded` (o después),
+  nunca en medio del `<script>` que está antes de `#app-content` en el HTML — si no,
+  `document.getElementById('app-content')` da `null` porque ese nodo todavía no se parseó, y la
+  página queda en blanco en una recarga con sesión ya desbloqueada (bug real que apareció y se
+  corrigió durante esta misma tarea).
+- **Nómina real de alumnos, nunca en el repositorio.** Antes estaba hardcodeada en dos lugares
+  del código público (`generar_planilla_excel.py` y el `studentGroups` de `index.html`). Ahora:
+  - En `index.html`, la pestaña Control de Prácticos usa `studentRoster` (array simple, sin el
+    campo "Grupo" que tenía antes — no se usaba en ningún lado más que como dato muerto), cargado
+    de `localStorage` (`pediatriaStudentRoster`). Botón "✏️ Editar Nómina" en la barra de
+    controles para cargarla/editarla; si está vacía al iniciar, abre el editor automáticamente
+    (primer uso). Se pierde si se borra el `localStorage` del navegador o se cambia de
+    dispositivo — hay que volver a cargarla a mano, no hay sync a la nube de la nómina en sí
+    (sólo `attendanceData`, los registros de asistencia, si se usa la sincronización existente).
+  - `generar_planilla_excel.py` lee de `nomina_alumnos.txt` (raíz del repo, un nombre por línea,
+    formato "APELLIDO, Nombre") — ese archivo está en `.gitignore` a propósito y hay que crearlo
+    localmente para poder correr el script; si falta, el script explica cómo crearlo en vez de
+    fallar en silencio.
+  - **Pendiente, no resuelto:** los commits viejos del repo (anteriores a este cambio) siguen
+    teniendo la nómina real en el historial de git, visible en GitHub aunque el archivo actual ya
+    no la tenga. Sacarla del historial requiere reescribir commits (`git filter-repo` o similar,
+    con force-push) — es una operación más delicada que no se hizo todavía; consultar con el
+    docente antes de intentarla si se vuelve prioridad.
 
 ---
 
