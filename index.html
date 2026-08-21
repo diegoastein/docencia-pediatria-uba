@@ -6,6 +6,8 @@
     <title>Docencia Pediatría UBA - Anuncios, EFU y Control de Prácticos</title>
     <!-- SheetJS CDN para Exportación Nativa a Excel (.xlsx) -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- QRCode CDN para el QR de Votación en Vivo (Talleres EFU) -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #1a73e8;
@@ -721,6 +723,248 @@
             box-shadow: 0 6px 15px rgba(26, 115, 232, 0.35);
         }
 
+        /* ==========================================================================
+           VOTACIÓN EN VIVO POR QR (Toolbar del docente + panel dentro de la presentación)
+           ========================================================================== */
+        #efu-vote-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .vote-toolbar-select {
+            padding: 9px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            background: white;
+        }
+
+        .vote-toolbar-btn {
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 3px 8px rgba(124, 58, 237, 0.25);
+            transition: all 0.25s ease;
+        }
+
+        .vote-toolbar-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(124, 58, 237, 0.35);
+        }
+
+        .vote-toolbar-btn.btn-secondary {
+            background: rgba(124, 58, 237, 0.1);
+            color: #5b21b6;
+            box-shadow: none;
+        }
+
+        .vote-toolbar-btn.btn-danger-outline {
+            background: #fce8e6;
+            color: #c5221f;
+            box-shadow: none;
+        }
+
+        .vote-room-active-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #f5f3ff;
+            border: 1px solid #ddd6fe;
+            border-radius: 12px;
+            padding: 8px 14px 8px 8px;
+        }
+
+        .vote-room-active-box canvas {
+            border-radius: 6px;
+            background: white;
+            display: block;
+        }
+
+        .vote-room-code {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #5b21b6;
+        }
+
+        .vote-room-mode-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #7c3aed;
+            display: block;
+        }
+
+        /* Barras de votos en vivo sobre las opciones del Modo Presentación */
+        .pres-option-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vote-bar-track {
+            display: none;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(128, 128, 128, 0.15);
+        }
+
+        .pres-option-item.has-live-bar .vote-bar-track {
+            display: block;
+        }
+
+        .vote-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            transition: width 0.4s ease;
+        }
+
+        .projector-theme-dark .vote-bar-fill {
+            background: #8ab4f8;
+        }
+
+        .vote-bar-count {
+            display: none;
+            margin-left: auto;
+            font-size: 1rem;
+            font-weight: 800;
+            opacity: 0.8;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .pres-option-item.has-live-bar .vote-bar-count {
+            display: inline-block;
+        }
+
+        /* Panel flotante de QR / código de sala dentro de la presentación */
+        .pres-vote-panel {
+            position: absolute;
+            top: 95px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(124, 58, 237, 0.08);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 12px;
+            padding: 8px 14px 8px 8px;
+            z-index: 10001;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .hide-controls .pres-vote-panel {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+        }
+
+        .pres-vote-panel canvas {
+            border-radius: 6px;
+            background: white;
+            display: block;
+        }
+
+        .pres-vote-panel-info {
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        .pres-vote-panel-info strong {
+            font-size: 1.05rem;
+            letter-spacing: 1px;
+        }
+
+        .pres-vote-status-off {
+            position: absolute;
+            top: 95px;
+            right: 30px;
+            font-size: 0.85rem;
+            opacity: 0.55;
+            z-index: 10001;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .hide-controls .pres-vote-status-off {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        /* Modal de Ranking (modo Equipos) */
+        .ranking-modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.6);
+            z-index: 10010;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ranking-modal-box {
+            background: white;
+            color: #202124;
+            border-radius: 16px;
+            padding: 24px 28px;
+            max-width: 420px;
+            width: 90%;
+            max-height: 70vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .ranking-modal-box h3 {
+            margin-top: 0;
+            color: #5b21b6;
+        }
+
+        .ranking-list {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0 0 0;
+        }
+
+        .ranking-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            background: #f8f9fa;
+            font-weight: 700;
+        }
+
+        .ranking-list li:nth-child(1) { background: #fef7e0; }
+        .ranking-list li:nth-child(2) { background: #f1f3f4; }
+        .ranking-list li:nth-child(3) { background: #fce8e6; }
+
+        .ranking-modal-close {
+            margin-top: 18px;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
         /* View Transition Animations */
         ::view-transition-group(root) {
             animation-duration: 0.35s;
@@ -1292,7 +1536,10 @@ Equipo Docente de Pediatría</textarea>
             <p style="margin: 0; font-size: 1.1rem; color: #1967d2; font-weight: 500;">
                 🏫 <strong>Ejercitación EFU:</strong> Usa el Modo Presentación interactivo para debatir y repasar los casos en clase con los alumnos.
             </p>
-            <button class="pres-start-global-btn" onclick="startPresentation()">📺 Iniciar Modo Presentación</button>
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <div id="efu-vote-toolbar"></div>
+                <button class="pres-start-global-btn" onclick="startPresentation()">📺 Iniciar Modo Presentación</button>
+            </div>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 12px;">
@@ -2430,6 +2677,286 @@ Equipo Docente de Pediatría</textarea>
         let controlsTimeout;
         let presentationActive = false;
 
+        // ==========================================================================
+        // VOTACIÓN EN VIVO POR QR (Firebase Realtime Database vía REST)
+        // ==========================================================================
+        // Configurar acá el databaseURL del proyecto de Firebase (Realtime Database, no
+        // Firestore), ej: "https://xxx-default-rtdb.firebaseio.com". Debe coincidir con el
+        // mismo valor pegado en votar.html. Mientras quede vacío, la Votación en Vivo se
+        // muestra deshabilitada y el Modo Presentación funciona igual que siempre (toggle
+        // manual A-H).
+        const EFU_FIREBASE_DB_URL = "https://pediatria-uba-efu-votos.firebaseio.com";
+
+        let voteRoomId = '';
+        let voteMode = 'anonimo'; // 'anonimo' | 'equipos'
+        let voteRoomActive = false;
+        let votePollInterval = null;
+        let liveVoteCounts = [];
+        let liveVoteTotal = 0;
+
+        function efuVotingEnabled() {
+            return !!EFU_FIREBASE_DB_URL;
+        }
+
+        async function efuFbGet(path) {
+            const res = await fetchWithTimeout(`${EFU_FIREBASE_DB_URL}/${path}.json`, {}, 5000);
+            if (!res.ok) throw new Error(`Firebase GET ${path} → ${res.status}`);
+            return res.json();
+        }
+
+        async function efuFbPost(path, body) {
+            const res = await fetchWithTimeout(`${EFU_FIREBASE_DB_URL}/${path}.json`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            }, 5000);
+            if (!res.ok) throw new Error(`Firebase POST ${path} → ${res.status}`);
+            return res.json();
+        }
+
+        async function efuFbPatch(path, body) {
+            const res = await fetchWithTimeout(`${EFU_FIREBASE_DB_URL}/${path}.json`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            }, 5000);
+            if (!res.ok) throw new Error(`Firebase PATCH ${path} → ${res.status}`);
+            return res.json();
+        }
+
+        async function efuFbPut(path, body) {
+            const res = await fetchWithTimeout(`${EFU_FIREBASE_DB_URL}/${path}.json`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            }, 5000);
+            if (!res.ok) throw new Error(`Firebase PUT ${path} → ${res.status}`);
+            return res.json();
+        }
+
+        function generateVoteRoomId() {
+            // Sin caracteres ambiguos (0/O, 1/I) para que sea fácil de tipear a mano como fallback del QR.
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let id = '';
+            for (let i = 0; i < 6; i++) id += chars[Math.floor(Math.random() * chars.length)];
+            return id;
+        }
+
+        function sanitizeTeamKey(name) {
+            return String(name).trim().replace(/[.#$\[\]\/]/g, '_') || 'equipo';
+        }
+
+        function renderVoteToolbar() {
+            const box = document.getElementById('efu-vote-toolbar');
+            if (!box) return;
+
+            if (!efuVotingEnabled()) {
+                box.innerHTML = `<span style="font-size: 0.85rem; color: #94a3b8;">🗳️ Votación en vivo no configurada</span>`;
+                return;
+            }
+
+            if (!voteRoomActive) {
+                box.innerHTML = `
+                    <select class="vote-toolbar-select" id="efuVoteModeSelect">
+                        <option value="anonimo">Modo Anónimo</option>
+                        <option value="equipos">Modo Equipos</option>
+                    </select>
+                    <button class="vote-toolbar-btn" onclick="activateVotingRoom()">🗳️ Activar Votación en Vivo</button>
+                `;
+                return;
+            }
+
+            const voteUrl = `${window.location.origin}${window.location.pathname.replace(/index\.html$/, '')}votar.html?room=${voteRoomId}`;
+            box.innerHTML = `
+                <div class="vote-room-active-box">
+                    <canvas id="efuVoteQrCanvas" width="66" height="66"></canvas>
+                    <div>
+                        <span class="vote-room-mode-tag">${voteMode === 'equipos' ? '🏆 Equipos' : '🙈 Anónimo'}</span>
+                        <span class="vote-room-code">${voteRoomId}</span>
+                    </div>
+                    <button class="vote-toolbar-btn btn-secondary" onclick="copyVoteLink()">🔗 Copiar Link</button>
+                    ${voteMode === 'equipos' ? '<button class="vote-toolbar-btn btn-secondary" onclick="showRankingModal()">🏆 Ranking</button>' : ''}
+                    <button class="vote-toolbar-btn btn-danger-outline" onclick="deactivateVotingRoom()">✕ Desactivar</button>
+                </div>
+            `;
+            renderVoteQr('efuVoteQrCanvas', voteUrl);
+        }
+
+        function renderVoteQr(canvasId, url) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas || typeof QRCode === 'undefined') return;
+            QRCode.toCanvas(canvas, url, { width: canvas.width, margin: 1 }, (err) => {
+                if (err) console.warn('No se pudo generar el QR de votación:', err);
+            });
+        }
+
+        async function activateVotingRoom() {
+            if (!efuVotingEnabled()) {
+                alert('Votación en vivo no disponible: falta configurar EFU_FIREBASE_DB_URL en index.html.');
+                return;
+            }
+            const modeSelect = document.getElementById('efuVoteModeSelect');
+            voteMode = modeSelect ? modeSelect.value : 'anonimo';
+            const newRoomId = generateVoteRoomId();
+            try {
+                await efuFbPut(`efuRooms/${newRoomId}/meta`, {
+                    mode: voteMode,
+                    currentCaseId: '',
+                    phase: 1,
+                    updatedAt: Date.now()
+                });
+                voteRoomId = newRoomId;
+                voteRoomActive = true;
+                renderVoteToolbar();
+                if (presentationActive) {
+                    syncVoteMeta();
+                    startVotePolling();
+                    renderSlide(false);
+                }
+            } catch (err) {
+                console.error('Error activando sala de votación:', err);
+                alert('No se pudo activar la votación en vivo (revisá tu conexión o la configuración de Firebase): ' + err.message);
+            }
+        }
+
+        function deactivateVotingRoom() {
+            voteRoomActive = false;
+            voteRoomId = '';
+            stopVotePolling();
+            renderVoteToolbar();
+            if (presentationActive) renderSlide(false);
+        }
+
+        function copyVoteLink() {
+            if (!voteRoomActive) return;
+            const voteUrl = `${window.location.origin}${window.location.pathname.replace(/index\.html$/, '')}votar.html?room=${voteRoomId}`;
+            navigator.clipboard.writeText(voteUrl);
+            alert(`¡Enlace de votación copiado!\n\nCompartilo con los alumnos o proyectá el QR:\n${voteUrl}\n\nCódigo de sala (fallback manual): ${voteRoomId}`);
+        }
+
+        function syncVoteMeta() {
+            if (!voteRoomActive) return;
+            const currentCase = presentationCases[currentCaseIndex];
+            if (!currentCase) return;
+            efuFbPatch(`efuRooms/${voteRoomId}/meta`, {
+                currentCaseId: currentCase.caseId,
+                phase: currentPhase,
+                updatedAt: Date.now()
+            }).catch((err) => console.warn('No se pudo sincronizar la sala de votación:', err));
+        }
+
+        function computeLiveVoteCounts(votesObj) {
+            const currentCase = presentationCases[currentCaseIndex];
+            if (!currentCase) return;
+            const counts = new Array(currentCase.options.length).fill(0);
+            let total = 0;
+            Object.values(votesObj || {}).forEach((vote) => {
+                (vote.options || []).forEach((letter) => {
+                    const idx = letter.charCodeAt(0) - 65;
+                    if (idx >= 0 && idx < counts.length) counts[idx]++;
+                });
+                total++;
+            });
+            liveVoteCounts = counts;
+            liveVoteTotal = total;
+        }
+
+        async function pollVotes() {
+            if (!voteRoomActive || currentPhase !== 1) return;
+            const currentCase = presentationCases[currentCaseIndex];
+            if (!currentCase) return;
+            try {
+                const votes = await efuFbGet(`efuRooms/${voteRoomId}/votes/${currentCase.caseId}`);
+                computeLiveVoteCounts(votes || {});
+                renderOptionsOnly();
+            } catch (err) {
+                console.warn('Polling de votos falló:', err);
+            }
+        }
+
+        function startVotePolling() {
+            stopVotePolling();
+            if (!voteRoomActive) return;
+            liveVoteCounts = [];
+            liveVoteTotal = 0;
+            pollVotes();
+            votePollInterval = setInterval(pollVotes, 2000);
+        }
+
+        function stopVotePolling() {
+            if (votePollInterval) clearInterval(votePollInterval);
+            votePollInterval = null;
+        }
+
+        async function scoreTeamsForCase(caseObj) {
+            if (!voteRoomActive || voteMode !== 'equipos') return;
+            try {
+                const votes = await efuFbGet(`efuRooms/${voteRoomId}/votes/${caseObj.caseId}`);
+                if (!votes) return;
+
+                const correctSet = new Set(
+                    caseObj.options
+                        .map((opt, idx) => (opt.isCorrect ? String.fromCharCode(65 + idx) : null))
+                        .filter(Boolean)
+                );
+
+                // Un voto por equipo por caso (el celular ya bloquea el reenvío con localStorage);
+                // si igualmente hubiera más de uno, nos quedamos con el último.
+                const teamVotes = {};
+                Object.values(votes).forEach((v) => {
+                    if (!v.team) return;
+                    teamVotes[v.team] = new Set(v.options || []);
+                });
+
+                for (const [team, optSet] of Object.entries(teamVotes)) {
+                    const isExactMatch = optSet.size === correctSet.size && [...optSet].every((o) => correctSet.has(o));
+                    if (!isExactMatch) continue;
+                    const key = sanitizeTeamKey(team);
+                    const current = await efuFbGet(`efuRooms/${voteRoomId}/teams/${key}/score`);
+                    await efuFbPut(`efuRooms/${voteRoomId}/teams/${key}`, {
+                        name: team,
+                        score: (current || 0) + 1
+                    });
+                }
+            } catch (err) {
+                console.warn('No se pudo calcular el puntaje de equipos:', err);
+            }
+        }
+
+        async function showRankingModal() {
+            if (!voteRoomActive || voteMode !== 'equipos') return;
+            let teams = {};
+            try {
+                teams = await efuFbGet(`efuRooms/${voteRoomId}/teams`) || {};
+            } catch (err) {
+                alert('No se pudo obtener el ranking: ' + err.message);
+                return;
+            }
+            const list = Object.values(teams).sort((a, b) => (b.score || 0) - (a.score || 0));
+
+            const backdrop = document.createElement('div');
+            backdrop.className = 'ranking-modal-backdrop';
+            backdrop.id = 'ranking-modal-backdrop';
+            backdrop.onclick = (e) => { if (e.target === backdrop) closeRankingModal(); };
+            backdrop.innerHTML = `
+                <div class="ranking-modal-box">
+                    <h3>🏆 Ranking de Equipos</h3>
+                    <ul class="ranking-list">
+                        ${list.length > 0
+                            ? list.map((t) => `<li><span>${t.name}</span><span>${t.score || 0} pts</span></li>`).join('')
+                            : '<li>Todavía no hay puntos registrados.</li>'}
+                    </ul>
+                    <button class="ranking-modal-close" onclick="closeRankingModal()">Cerrar</button>
+                </div>
+            `;
+            document.body.appendChild(backdrop);
+        }
+
+        function closeRankingModal() {
+            const backdrop = document.getElementById('ranking-modal-backdrop');
+            if (backdrop) backdrop.remove();
+        }
+
         function resetControlsTimer() {
             if (!presentationActive) return;
             
@@ -2523,8 +3050,12 @@ Equipo Docente de Pediatría</textarea>
                     });
                 });
                 
-                let answerHtml = card.querySelector('.answer-box') ? card.querySelector('.answer-box').innerHTML : '';
-                presentationCases.push({ badge, title, vignette, options, answerHtml });
+                let answerBox = card.querySelector('.answer-box');
+                let answerHtml = answerBox ? answerBox.innerHTML : '';
+                // caseId estable: se deriva del id único del .answer-box (ans12 → "12"), no del
+                // orden de la lista (que cambia según el filtro de semana o el buscador por tema).
+                let caseId = answerBox ? answerBox.id.replace(/^ans/, '') : String(presentationCases.length);
+                presentationCases.push({ badge, title, vignette, options, answerHtml, caseId });
             });
         }
 
@@ -2547,12 +3078,14 @@ Equipo Docente de Pediatría</textarea>
             
             renderSlide(false);
             resetControlsTimer();
-            
+            syncVoteMeta();
+            startVotePolling();
+
             // Add event listeners
             window.addEventListener('keydown', handleKeyPress);
             window.addEventListener('mousemove', resetControlsTimer);
             window.addEventListener('mousedown', resetControlsTimer);
-            
+
             // Try to request fullscreen for a true slideshow feel
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen().catch(() => {});
@@ -2562,7 +3095,8 @@ Equipo Docente de Pediatría</textarea>
         function exitPresentation() {
             presentationActive = false;
             clearTimeout(controlsTimeout);
-            
+            stopVotePolling();
+
             let overlay = document.getElementById('presentation-overlay');
             if (overlay) {
                 overlay.className = '';
@@ -2571,7 +3105,7 @@ Equipo Docente de Pediatría</textarea>
             window.removeEventListener('keydown', handleKeyPress);
             window.removeEventListener('mousemove', resetControlsTimer);
             window.removeEventListener('mousedown', resetControlsTimer);
-            
+
             if (document.fullscreenElement && document.exitFullscreen) {
                 document.exitFullscreen().catch(() => {});
             }
@@ -2646,10 +3180,19 @@ Equipo Docente de Pediatría</textarea>
                 // Reset styling classes
                 li.className = 'pres-option-item';
                 badge.innerText = letter;
-                
+
                 if (currentPhase === 1) {
                     if (opt.voted) {
                         li.classList.add('voted');
+                    }
+                    if (voteRoomActive) {
+                        li.classList.add('has-live-bar');
+                        let count = liveVoteCounts[idx] || 0;
+                        let pct = liveVoteTotal > 0 ? Math.round((count / liveVoteTotal) * 100) : 0;
+                        let fill = li.querySelector('.vote-bar-fill');
+                        let countLabel = li.querySelector('.vote-bar-count');
+                        if (fill) fill.style.width = pct + '%';
+                        if (countLabel) countLabel.innerText = `${count} voto${count === 1 ? '' : 's'} (${pct}%)`;
                     }
                 } else {
                     // Phase 2: Reveal answers
@@ -2679,11 +3222,22 @@ Equipo Docente de Pediatría</textarea>
                         <h2>${currentCase.title}</h2>
                     </div>
                     <div class="pres-controls-top">
+                        ${voteMode === 'equipos' && voteRoomActive ? '<button class="pres-btn-top" onclick="showRankingModal()">🏆 Ranking</button>' : ''}
                         <button class="pres-btn-top" onclick="toggleTheme()">🌓 Tema Claro/Oscuro</button>
                         <button class="pres-btn-top" onclick="exitPresentation()">✕ Salir (Esc)</button>
                     </div>
                 </div>
-                
+
+                ${voteRoomActive ? `
+                    <div class="pres-vote-panel">
+                        <canvas id="presVoteQrCanvas" width="58" height="58"></canvas>
+                        <div class="pres-vote-panel-info">
+                            🗳️ Votá en <strong>votar.html</strong><br>
+                            Sala: <strong>${voteRoomId}</strong>
+                        </div>
+                    </div>
+                ` : ''}
+
                 <div class="pres-content">
                     <div class="pres-left">
                         <div class="pres-vignette-box">
@@ -2707,6 +3261,8 @@ Equipo Docente de Pediatría</textarea>
                                     <li class="pres-option-item" onclick="if(currentPhase===1) toggleVote(${idx})">
                                         <span class="pres-option-badge">${letter}</span>
                                         <div class="pres-option-text">${opt.text}</div>
+                                        <span class="vote-bar-count"></span>
+                                        <div class="vote-bar-track"><div class="vote-bar-fill"></div></div>
                                     </li>
                                 `;
                             }).join('')}
@@ -2732,7 +3288,12 @@ Equipo Docente de Pediatría</textarea>
             `;
             
             renderOptionsOnly();
-            
+
+            if (voteRoomActive) {
+                const voteUrl = `${window.location.origin}${window.location.pathname.replace(/index\.html$/, '')}votar.html?room=${voteRoomId}`;
+                renderVoteQr('presVoteQrCanvas', voteUrl);
+            }
+
             if (currentPhase === 2) {
                 const box = document.getElementById('pres-explanation');
                 if (box) {
@@ -2750,17 +3311,23 @@ Equipo Docente de Pediatría</textarea>
 
         function nextStep() {
             if (currentPhase === 1) {
+                let closingCase = presentationCases[currentCaseIndex];
                 currentPhase = 2;
+                stopVotePolling(); // se dejó de votar: congelamos el conteo en pantalla
                 renderSlide(true);
+                scoreTeamsForCase(closingCase);
             } else if (currentPhase === 2) {
                 if (currentCaseIndex < presentationCases.length - 1) {
                     currentCaseIndex++;
                     currentPhase = 1;
                     renderSlide(false);
+                    startVotePolling();
                 } else {
                     exitPresentation();
+                    return;
                 }
             }
+            syncVoteMeta();
             resetControlsTimer();
         }
 
@@ -2768,13 +3335,18 @@ Equipo Docente de Pediatría</textarea>
             if (currentPhase === 2) {
                 currentPhase = 1;
                 renderSlide(false);
+                startVotePolling();
             } else if (currentPhase === 1 && currentCaseIndex > 0) {
                 currentCaseIndex--;
                 currentPhase = 2;
+                stopVotePolling();
                 renderSlide(false);
             }
+            syncVoteMeta();
             resetControlsTimer();
         }
+
+        renderVoteToolbar();
     </script>
 
     <script>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Votación EFU — Pediatría UBA</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 16px;
+        background: #f8f9fa;
+        color: #202124;
+        min-height: 100vh;
+    }
+    .screen {
+        max-width: 480px;
+        margin: 0 auto;
+    }
+    h1 {
+        font-size: 1.3rem;
+        color: #5b21b6;
+        margin: 0 0 4px 0;
+    }
+    .subtitle {
+        color: #5f6368;
+        font-size: 0.9rem;
+        margin: 0 0 20px 0;
+    }
+    .box {
+        background: white;
+        border: 1px solid #dadce0;
+        border-radius: 14px;
+        padding: 20px;
+        margin-bottom: 16px;
+    }
+    input[type="text"] {
+        width: 100%;
+        padding: 12px 14px;
+        font-size: 1.1rem;
+        border-radius: 10px;
+        border: 2px solid #dadce0;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+    }
+    button {
+        width: 100%;
+        padding: 14px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #7c3aed, #5b21b6);
+        color: white;
+        cursor: pointer;
+    }
+    button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+    .badge {
+        display: inline-block;
+        background: #f5f3ff;
+        color: #5b21b6;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    .case-title {
+        font-size: 1.15rem;
+        font-weight: 800;
+        margin: 0 0 14px 0;
+    }
+    .options-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 18px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .option-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 14px;
+        border: 2px solid #dadce0;
+        border-radius: 10px;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.15s ease;
+    }
+    .option-item.selected {
+        border-color: #7c3aed;
+        background: #f5f3ff;
+        box-shadow: 0 0 0 1px #7c3aed inset;
+    }
+    .option-letter {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #e8eaed;
+        color: #5f6368;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        flex-shrink: 0;
+    }
+    .option-item.selected .option-letter {
+        background: #7c3aed;
+        color: white;
+    }
+    .option-text {
+        font-size: 0.98rem;
+        line-height: 1.3;
+    }
+    .status-msg {
+        text-align: center;
+        padding: 40px 20px;
+        color: #5f6368;
+    }
+    .status-msg .big {
+        font-size: 2.5rem;
+        margin-bottom: 12px;
+    }
+    .error-msg {
+        color: #c5221f;
+        font-size: 0.9rem;
+        margin-top: -6px;
+        margin-bottom: 12px;
+    }
+    .footer-note {
+        text-align: center;
+        font-size: 0.75rem;
+        color: #9aa0a6;
+        margin-top: 20px;
+    }
+    @media (prefers-color-scheme: dark) {
+        body { background: #0a0b0d; color: #f1f3f4; }
+        .box { background: #1e2025; border-color: #3c4043; }
+        .subtitle { color: #9aa0a6; }
+        input[type="text"] { background: #1e2025; color: #f1f3f4; border-color: #3c4043; }
+        .option-item { border-color: #3c4043; }
+        .option-item.selected { background: #182a4d; border-color: #8ab4f8; box-shadow: 0 0 0 1px #8ab4f8 inset; }
+        .option-letter { background: #3c4043; color: #e8eaed; }
+        .option-item.selected .option-letter { background: #8ab4f8; color: #0c0d0f; }
+        .badge { background: #182a4d; color: #8ab4f8; }
+        .case-title { color: #f1f3f4; }
+    }
+</style>
+</head>
+<body>
+<div class="screen" id="app">
+    <h1>🗳️ Votación EFU</h1>
+    <p class="subtitle">Cátedra de Pediatría UBA — Hospital Ramón Carrillo</p>
+    <div id="content"></div>
+    <p class="footer-note">Un voto por caso. Tu voto se guarda en este celular hasta el próximo caso.</p>
+</div>
+
+<script>
+    // Debe coincidir exactamente con la constante EFU_FIREBASE_DB_URL configurada en index.html.
+    const EFU_FIREBASE_DB_URL = "https://pediatria-uba-efu-votos.firebaseio.com";
+
+    const params = new URLSearchParams(window.location.search);
+    let roomId = (params.get('room') || '').trim().toUpperCase();
+    let roomMeta = null;
+    let teamName = '';
+    let currentCase = null; // { caseId, title, options: [{letter, text}] }
+    let selectedLetters = [];
+    let pollTimer = null;
+
+    const content = document.getElementById('content');
+
+    async function fbGet(path) {
+        const res = await fetch(`${EFU_FIREBASE_DB_URL}/${path}.json`);
+        if (!res.ok) throw new Error(`GET ${path} → ${res.status}`);
+        return res.json();
+    }
+
+    async function fbPost(path, body) {
+        const res = await fetch(`${EFU_FIREBASE_DB_URL}/${path}.json`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error(`POST ${path} → ${res.status}`);
+        return res.json();
+    }
+
+    function hasVoted(caseId) {
+        return !!localStorage.getItem(`efuVoted_${roomId}_${caseId}`);
+    }
+
+    function markVoted(caseId) {
+        localStorage.setItem(`efuVoted_${roomId}_${caseId}`, '1');
+    }
+
+    function getSavedTeam() {
+        return localStorage.getItem(`efuTeam_${roomId}`) || '';
+    }
+
+    function saveTeam(name) {
+        localStorage.setItem(`efuTeam_${roomId}`, name);
+        teamName = name;
+    }
+
+    function renderRoomPrompt(errorMsg) {
+        content.innerHTML = `
+            <div class="box">
+                <p>Ingresá el código de sala que te mostró el docente (o escaneá el QR proyectado).</p>
+                <input type="text" id="roomInput" maxlength="6" placeholder="Ej: A3F9K2">
+                ${errorMsg ? `<p class="error-msg">${errorMsg}</p>` : ''}
+                <button onclick="submitRoomCode()">Ingresar</button>
+            </div>
+        `;
+    }
+
+    window.submitRoomCode = function () {
+        const input = document.getElementById('roomInput');
+        const code = (input.value || '').trim().toUpperCase();
+        if (!code) return;
+        window.location.href = `${window.location.pathname}?room=${encodeURIComponent(code)}`;
+    };
+
+    function renderTeamPrompt() {
+        content.innerHTML = `
+            <div class="box">
+                <p><strong>Modo Equipos activado.</strong> Elegí un nombre para tu equipo (se usa para todo el taller de hoy).</p>
+                <input type="text" id="teamInput" maxlength="30" placeholder="Ej: Equipo Rojo" style="text-transform: none;">
+                <button onclick="submitTeamName()">Confirmar equipo</button>
+            </div>
+        `;
+    }
+
+    window.submitTeamName = function () {
+        const input = document.getElementById('teamInput');
+        const name = (input.value || '').trim();
+        if (!name) return;
+        saveTeam(name);
+        renderApp();
+    };
+
+    function renderStatus(icon, title, subtitle) {
+        content.innerHTML = `
+            <div class="box status-msg">
+                <div class="big">${icon}</div>
+                <div style="font-size: 1.1rem; font-weight: 700; color: inherit;">${title}</div>
+                ${subtitle ? `<div style="margin-top: 6px;">${subtitle}</div>` : ''}
+            </div>
+        `;
+    }
+
+    function toggleOption(letter) {
+        const idx = selectedLetters.indexOf(letter);
+        if (idx >= 0) {
+            selectedLetters.splice(idx, 1);
+        } else {
+            selectedLetters.push(letter);
+        }
+        renderCaseVoting();
+    }
+
+    function renderCaseVoting() {
+        if (!currentCase) return;
+        content.innerHTML = `
+            <div class="box">
+                <span class="badge">Caso en pantalla</span>
+                <p class="case-title">${currentCase.title}</p>
+                <ul class="options-list">
+                    ${currentCase.options.map(opt => `
+                        <li class="option-item ${selectedLetters.includes(opt.letter) ? 'selected' : ''}" onclick="window.__toggleOpt('${opt.letter}')">
+                            <span class="option-letter">${opt.letter}</span>
+                            <span class="option-text">${opt.text}</span>
+                        </li>
+                    `).join('')}
+                </ul>
+                <button id="submitVoteBtn" ${selectedLetters.length === 0 ? 'disabled' : ''} onclick="submitVote()">
+                    Votar (${selectedLetters.length} seleccionada${selectedLetters.length === 1 ? '' : 's'})
+                </button>
+            </div>
+        `;
+    }
+    window.__toggleOpt = toggleOption;
+
+    window.submitVote = async function () {
+        if (!currentCase || selectedLetters.length === 0) return;
+        const btn = document.getElementById('submitVoteBtn');
+        if (btn) { btn.disabled = true; btn.innerText = 'Enviando...'; }
+        try {
+            const body = { options: [...selectedLetters], ts: Date.now() };
+            if (roomMeta && roomMeta.mode === 'equipos') body.team = teamName;
+            await fbPost(`efuRooms/${roomId}/votes/${currentCase.caseId}`, body);
+            markVoted(currentCase.caseId);
+            renderStatus('✅', 'Voto enviado', 'Esperando al resto de tus compañeros...');
+        } catch (err) {
+            if (btn) { btn.disabled = false; btn.innerText = 'Reintentar envío'; }
+            alert('No se pudo enviar el voto, revisá tu conexión e intentá de nuevo.');
+        }
+    };
+
+    async function extractCaseFromIndex(caseId) {
+        const res = await fetch('index.html');
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const answerBox = doc.getElementById('ans' + caseId);
+        if (!answerBox) return null;
+        const card = answerBox.closest('.card');
+        if (!card) return null;
+
+        let title = card.querySelector('h2') ? card.querySelector('h2').innerText : '';
+        title = title.replace(/\s*\(.*?\)\s*$/, ''); // sin spoilers, igual que en el proyector
+
+        const options = [];
+        card.querySelectorAll('.efu-options li').forEach((li, idx) => {
+            let text = li.innerHTML.replace(/^<strong>[A-H]\.<\/strong>\s*/i, '');
+            options.push({ letter: String.fromCharCode(65 + idx), text });
+        });
+
+        return { caseId, title, options };
+    }
+
+    async function checkForNewCase() {
+        try {
+            roomMeta = await fbGet(`efuRooms/${roomId}/meta`);
+        } catch (err) {
+            return; // sin conexión momentánea: se reintenta en el próximo poll
+        }
+        if (!roomMeta) {
+            renderStatus('⏳', 'Sala no encontrada', 'Puede que el docente todavía no haya activado la votación.');
+            return;
+        }
+
+        if (roomMeta.mode === 'equipos' && !getSavedTeam()) {
+            renderTeamPrompt();
+            return;
+        }
+        if (roomMeta.mode === 'equipos') teamName = getSavedTeam();
+
+        const caseId = roomMeta.currentCaseId;
+        if (!caseId) {
+            renderStatus('⏳', 'Esperando el primer caso...', 'El docente todavía no inició la votación de ningún caso.');
+            currentCase = null;
+            return;
+        }
+
+        if (roomMeta.phase === 2 || hasVoted(caseId)) {
+            renderStatus(
+                hasVoted(caseId) ? '✅' : '📋',
+                hasVoted(caseId) ? 'Voto registrado' : 'Revisando respuestas',
+                'Esperando el próximo caso...'
+            );
+            currentCase = null;
+            return;
+        }
+
+        if (!currentCase || currentCase.caseId !== caseId) {
+            const parsed = await extractCaseFromIndex(caseId);
+            if (!parsed) {
+                renderStatus('⚠️', 'No se pudo cargar el caso', 'Reintentando...');
+                currentCase = null;
+                return;
+            }
+            currentCase = parsed;
+            selectedLetters = [];
+            renderCaseVoting();
+        }
+    }
+
+    function renderApp() {
+        if (!roomId) {
+            renderRoomPrompt();
+            return;
+        }
+        renderStatus('⏳', 'Conectando con la sala...', '');
+        if (pollTimer) clearInterval(pollTimer);
+        checkForNewCase();
+        pollTimer = setInterval(checkForNewCase, 2000);
+    }
+
+    if (!EFU_FIREBASE_DB_URL) {
+        renderStatus('⚠️', 'Votación en vivo no disponible', 'Consultá con el docente.');
+    } else {
+        renderApp();
+    }
+</script>
+</body>
+</html>
