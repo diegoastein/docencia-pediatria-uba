@@ -265,6 +265,7 @@
     let caseCache = {}; // caseId -> caso ya parseado (el contenido no cambia durante el taller)
     let lastSeenKey = ''; // evita re-renderizar/refetchear si no cambió nada desde el último poll
     let activityDraftScale = null; // puntaje 1-5 elegido en el Pulso de Cierre, antes de enviar
+    let pollDraftChoice = null; // índice de opción elegido en la Encuesta de Opción Múltiple, antes de enviar
 
     const content = document.getElementById('content');
 
@@ -537,7 +538,7 @@
     }
 
     // ==========================================================================
-    // ACTIVIDADES ABIERTAS EN VIVO (Nube de Palabras / Muro de Preguntas / Pulso)
+    // ACTIVIDADES ABIERTAS EN VIVO (Nube de Palabras / Muro de Preguntas / Pulso / Encuesta)
     // ==========================================================================
     // Se renderizan en vez de la votación de casos cuando roomMeta.activity existe. No
     // duplican ningún dato: usan la misma sala/QR y los mismos helpers fbGet/fbPost/fbPut.
@@ -565,12 +566,36 @@
                     <button onclick="submitActivityResponse()">Enviar</button>
                 </div>
             `;
+        } else if (activity.type === 'poll') {
+            pollDraftChoice = null;
+            content.innerHTML = `
+                <div class="box">
+                    <span class="badge">🗳️ Encuesta</span>
+                    <p class="case-title">${activity.prompt}</p>
+                    <ul class="options-list" id="pollOptionsList">
+                        ${activity.options.map((opt, idx) => `
+                            <li class="option-item" onclick="window.__pickPollOption(${idx})">
+                                <span class="option-letter">${String.fromCharCode(65 + idx)}</span>
+                                <span class="option-text">${opt}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <button id="submitPollBtn" disabled onclick="submitActivityResponse()">Votar</button>
+                </div>
+            `;
         }
     }
 
     window.__pickScale = function (n) {
         activityDraftScale = n;
         document.querySelectorAll('.scale-btn').forEach(b => b.classList.toggle('selected', Number(b.dataset.n) === n));
+    };
+
+    window.__pickPollOption = function (idx) {
+        pollDraftChoice = idx;
+        document.querySelectorAll('#pollOptionsList .option-item').forEach((li, i) => li.classList.toggle('selected', i === idx));
+        const btn = document.getElementById('submitPollBtn');
+        if (btn) btn.disabled = false;
     };
 
     window.submitActivityResponse = async function () {
@@ -585,9 +610,14 @@
             alert('Elegí un puntaje del 1 al 5.');
             return;
         }
+        if (activity.type === 'poll' && pollDraftChoice === null) {
+            alert('Elegí una opción.');
+            return;
+        }
         const body = { ts: Date.now() };
         if (text) body.text = text;
         if (activity.type === 'pulse') body.scale = activityDraftScale;
+        if (activity.type === 'poll') body.choice = pollDraftChoice;
         try {
             await fbPost(`efuRooms/${roomId}/activity/${activity.key}/responses`, body);
             markActivitySent(activity.key);
@@ -672,7 +702,7 @@
             renderStatus('⏹️', 'Esta actividad ya cerró', 'Gracias por participar.');
             return;
         }
-        if (activity.type === 'wordcloud' || activity.type === 'pulse') {
+        if (activity.type === 'wordcloud' || activity.type === 'pulse' || activity.type === 'poll') {
             if (hasSentActivity(activity.key)) {
                 renderStatus('✅', 'Ya enviaste tu respuesta', 'Gracias por participar.');
                 return;

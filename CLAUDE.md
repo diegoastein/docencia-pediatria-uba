@@ -69,7 +69,7 @@ votación en vivo no está configurada o falla).
 
 ### Actividades Abiertas en Vivo (sin necesidad de contenido clínico nuevo)
 Reutilizan la misma sala/QR de la Votación en Vivo (botón "💬 Actividad Abierta" en la barra
-del docente), sin escanear un segundo código. Tres plantillas listas para usar:
+del docente), sin escanear un segundo código. Cuatro plantillas listas para usar:
 - **☁️ Nube de Palabras:** el docente escribe una consigna libre en el momento; los alumnos
   mandan una palabra/frase corta y se agrega por frecuencia (agrupa variantes por tilde, sin
   tocar la "ñ" — no es un diacrítico).
@@ -78,6 +78,10 @@ del docente), sin escanear un segundo código. Tres plantillas listas para usar:
   y puede marcarlas "respondida" (sólo de su lado, no se sincroniza).
 - **🌡️ Pulso de Cierre de Clase:** consigna fija (escala 1-5 + comentario opcional), pensada
   para correr al final de cada teórico sin preparación previa.
+- **🗳️ Encuesta de Opción Múltiple:** el docente escribe una consigna y de 2 a 8 opciones ad
+  hoc en el momento (sin depender de un caso ya cargado en el banco EFU); los alumnos eligen
+  una sola opción y el docente ve barras de resultado en vivo — sin corrección, útil para
+  cualquier pregunta que no sea "en una palabra" ni de escala 1-5.
 
 Modelo de datos: `efuRooms/{roomId}/meta.activity` (`type`/`prompt`/`status`/`key`) +
 `efuRooms/{roomId}/activity/{key}/responses` (append-only) y `/upvotes` (sólo Muro de

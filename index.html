@@ -1117,6 +1117,62 @@
             flex: 1;
         }
 
+        .poll-option-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .poll-option-row .poll-option-input {
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        .poll-option-remove {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: none;
+            color: inherit;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .poll-bar-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .poll-bar-row {
+            margin-bottom: 12px;
+        }
+
+        .poll-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            gap: 10px;
+        }
+
+        .poll-bar-track {
+            height: 10px;
+            border-radius: 6px;
+            background: #f1f3f4;
+            overflow: hidden;
+        }
+
+        .poll-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            background: linear-gradient(90deg, #7c3aed, #5b21b6);
+        }
+
         @media (prefers-color-scheme: dark) {
             .activity-type-btn.selected { background: #182a4d; color: #8ab4f8; border-color: #8ab4f8; }
             .wordcloud-tag { color: #8ab4f8; }
@@ -1124,6 +1180,7 @@
             .pulse-comment-list li, .qna-list li { background: #2b2e35; }
             .qna-count-badge { background: #182a4d; color: #8ab4f8; }
             .activity-status-pill.closed { background: #2b2e35; color: #9aa0a6; }
+            .poll-bar-track { background: #2b2e35; }
         }
 
         /* Selección de casos para armar una presentación a medida (combinando búsquedas) */
@@ -2944,6 +3001,9 @@ Equipo Docente de Pediatría</textarea>
         let activityPollInterval = null;
         let activityAnsweredQna = new Set(); // ids de preguntas marcadas "respondida" (sólo local, lado docente)
         let pendingActivityType = 'wordcloud'; // selección en el panel antes de abrir la actividad
+        let pendingPollOptions = ['', '']; // opciones en construcción para la Encuesta de Opción Múltiple
+        let pendingActivityPrompt = ''; // consigna en construcción — se guarda fuera del DOM porque
+                                         // agregar/quitar opciones de la Encuesta vuelve a armar el modal
 
         function efuVotingEnabled() {
             return !!EFU_FIREBASE_DB_URL;
@@ -3263,7 +3323,7 @@ Equipo Docente de Pediatría</textarea>
         }
 
         // ==========================================================================
-        // ACTIVIDADES ABIERTAS EN VIVO (Nube de Palabras / Muro de Preguntas / Pulso)
+        // ACTIVIDADES ABIERTAS EN VIVO (Nube de Palabras / Muro de Preguntas / Pulso / Encuesta)
         // ==========================================================================
         // Reutilizan la misma sala/QR de la Votación en Vivo (voteRoomId) para no pedirle a
         // los alumnos que escaneen un segundo código. El ciclo de vida (activityState +
@@ -3274,7 +3334,8 @@ Equipo Docente de Pediatría</textarea>
         const ACTIVITY_TEMPLATES = {
             wordcloud: { label: '☁️ Nube de Palabras', needsPrompt: true },
             qna: { label: '❓ Muro de Preguntas Anónimas', needsPrompt: false },
-            pulse: { label: '🌡️ Pulso de Cierre de Clase', needsPrompt: false }
+            pulse: { label: '🌡️ Pulso de Cierre de Clase', needsPrompt: false },
+            poll: { label: '🗳️ Encuesta de Opción Múltiple', needsPrompt: true }
         };
 
         function activityModalBackdrop() {
@@ -3329,7 +3390,22 @@ Equipo Docente de Pediatría</textarea>
                     </div>
                     ${ACTIVITY_TEMPLATES[pendingActivityType].needsPrompt ? `
                         <input type="text" id="activityPromptInput" class="activity-prompt-input" maxlength="120"
-                            placeholder="Ej: En una palabra, ¿qué pensás al ver esta imagen?">
+                            value="${pendingActivityPrompt.replace(/"/g, '&quot;')}"
+                            oninput="updateActivityPrompt(this.value)"
+                            placeholder="${pendingActivityType === 'poll' ? 'Ej: ¿Qué conducta tomarías primero?' : 'Ej: En una palabra, ¿qué pensás al ver esta imagen?'}">
+                    ` : ''}
+                    ${pendingActivityType === 'poll' ? `
+                        <div class="poll-option-inputs" id="pollOptionInputs">
+                            ${pendingPollOptions.map((val, idx) => `
+                                <div class="poll-option-row">
+                                    <input type="text" class="activity-prompt-input poll-option-input" maxlength="80"
+                                        value="${(val || '').replace(/"/g, '&quot;')}" placeholder="Opción ${String.fromCharCode(65 + idx)}"
+                                        oninput="updatePollOption(${idx}, this.value)">
+                                    ${pendingPollOptions.length > 2 ? `<button type="button" class="poll-option-remove" onclick="removePollOption(${idx})">✕</button>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${pendingPollOptions.length < 8 ? '<button type="button" class="ranking-modal-close" style="margin-bottom:10px;" onclick="addPollOption()">+ Agregar opción</button>' : ''}
                     ` : ''}
                     <div class="activity-modal-actions">
                         <button class="ranking-modal-close" onclick="startOpenActivity()">Abrir</button>
@@ -3355,10 +3431,43 @@ Equipo Docente de Pediatría</textarea>
             `;
         }
 
+        function updateActivityPrompt(value) {
+            pendingActivityPrompt = value; // sin re-render: no queremos perder el foco en cada tecla
+        }
+
+        function updatePollOption(idx, value) {
+            pendingPollOptions[idx] = value; // sin re-render: no queremos perder el foco en cada tecla
+        }
+
+        function addPollOption() {
+            if (pendingPollOptions.length >= 8) return;
+            pendingPollOptions.push('');
+            renderActivityModalContent();
+        }
+
+        function removePollOption(idx) {
+            if (pendingPollOptions.length <= 2) return;
+            pendingPollOptions.splice(idx, 1);
+            renderActivityModalContent();
+        }
+
         async function startOpenActivity() {
             const tpl = ACTIVITY_TEMPLATES[pendingActivityType];
             let prompt = '';
-            if (tpl.needsPrompt) {
+            let options = null;
+            if (pendingActivityType === 'poll') {
+                const input = document.getElementById('activityPromptInput');
+                prompt = input ? input.value.trim() : '';
+                if (!prompt) {
+                    alert('Escribí la consigna de la encuesta.');
+                    return;
+                }
+                options = pendingPollOptions.map((o) => o.trim()).filter(Boolean);
+                if (options.length < 2) {
+                    alert('Cargá al menos 2 opciones.');
+                    return;
+                }
+            } else if (tpl.needsPrompt) {
                 const input = document.getElementById('activityPromptInput');
                 prompt = input ? input.value.trim() : '';
                 if (!prompt) {
@@ -3377,10 +3486,13 @@ Equipo Docente de Pediatría</textarea>
                 status: 'open',
                 key: String(Date.now())
             };
+            if (options) newActivity.options = options;
             try {
                 await efuFbPut(`efuRooms/${voteRoomId}/meta/activity`, newActivity);
                 activityState = newActivity;
                 activityAnsweredQna = new Set();
+                pendingPollOptions = ['', '']; // limpio para la próxima vez que se abra una encuesta
+                pendingActivityPrompt = '';
                 renderVoteToolbar();
                 renderActivityModalContent();
                 startActivityPolling();
@@ -3401,6 +3513,8 @@ Equipo Docente de Pediatría</textarea>
                 } else if (activityState.type === 'qna') {
                     const upvotes = await efuFbGet(`efuRooms/${voteRoomId}/activity/${activityState.key}/upvotes`) || {};
                     renderQnaResults(box, responses, upvotes);
+                } else if (activityState.type === 'poll') {
+                    renderPollResults(box, responses, activityState.options || []);
                 }
             } catch (err) {
                 console.warn('No se pudo actualizar la actividad abierta:', err);
@@ -3476,6 +3590,29 @@ Equipo Docente de Pediatría</textarea>
                     </span>
                 </li>
             `).join('')}</ul>`;
+        }
+
+        function renderPollResults(box, responses, options) {
+            if (!box || options.length === 0) return;
+            const counts = new Array(options.length).fill(0);
+            Object.values(responses).forEach((r) => {
+                const idx = Number(r.choice);
+                if (Number.isInteger(idx) && idx >= 0 && idx < options.length) counts[idx]++;
+            });
+            const total = counts.reduce((a, b) => a + b, 0);
+            if (total === 0) {
+                box.innerHTML = '<p style="opacity: 0.7;">Todavía no llegaron respuestas.</p>';
+                return;
+            }
+            box.innerHTML = `<ul class="poll-bar-list">${options.map((opt, idx) => {
+                const pct = Math.round((counts[idx] / total) * 100);
+                return `
+                    <li class="poll-bar-row">
+                        <div class="poll-bar-label"><span>${String.fromCharCode(65 + idx)}. ${opt}</span><span>${counts[idx]} (${pct}%)</span></div>
+                        <div class="poll-bar-track"><div class="poll-bar-fill" style="width: ${pct}%;"></div></div>
+                    </li>
+                `;
+            }).join('')}</ul><p style="text-align:center; opacity:0.7; font-size:0.85rem; margin-top:8px;">${total} respuesta${total === 1 ? '' : 's'}</p>`;
         }
 
         function markQnaAnswered(id) {
