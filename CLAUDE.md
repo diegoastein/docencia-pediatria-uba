@@ -146,6 +146,16 @@ escribir contenido nuevo.
 > que el volumen actual alcanza por ahora. Retomar esos dos con el mismo flujo de abajo si más
 > adelante hace falta más contenido; no es necesario para que el banco actual sea usable.
 >
+> **Los 138 casos `"verificado"` ya están integrados en `index.html`** (pestaña Talleres EFU),
+> como tarjetas `.card` normales al final del tab, con `data-tema` para el buscador y
+> `data-semana=""` (vacío a propósito): no aparecen navegando por un viernes específico (1-9),
+> sólo con "Todas" o buscando por tema — decisión del docente, porque no corresponden a ningún
+> viernes del cronograma. Se distinguen de las tarjetas curadas por semana en dos cosas: el badge
+> dice "Banco EFU — {módulo}" en vez de "Viernes X — EFU", y la justificación es breve (1-2
+> líneas de lógica clínica general, no la justificación letra por letra que sí tienen los casos
+> curados) — decisión del docente para no multiplicar por 138 el trabajo de escribir
+> justificación detallada. IDs de sus `answer-box` con prefijo `ansB` (`ansB1`...`ansB138`) para
+> no colisionar con los `ansN`/`ansN_M` de las tarjetas curadas.
 > **Antigravity queda descartado como método de extracción** (decisión del docente, 21/08/2026):
 > pide permisos demasiado amplios y sus resultados no son confiables. La extracción la hace
 > **Claude Code directamente**, caso por caso, con el skill de PDF — más lento y con más costo en
