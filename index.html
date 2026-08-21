@@ -7,7 +7,7 @@
     <!-- SheetJS CDN para Exportación Nativa a Excel (.xlsx) -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <!-- QRCode CDN para el QR de Votación en Vivo (Talleres EFU) -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #1a73e8;
@@ -786,10 +786,18 @@
             padding: 8px 14px 8px 8px;
         }
 
-        .vote-room-active-box canvas {
+        .qr-box {
             border-radius: 6px;
             background: white;
             display: block;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .qr-box img, .qr-box canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
 
         .vote-room-code {
@@ -872,12 +880,6 @@
             opacity: 0;
             transform: translateY(-20px);
             pointer-events: none;
-        }
-
-        .pres-vote-panel canvas {
-            border-radius: 6px;
-            background: white;
-            display: block;
         }
 
         .pres-vote-panel-info {
@@ -2769,7 +2771,7 @@ Equipo Docente de Pediatría</textarea>
             const voteUrl = `${window.location.origin}${window.location.pathname.replace(/index\.html$/, '')}votar.html?room=${voteRoomId}`;
             box.innerHTML = `
                 <div class="vote-room-active-box">
-                    <canvas id="efuVoteQrCanvas" width="66" height="66"></canvas>
+                    <div id="efuVoteQrCanvas" class="qr-box" style="width: 66px; height: 66px;"></div>
                     <div>
                         <span class="vote-room-mode-tag">${voteMode === 'equipos' ? '🏆 Equipos' : '🙈 Anónimo'}</span>
                         <span class="vote-room-code">${voteRoomId}</span>
@@ -2782,12 +2784,15 @@ Equipo Docente de Pediatría</textarea>
             renderVoteQr('efuVoteQrCanvas', voteUrl);
         }
 
-        function renderVoteQr(canvasId, url) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas || typeof QRCode === 'undefined') return;
-            QRCode.toCanvas(canvas, url, { width: canvas.width, margin: 1 }, (err) => {
-                if (err) console.warn('No se pudo generar el QR de votación:', err);
-            });
+        function renderVoteQr(elementId, url) {
+            const el = document.getElementById(elementId);
+            if (!el || typeof QRCode === 'undefined') return;
+            el.innerHTML = '';
+            try {
+                new QRCode(el, { text: url, width: el.offsetWidth || 66, height: el.offsetHeight || 66, correctLevel: QRCode.CorrectLevel.M });
+            } catch (err) {
+                console.warn('No se pudo generar el QR de votación:', err);
+            }
         }
 
         async function activateVotingRoom() {
@@ -3230,7 +3235,7 @@ Equipo Docente de Pediatría</textarea>
 
                 ${voteRoomActive ? `
                     <div class="pres-vote-panel">
-                        <canvas id="presVoteQrCanvas" width="58" height="58"></canvas>
+                        <div id="presVoteQrCanvas" class="qr-box" style="width: 58px; height: 58px;"></div>
                         <div class="pres-vote-panel-info">
                             🗳️ Votá en <strong>votar.html</strong><br>
                             Sala: <strong>${voteRoomId}</strong>
