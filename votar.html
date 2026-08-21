@@ -147,8 +147,10 @@
         border-radius: 10px;
         margin-bottom: 16px;
     }
-    .result-summary.result-ok { background: #e6f4ea; color: #137333; }
-    .result-summary.result-bad { background: #fce8e6; color: #c5221f; }
+    .result-summary.result-perfect { background: #e6f4ea; color: #137333; }
+    .result-summary.result-close { background: #fef7e0; color: #b06000; }
+    .result-summary.result-bad { background: #fdf0e5; color: #c2410c; }
+    .result-summary.result-zero { background: #fce8e6; color: #c5221f; }
     .result-summary.result-missed { background: #f1f3f4; color: #5f6368; }
     .option-item.result-item { cursor: default; }
     .option-item.result-correct {
@@ -178,8 +180,10 @@
         .option-item.selected .option-letter { background: #8ab4f8; color: #0c0d0f; }
         .badge { background: #182a4d; color: #8ab4f8; }
         .case-title { color: #f1f3f4; }
-        .result-summary.result-ok { background: #133220; color: #81c995; }
-        .result-summary.result-bad { background: #3b1816; color: #f28b82; }
+        .result-summary.result-perfect { background: #133220; color: #81c995; }
+        .result-summary.result-close { background: #3d2e05; color: #fbbc04; }
+        .result-summary.result-bad { background: #3a220f; color: #ffab6e; }
+        .result-summary.result-zero { background: #3b1816; color: #f28b82; }
         .result-summary.result-missed { background: #2b2e35; color: #9aa0a6; }
         .option-item.result-correct { border-color: #81c995; background: #133220; }
         .option-item.result-correct .option-letter { background: #81c995; color: #0c0d0f; }
@@ -384,16 +388,41 @@
 
     // Feedback de acierto/error cuando el docente revela las respuestas (fase 2). Se arma sólo
     // con las letras correctas/elegidas — nunca con la justificación clínica completa, que
-    // queda en el proyector.
+    // queda en el proyector. El tono es irónico/juguetón a propósito (pedido del docente), con
+    // un ícono distinto por nivel de acierto.
+    function buildResultSummary(myChoice, correctLetters, didVote) {
+        if (!didVote) {
+            return { cls: 'result-missed', icon: '⏰', text: 'No llegaste a votar este caso' };
+        }
+
+        const total = correctLetters.length;
+        const hits = myChoice.filter(l => correctLetters.includes(l)).length;
+        const extras = myChoice.filter(l => !correctLetters.includes(l)).length;
+        const ratio = total > 0 ? hits / total : 0;
+
+        if (hits === total && extras === 0) {
+            return {
+                cls: 'result-perfect',
+                icon: '🎉',
+                text: total === 1 ? '¡Excelente! Acertaste la opción correcta' : `¡Excelente! Acertaste las ${total} opciones`
+            };
+        }
+        if (hits === 0) {
+            return { cls: 'result-zero', icon: '🥶', text: 'No acertaste ninguna. ¿Pasó algo anoche? ¿Dormiste bien?' };
+        }
+        if (ratio >= 0.66) {
+            return {
+                cls: 'result-close',
+                icon: '😅',
+                text: `Bien... ${hits} sobre ${total}. Está casi bien${extras > 0 ? ' (aunque marcaste alguna de más)' : ''}...`
+            };
+        }
+        return { cls: 'result-bad', icon: '😬', text: `Grrrhhh... ${hits} sobre ${total}, no nos fue muy bien, ¿no?` };
+    }
+
     function renderCaseResult(parsed, myChoice, didVote) {
         const correctLetters = parsed.options.filter(o => o.correct).map(o => o.letter);
-        const isExact = didVote && myChoice.length === correctLetters.length && myChoice.every(l => correctLetters.includes(l));
-
-        let summaryClass = !didVote ? 'result-missed' : (isExact ? 'result-ok' : 'result-bad');
-        let summaryIcon = !didVote ? '⏰' : (isExact ? '✅' : '❌');
-        let summaryText = !didVote
-            ? 'No llegaste a votar este caso'
-            : (isExact ? '¡Exacto! Acertaste todas las opciones' : `Marcaste: ${myChoice.join(', ') || '(nada)'} — no coincidió del todo`);
+        const { cls: summaryClass, icon: summaryIcon, text: summaryText } = buildResultSummary(myChoice, correctLetters, didVote);
 
         content.innerHTML = `
             <div class="box">
