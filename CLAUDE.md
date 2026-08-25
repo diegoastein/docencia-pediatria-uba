@@ -70,8 +70,9 @@ medidas tomadas, con ese límite en mente:
   - En `index.html`, la pestaña Control de Prácticos usa `studentRoster` (array simple, sin el
     campo "Grupo" que tenía antes — no se usaba en ningún lado más que como dato muerto), cargado
     de `localStorage` (`pediatriaStudentRoster`). Botón "✏️ Editar Nómina" en la barra de
-    controles para cargarla/editarla; si está vacía al iniciar, abre el editor automáticamente
-    (primer uso). Se pierde si se borra el `localStorage` del navegador o se cambia de
+    controles para cargarla/editarla, sólo a demanda — no se abre solo al cargar la página
+    (se sacó ese auto-open porque interrumpía en cualquier pestaña, no sólo en Control de
+    Prácticos, y no es un dato crítico). Se pierde si se borra el `localStorage` del navegador o se cambia de
     dispositivo — hay que volver a cargarla a mano, no hay sync a la nube de la nómina en sí
     (sólo `attendanceData`, los registros de asistencia, si se usa la sincronización existente).
   - `generar_planilla_excel.py` lee de `nomina_alumnos.txt` (raíz del repo, un nombre por línea,
@@ -204,9 +205,9 @@ recargar la página no pierde nada.
   propósito — avisa en rojo, igual que la regla del EFU real.
 - El armador **sólo ofrece casos con exactamente 3 opciones correctas** (141 de los 167 del banco).
   Hay un checkbox para ver los demás, pero quedan deshabilitados.
-- **Escala de nota:** lineal en dos tramos, **0% → 1**, **60% → 4** (aprobado), **100% → 10**. La
-  "nota final" entera nunca aprueba por redondeo: con menos del 60% se topea en 3 (si no, un 59,9%
-  redondearía a 4).
+- **Escala de nota:** lineal en dos tramos, **0% → 0**, **60% → 4** (aprobado), **100% → 10** —
+  mantiene la escala estándar de 0 a 10. La "nota final" entera nunca aprueba por redondeo: con
+  menos del 60% se topea en 3 (si no, un 59,9% redondearía a 4).
 - **Mezclado opcional** de orden de preguntas y de opciones, distinto para cada alumno. Se calcula
   en el celular y se guarda en su `localStorage` (una recarga no reordena el examen a mitad de
   camino). Las respuestas viajan **siempre con la letra canónica del banco**, nunca con la letra
