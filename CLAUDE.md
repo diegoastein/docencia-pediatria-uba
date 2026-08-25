@@ -33,13 +33,14 @@ Este archivo configura las reglas de comportamiento y contexto de proyecto para 
 - `banco_casos_efu.json`: Banco estructurado de casos EFU (fuente de verdad intermedia, ver sección "Banco Estructurado de Casos EFU").
 - `validar_banco_casos_efu.py`: Script de validación de `banco_casos_efu.json` contra las reglas del proyecto.
 - `prompt_extraccion_antigravity.md`: Prompt listo para pegar en Antigravity que genera `banco_casos_efu.json` desde `fuentes_pdf/`.
-- `index.html`: Herramienta interactiva publicada en GitHub Pages, con tres solapas: **Anuncios Classroom** (botón de copiado directo), **Talleres EFU** (modo presentación con votación de alumnos) y **Control de Prácticos** (matriz de asistencia con sincronización en la nube y exportación XLSX).
+- `index.html`: Herramienta interactiva publicada en GitHub Pages, con cuatro solapas: **Anuncios Classroom** (botón de copiado directo), **Talleres EFU** (modo presentación con votación de alumnos), **Control de Prácticos** (matriz de asistencia con sincronización en la nube y exportación XLSX) y **Evaluaciones** (armado y toma de parciales/prefinales, ver sección propia más abajo).
 - `generar_planilla_excel.py`: Generador de la planilla Excel de control de prácticos. Lee la
   nómina real de `nomina_alumnos.txt` (no versionado, ver sección "Control de Ingreso y Datos
   Sensibles" más abajo) — el script ya no trae nombres hardcodeados.
 - `inventario_clases_drive.md`: Repositorio dinámico de presentaciones en Google Drive.
 - `fuentes_pdf/`: PDFs oficiales de los exámenes EFU (fuente de verdad original para las preguntas).
 - `votar.html`: Página mobile-first para que los alumnos voten desde su celular durante el Modo Presentación (ver sección Votación en Vivo más abajo).
+- `examen.html`: Página mobile-first para que los alumnos rindan parciales/prefinales desde su celular (ver sección Evaluaciones más abajo). No comparte código con `votar.html` a propósito: la dinámica es distinta (navegación libre entre preguntas, entrega única, sin feedback de aciertos).
 
 > Las presentaciones `.pptx` están ignoradas por git (se comparten por Google Drive).
 
@@ -174,6 +175,81 @@ escribir contenido nuevo.
   crear la instancia (`POST .../v1beta/projects/{id}/locations/{loc}/instances?databaseId={id}`)
   → subir las reglas de arriba con `PUT {databaseURL}/.settings/rules.json` → pegar el
   `databaseURL` resultante en `EFU_FIREBASE_DB_URL` en los dos archivos.
+
+---
+
+## 📋 Evaluaciones: Parciales y Prefinales (agregado 24/08/2026)
+
+Cuarta pestaña de `index.html` (`#tab-evaluaciones`) + página del alumno `examen.html`. El docente
+arma el examen eligiendo casos del **mismo banco EFU que usa en los talleres** (las tarjetas
+`.card` de la pestaña Talleres EFU — no hay una segunda copia del contenido clínico), lo activa
+cuando toca, y los alumnos rinden desde el celular entrando por un QR proyectado.
+
+**Flujo:** armar examen (título, tipo parcial/prefinal, fecha, casos) → "▶ Tomar" abre la sala y
+muestra el QR → los alumnos escanean, se identifican con **apellido y nombre** y quedan en el
+lobby → "▶ Comenzar examen" les habilita las preguntas → el docente ve el desempeño en vivo →
+"⏹ Finalizar examen" congela los resultados → exportación a Excel y PDF.
+
+**En el celular del alumno:** puede pasar a otra pregunta sin contestar, volver atrás y cambiar
+respuestas cuantas veces quiera; una grilla numerada arriba muestra cuáles ya respondió. Al
+enviar, pierde el acceso (confirmación previa avisando cuántas quedaron sin responder). Cada
+respuesta se guarda sola en Firebase apenas se toca una opción, así que quedarse sin batería o
+recargar la página no pierde nada.
+
+**Reglas de corrección** (definidas por el docente, 24/08/2026):
+- Cada pregunta vale **1 punto**, otorgado en forma **proporcional: aciertos ÷ cantidad de
+  opciones correctas**, **sin penalizar** las incorrectas.
+- Marcar **más de 3 opciones anula la pregunta**: 0 puntos, pero sigue contando en el puntaje
+  máximo (si no, marcar de más saldría gratis). El celular **no bloquea** la cuarta marca a
+  propósito — avisa en rojo, igual que la regla del EFU real.
+- El armador **sólo ofrece casos con exactamente 3 opciones correctas** (141 de los 167 del banco).
+  Hay un checkbox para ver los demás, pero quedan deshabilitados.
+- **Escala de nota:** lineal en dos tramos, **0% → 1**, **60% → 4** (aprobado), **100% → 10**. La
+  "nota final" entera nunca aprueba por redondeo: con menos del 60% se topea en 3 (si no, un 59,9%
+  redondearía a 4).
+- **Mezclado opcional** de orden de preguntas y de opciones, distinto para cada alumno. Se calcula
+  en el celular y se guarda en su `localStorage` (una recarga no reordena el examen a mitad de
+  camino). Las respuestas viajan **siempre con la letra canónica del banco**, nunca con la letra
+  mostrada en pantalla: el mezclado es puramente visual y la corrección no depende de él.
+- **Ocultar nombres:** toggle del lado del docente para proyectar el desempeño sin exponer quién
+  es quién. Con los nombres ocultos la tabla se **reordena por puntaje** — si se ordenara por
+  apellido, la posición en la lista delataría igual cada fila.
+
+**Modelo de datos (Firebase):** cuelga de `efuRooms/{roomId}/exam/` — se eligió ese nodo **a
+propósito** porque las reglas de seguridad ya desplegadas habilitan lectura/escritura bajo
+`efuRooms/$roomId`, así que **no hace falta tocar ni redesplegar las reglas**. (La validación de
+`meta` de las reglas aplica a `efuRooms/$roomId/meta`, el de la votación; el examen usa
+`.../exam/meta`, que es otro nodo.) Estructura: `exam/meta` (estado `lobby`/`running`/`closed` y
+opciones), `exam/questions` (array), `exam/students/{sid}`, `exam/answers/{sid}/{nPregunta}`
+— cada alumno escribe sólo en su propio nodo, sin condiciones de carrera.
+
+**Lo que NUNCA sale de la computadora del docente:** a Firebase se suben **sólo enunciado y
+opciones**. Ni las respuestas correctas ni el título del caso (que suele spoilear el diagnóstico:
+"Amalia de 9 meses (Bronquiolitis Leve)") viajan. **Toda la corrección ocurre en el navegador del
+docente**, contra las tarjetas de la pestaña Talleres EFU. Verificado con `curl` sobre una sala
+real: las opciones publicadas tienen sólo `letter` y `text`.
+
+**Los resultados se guardan en `localStorage`** (`pediatriaExams`, junto con los exámenes
+armados), no en Firebase: la nube es el canal en vivo, no el archivo del examen. Implicancia
+práctica igual que con la nómina — **si se borra el `localStorage` o se cambia de computadora, se
+pierden los exámenes y las notas**. Exportar a Excel/PDF después de cada toma.
+
+**Limitaciones conocidas, asumidas:**
+- **Las respuestas correctas siguen estando en `index.html`, que es público.** Un alumno que
+  conozca la URL y mire el código fuente puede encontrar los casos con su `data-correct="true"`.
+  La pantalla de contraseña no lo impide (nunca lo impidió, ver sección de seguridad arriba). Lo
+  que se hizo es no facilitarlo: el celular del alumno **no descarga `index.html`** durante el
+  examen (a diferencia de `votar.html`, que sí lo hace). Es un examen presencial con el docente
+  mirando; para que sea a prueba de todo habría que sacar los casos del sitio público.
+- **Doble entrega:** un alumno que ya entregó y borra su `localStorage` queda bloqueado igual —
+  al reingresar se chequea contra Firebase si ya figura una entrega con ese mismo nombre
+  (comparación sin distinguir mayúsculas/tildes de capitalización). Lo que **no** cubre es que
+  entre con un nombre distinto o que rinda por otro: la identificación es por texto libre, sin
+  login. Se eligió texto libre a propósito para no publicar la nómina real en una base pública
+  (ver sección de datos sensibles).
+- El **PDF sale por la ventana de impresión** del navegador ("Destino: Guardar como PDF"), no por
+  una librería: es un acta con formato propio, no suma otro CDN y sigue funcionando si el aula se
+  queda sin internet después de cargar la página.
 
 ---
 

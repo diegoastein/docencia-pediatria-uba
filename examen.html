@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Examen — Pediatría UBA</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 16px;
+        background: #f8f9fa;
+        color: #202124;
+        min-height: 100vh;
+    }
+    .screen { max-width: 520px; margin: 0 auto; }
+    h1 { font-size: 1.3rem; color: #0f766e; margin: 0 0 4px 0; }
+    .subtitle { color: #5f6368; font-size: 0.9rem; margin: 0 0 20px 0; }
+    .box {
+        background: white;
+        border: 1px solid #dadce0;
+        border-radius: 14px;
+        padding: 20px;
+        margin-bottom: 16px;
+    }
+    label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #5f6368;
+        margin-bottom: 6px;
+    }
+    input[type="text"] {
+        width: 100%;
+        padding: 12px 14px;
+        font-size: 1.1rem;
+        border-radius: 10px;
+        border: 2px solid #dadce0;
+        margin-bottom: 12px;
+    }
+    input.room-code { text-transform: uppercase; }
+    button {
+        width: 100%;
+        padding: 14px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #14b8a6, #0f766e);
+        color: white;
+        cursor: pointer;
+    }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    button.secondary {
+        background: #f1f3f4;
+        color: #3c4043;
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+    .badge {
+        display: inline-block;
+        background: #ecfdf5;
+        color: #0f766e;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    .status-msg { text-align: center; padding: 40px 20px; color: #5f6368; }
+    .status-msg .big { font-size: 2.5rem; margin-bottom: 12px; }
+    .status-msg .title { font-size: 1.15rem; font-weight: 800; color: #202124; margin-bottom: 8px; }
+    .error-msg { color: #c5221f; font-size: 0.9rem; margin-top: -6px; margin-bottom: 12px; }
+    .footer-note { text-align: center; font-size: 0.75rem; color: #9aa0a6; margin-top: 20px; }
+
+    /* ---- Barra de progreso / navegación entre preguntas ---- */
+    .exam-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: #f8f9fa;
+        padding: 8px 0 10px 0;
+        margin: -16px 0 12px 0;
+    }
+    .exam-progress-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #5f6368;
+        margin-bottom: 8px;
+    }
+    .qnav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .qnav-btn {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        flex: 0 0 auto;
+        border-radius: 8px;
+        background: #e8eaed;
+        color: #5f6368;
+        font-size: 0.85rem;
+        font-weight: 800;
+        border: 2px solid transparent;
+    }
+    .qnav-btn.answered { background: #0f766e; color: white; }
+    .qnav-btn.current { border-color: #f59e0b; }
+    .qnav-btn.over { background: #fdd; color: #c5221f; }
+
+    .vignette {
+        font-size: 0.95rem;
+        line-height: 1.45;
+        margin-bottom: 16px;
+    }
+    .vignette strong { color: #0f766e; }
+    .options-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 8px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .option-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 14px;
+        border: 2px solid #dadce0;
+        border-radius: 10px;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.15s ease;
+    }
+    .option-item.selected {
+        border-color: #0f766e;
+        background: #ecfdf5;
+        box-shadow: 0 0 0 1px #0f766e inset;
+    }
+    .option-letter {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #e8eaed;
+        color: #5f6368;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        flex-shrink: 0;
+    }
+    .option-item.selected .option-letter { background: #0f766e; color: white; }
+    .option-text { font-size: 0.98rem; line-height: 1.35; }
+
+    .marks-hint { font-size: 0.8rem; color: #5f6368; margin: 0 0 14px 0; }
+    .marks-hint.over { color: #c5221f; font-weight: 700; }
+
+    .nav-row { display: flex; gap: 10px; margin-bottom: 10px; }
+    .nav-row button { flex: 1; background: #e8eaed; color: #3c4043; }
+    .nav-row button:disabled { opacity: 0.35; }
+    .submit-btn { background: linear-gradient(135deg, #f59e0b, #b45309); }
+
+    .save-state { text-align: center; font-size: 0.75rem; color: #9aa0a6; margin: 6px 0 0 0; }
+    .save-state.error { color: #c5221f; font-weight: 700; }
+
+    @media (prefers-color-scheme: dark) {
+        body { background: #0a0b0d; color: #f1f3f4; }
+        .box { background: #1e2025; border-color: #3c4043; }
+        .subtitle, label, .marks-hint { color: #9aa0a6; }
+        input[type="text"] { background: #1e2025; color: #f1f3f4; border-color: #3c4043; }
+        .option-item { border-color: #3c4043; }
+        .option-item.selected { background: #10312c; border-color: #5eead4; box-shadow: 0 0 0 1px #5eead4 inset; }
+        .option-letter { background: #3c4043; color: #e8eaed; }
+        .option-item.selected .option-letter { background: #5eead4; color: #0c0d0f; }
+        .badge { background: #10312c; color: #5eead4; }
+        .exam-topbar { background: #0a0b0d; }
+        .qnav-btn { background: #2b2e35; color: #e8eaed; }
+        .qnav-btn.answered { background: #0f766e; color: white; }
+        .qnav-btn.over { background: #3b1816; color: #f28b82; }
+        .nav-row button { background: #2b2e35; color: #e8eaed; }
+        .status-msg .title { color: #f1f3f4; }
+        .vignette strong { color: #5eead4; }
+        button.secondary { background: #2b2e35; color: #e8eaed; }
+    }
+</style>
+</head>
+<body>
+<div class="screen" id="app">
+    <h1>📋 Examen de Pediatría</h1>
+    <p class="subtitle">Hospital Ramón Carrillo — UBA</p>
+    <div id="content"></div>
+    <p class="footer-note" id="footerNote">Tus respuestas se guardan solas a medida que las marcás.</p>
+</div>
+
+<script>
+    // Debe coincidir exactamente con la constante EFU_FIREBASE_DB_URL configurada en index.html.
+    const EFU_FIREBASE_DB_URL = "https://pediatria-uba-efu-votos.firebaseio.com";
+
+    // Tope de opciones marcables por pregunta. No se bloquea el marcado de una cuarta opción a
+    // propósito (el alumno puede equivocarse y tiene que poder verlo), pero marcar más de MAX_MARKS
+    // anula la pregunta al corregir — igual que en el EFU real. Por eso el aviso en rojo.
+    const MAX_MARKS = 3;
+
+    const params = new URLSearchParams(window.location.search);
+    let roomId = (params.get('room') || '').trim().toUpperCase();
+
+    let sid = '';           // id anónimo de este celular dentro de la sala
+    let studentName = '';   // "APELLIDO, Nombre"
+    let meta = null;        // meta del examen en Firebase
+    let questions = [];     // [{ enunciado, opciones: [{letter, text}] }] — sin correctas ni título del caso
+    let qOrder = [];        // orden de preguntas para ESTE alumno (índices sobre questions)
+    let optOrder = {};      // { qIdx: [letras canónicas en el orden mostrado] }
+    let answers = {};       // { qIdx: [letras canónicas] }
+    let cursor = 0;         // posición dentro de qOrder
+    let submitted = false;
+    let pollTimer = null;
+    let saveTimer = null;
+    let pendingSaves = new Set();
+
+    const content = document.getElementById('content');
+
+    // ==========================================================================
+    // FIREBASE (REST, sin SDK — mismo patrón que votar.html)
+    // ==========================================================================
+    async function fbGet(path) {
+        const res = await fetch(`${EFU_FIREBASE_DB_URL}/${path}.json`);
+        if (!res.ok) throw new Error('GET ' + path);
+        return res.json();
+    }
+
+    async function fbPut(path, body) {
+        const res = await fetch(`${EFU_FIREBASE_DB_URL}/${path}.json`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error('PUT ' + path);
+        return res.json();
+    }
+
+    async function fbPatch(path, body) {
+        const res = await fetch(`${EFU_FIREBASE_DB_URL}/${path}.json`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error('PATCH ' + path);
+        return res.json();
+    }
+
+    // ==========================================================================
+    // ESTADO LOCAL (sobrevive a que se apague la pantalla o se recargue la página)
+    // ==========================================================================
+    function lsKey(name) { return `exam_${roomId}_${name}`; }
+
+    function loadLocalState() {
+        sid = localStorage.getItem(lsKey('sid')) || '';
+        studentName = localStorage.getItem(lsKey('name')) || '';
+        submitted = localStorage.getItem(lsKey('submitted')) === '1';
+        try { qOrder = JSON.parse(localStorage.getItem(lsKey('qorder')) || '[]'); } catch (e) { qOrder = []; }
+        try { optOrder = JSON.parse(localStorage.getItem(lsKey('optorder')) || '{}'); } catch (e) { optOrder = {}; }
+        try { answers = JSON.parse(localStorage.getItem(lsKey('answers')) || '{}'); } catch (e) { answers = {}; }
+    }
+
+    function saveLocalAnswers() {
+        localStorage.setItem(lsKey('answers'), JSON.stringify(answers));
+    }
+
+    function newSid() {
+        return 's' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    }
+
+    // ==========================================================================
+    // MEZCLA DE ORDEN (Fisher-Yates)
+    // ==========================================================================
+    // Cada celular arma su propio orden y lo guarda en localStorage, así una recarga no
+    // reordena el examen a mitad de camino. Las respuestas SIEMPRE se envían con la letra
+    // canónica del banco (la que ve el docente), nunca con la letra que se mostró en pantalla:
+    // el mezclado es puramente visual y la corrección no depende de él.
+    function shuffled(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function buildOrders() {
+        const idxs = questions.map((_, i) => i);
+        qOrder = meta.shuffleQuestions ? shuffled(idxs) : idxs;
+
+        optOrder = {};
+        questions.forEach((q, i) => {
+            const letters = (q.opciones || []).map(o => o.letter);
+            optOrder[i] = meta.shuffleOptions ? shuffled(letters) : letters;
+        });
+
+        localStorage.setItem(lsKey('qorder'), JSON.stringify(qOrder));
+        localStorage.setItem(lsKey('optorder'), JSON.stringify(optOrder));
+    }
+
+    // ==========================================================================
+    // PANTALLAS
+    // ==========================================================================
+    function renderStatus(icon, title, subtitle, extraHtml) {
+        content.innerHTML = `
+            <div class="box">
+                <div class="status-msg">
+                    <div class="big">${icon}</div>
+                    <div class="title">${title}</div>
+                    <div>${subtitle || ''}</div>
+                </div>
+                ${extraHtml || ''}
+            </div>
+        `;
+    }
+
+    function renderRoomPrompt(errorMsg) {
+        content.innerHTML = `
+            <div class="box">
+                <label>Código del examen</label>
+                <input type="text" id="roomInput" class="room-code" maxlength="6" placeholder="Ej: KJ7M2P" autocomplete="off">
+                ${errorMsg ? `<p class="error-msg">${errorMsg}</p>` : ''}
+                <button onclick="submitRoomCode()">Entrar</button>
+            </div>
+            <p class="footer-note">Escaneá el QR que proyecta el docente o escribí el código que está en la pantalla.</p>
+        `;
+    }
+
+    window.submitRoomCode = function () {
+        const code = (document.getElementById('roomInput').value || '').trim().toUpperCase();
+        if (!code) return renderRoomPrompt('Escribí el código del examen.');
+        roomId = code;
+        loadLocalState();
+        boot();
+    };
+
+    function renderNamePrompt(errorMsg) {
+        content.innerHTML = `
+            <div class="box">
+                <span class="badge">${meta.tipo === 'prefinal' ? 'Prefinal' : 'Parcial'}</span>
+                <h2 style="margin: 0 0 16px 0; font-size: 1.1rem;">${escapeHtml(meta.titulo || 'Examen')}</h2>
+                <label>Apellido</label>
+                <input type="text" id="apellidoInput" placeholder="Pérez" autocomplete="family-name">
+                <label>Nombre</label>
+                <input type="text" id="nombreInput" placeholder="María" autocomplete="given-name">
+                ${errorMsg ? `<p class="error-msg">${errorMsg}</p>` : ''}
+                <button onclick="submitName()">Ingresar al examen</button>
+            </div>
+            <p class="footer-note">Identificate con tu nombre real: el docente corrige el examen con este dato.</p>
+        `;
+    }
+
+    window.submitName = async function () {
+        const apellido = (document.getElementById('apellidoInput').value || '').trim();
+        const nombre = (document.getElementById('nombreInput').value || '').trim();
+        if (apellido.length < 2 || nombre.length < 2) {
+            return renderNamePrompt('Completá apellido y nombre para poder rendir.');
+        }
+        const propuesto = `${apellido.toUpperCase()}, ${nombre.charAt(0).toUpperCase()}${nombre.slice(1)}`;
+
+        // Antes de anotar a nadie se mira quién está ya en la sala. Esto cubre dos casos reales:
+        //  - el alumno YA ENTREGÓ y vuelve a entrar con el localStorage borrado → se le bloquea
+        //    (si no, borrar los datos del navegador alcanzaría para rendir dos veces);
+        //  - el alumno está rindiendo y se le reinició el celular → se reusa su mismo sid y
+        //    recupera el examen donde lo dejó, en vez de arrancar de cero con las respuestas
+        //    viejas colgadas de un sid huérfano.
+        let previos = {};
+        try {
+            previos = (await fbGet(`efuRooms/${roomId}/exam/students`)) || {};
+        } catch (err) {
+            return renderNamePrompt('No se pudo verificar tu inscripción. Revisá tu conexión y probá de nuevo.');
+        }
+
+        const igualNombre = Object.keys(previos).find(k => (previos[k].nombre || '').toLowerCase() === propuesto.toLowerCase());
+        if (igualNombre && previos[igualNombre].status === 'submitted') {
+            submitted = true;
+            studentName = propuesto;
+            localStorage.setItem(lsKey('submitted'), '1');
+            localStorage.setItem(lsKey('name'), propuesto);
+            return renderStatus('🔒', 'Ya entregaste este examen',
+                `Figura una entrega a nombre de <strong>${escapeHtml(propuesto)}</strong>. No se puede rendir dos veces.<br><br>Si creés que es un error, avisale al docente.`);
+        }
+
+        studentName = propuesto;
+        sid = igualNombre || sid || newSid();
+        localStorage.setItem(lsKey('sid'), sid);
+        localStorage.setItem(lsKey('name'), studentName);
+
+        // Si se recupera un sid que ya existía, se traen sus respuestas de Firebase: el celular
+        // perdió el localStorage pero el examen en curso sigue entero del lado del servidor.
+        if (igualNombre) {
+            try {
+                const previas = (await fbGet(`efuRooms/${roomId}/exam/answers/${sid}`)) || {};
+                answers = {};
+                Object.keys(previas).forEach((k) => {
+                    if (previas[k] && previas[k].letters) answers[k] = previas[k].letters;
+                });
+                saveLocalAnswers();
+            } catch (err) { /* si falla, arranca en blanco: no es bloqueante */ }
+        } else {
+            fbPut(`efuRooms/${roomId}/exam/students/${sid}`, {
+                nombre: studentName,
+                joinedAt: Date.now(),
+                status: 'joined'
+            }).catch(() => {});
+        }
+
+        refresh();
+    };
+
+    function renderLobby() {
+        renderStatus(
+            '⏳',
+            'Ya estás anotado',
+            `Esperá a que el docente dé comienzo al examen.<br><br><strong>${escapeHtml(studentName)}</strong>`,
+            `<button class="secondary" onclick="changeName()">No soy yo — cambiar nombre</button>`
+        );
+    }
+
+    window.changeName = function () {
+        if (!confirm('¿Cambiar el nombre con el que vas a rendir?')) return;
+        localStorage.removeItem(lsKey('name'));
+        studentName = '';
+        renderNamePrompt();
+    };
+
+    // ---- Examen en curso ----
+    function currentQIdx() { return qOrder[cursor]; }
+
+    function answeredCount() {
+        return Object.values(answers).filter(a => a && a.length > 0).length;
+    }
+
+    function renderExam() {
+        const qIdx = currentQIdx();
+        const q = questions[qIdx];
+        if (!q) return renderStatus('⚠️', 'Error', 'No se pudo cargar la pregunta. Avisale al docente.');
+
+        const marks = answers[qIdx] || [];
+        const over = marks.length > MAX_MARKS;
+
+        const navHtml = qOrder.map((realIdx, pos) => {
+            const a = answers[realIdx] || [];
+            const cls = [
+                'qnav-btn',
+                a.length > MAX_MARKS ? 'over' : (a.length > 0 ? 'answered' : ''),
+                pos === cursor ? 'current' : ''
+            ].filter(Boolean).join(' ');
+            return `<button class="${cls}" onclick="goTo(${pos})">${pos + 1}</button>`;
+        }).join('');
+
+        const optionsHtml = (optOrder[qIdx] || []).map((letter, i) => {
+            const opt = (q.opciones || []).find(o => o.letter === letter);
+            if (!opt) return '';
+            const selected = marks.includes(letter);
+            return `
+                <li class="option-item ${selected ? 'selected' : ''}" onclick="toggleOption('${letter}')">
+                    <div class="option-letter">${String.fromCharCode(65 + i)}</div>
+                    <div class="option-text">${opt.text}</div>
+                </li>
+            `;
+        }).join('');
+
+        content.innerHTML = `
+            <div class="exam-topbar">
+                <div class="exam-progress-line">
+                    <span>Pregunta ${cursor + 1} de ${qOrder.length}</span>
+                    <span>${answeredCount()}/${qOrder.length} respondidas</span>
+                </div>
+                <div class="qnav">${navHtml}</div>
+            </div>
+
+            <div class="box">
+                <span class="badge">Pregunta ${cursor + 1}</span>
+                <div class="vignette">${q.enunciado || ''}</div>
+                <ul class="options-list">${optionsHtml}</ul>
+                <p class="marks-hint ${over ? 'over' : ''}">
+                    ${over
+                        ? `⚠️ Marcaste ${marks.length} opciones. Si dejás más de ${MAX_MARKS}, esta pregunta se anula y no suma puntaje.`
+                        : `Podés marcar hasta ${MAX_MARKS} opciones. Marcadas: ${marks.length}.`}
+                </p>
+                <div class="nav-row">
+                    <button onclick="goTo(${cursor - 1})" ${cursor === 0 ? 'disabled' : ''}>← Anterior</button>
+                    <button onclick="goTo(${cursor + 1})" ${cursor === qOrder.length - 1 ? 'disabled' : ''}>Siguiente →</button>
+                </div>
+                <button class="submit-btn" onclick="confirmSubmit()">✅ Finalizar y enviar examen</button>
+                <p class="save-state" id="saveState">Respuestas guardadas</p>
+            </div>
+        `;
+    }
+
+    window.goTo = function (pos) {
+        if (pos < 0 || pos >= qOrder.length) return;
+        cursor = pos;
+        renderExam();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.toggleOption = function (letter) {
+        const qIdx = currentQIdx();
+        const marks = (answers[qIdx] || []).slice();
+        const i = marks.indexOf(letter);
+        if (i >= 0) marks.splice(i, 1); else marks.push(letter);
+        answers[qIdx] = marks;
+        saveLocalAnswers();
+        queueSave(qIdx);
+        renderExam();
+    };
+
+    // Guardado con debounce: cada pregunta se escribe en su propio nodo, así dos alumnos (o dos
+    // toques rápidos) nunca se pisan entre sí.
+    function queueSave(qIdx) {
+        pendingSaves.add(qIdx);
+        setSaveState('Guardando...');
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(flushSaves, 600);
+    }
+
+    async function flushSaves() {
+        const toSave = [...pendingSaves];
+        pendingSaves.clear();
+        try {
+            for (const qIdx of toSave) {
+                await fbPut(`efuRooms/${roomId}/exam/answers/${sid}/${qIdx}`, {
+                    letters: answers[qIdx] || [],
+                    ts: Date.now()
+                });
+            }
+            setSaveState('Respuestas guardadas');
+        } catch (err) {
+            toSave.forEach(i => pendingSaves.add(i));
+            setSaveState('Sin conexión — reintentando...', true);
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(flushSaves, 4000);
+        }
+    }
+
+    function setSaveState(text, isError) {
+        const el = document.getElementById('saveState');
+        if (!el) return;
+        el.textContent = text;
+        el.classList.toggle('error', !!isError);
+    }
+
+    window.confirmSubmit = function () {
+        const sinResponder = qOrder.length - answeredCount();
+        const anuladas = Object.values(answers).filter(a => a && a.length > MAX_MARKS).length;
+
+        let msg = '¿Enviar el examen? Una vez enviado no vas a poder volver a entrar ni cambiar respuestas.';
+        if (sinResponder > 0) msg = `Te quedan ${sinResponder} pregunta(s) SIN responder.\n\n` + msg;
+        if (anuladas > 0) msg = `Tenés ${anuladas} pregunta(s) con más de ${MAX_MARKS} opciones marcadas (se anulan).\n\n` + msg;
+
+        if (!confirm(msg)) return;
+        doSubmit();
+    };
+
+    async function doSubmit() {
+        renderStatus('📤', 'Enviando...', 'No cierres la página.');
+        try {
+            await flushSaves();
+            await fbPatch(`efuRooms/${roomId}/exam/students/${sid}`, {
+                status: 'submitted',
+                submittedAt: Date.now()
+            });
+            submitted = true;
+            localStorage.setItem(lsKey('submitted'), '1');
+            stopPolling();
+            renderSubmitted();
+        } catch (err) {
+            renderStatus('⚠️', 'No se pudo enviar', 'Revisá tu conexión y probá de nuevo.',
+                `<button onclick="doSubmitRetry()">Reintentar envío</button>`);
+        }
+    }
+
+    window.doSubmitRetry = function () { doSubmit(); };
+
+    function renderSubmitted() {
+        document.getElementById('footerNote').style.display = 'none';
+        renderStatus(
+            '✅',
+            'Examen enviado',
+            `Listo, <strong>${escapeHtml(studentName)}</strong>. Tus respuestas quedaron registradas.<br><br>Ya no tenés acceso al examen. La nota la publica el docente.`
+        );
+    }
+
+    function renderClosed() {
+        document.getElementById('footerNote').style.display = 'none';
+        renderStatus(
+            '🔒',
+            'El examen se cerró',
+            'El docente finalizó el examen. Se registraron todas las respuestas que habías marcado hasta ese momento.'
+        );
+    }
+
+    // ==========================================================================
+    // CICLO PRINCIPAL
+    // ==========================================================================
+    async function refresh() {
+        try {
+            meta = await fbGet(`efuRooms/${roomId}/exam/meta`);
+        } catch (err) {
+            return renderStatus('📡', 'Sin conexión', 'No se pudo contactar al servidor. Revisá tu conexión.');
+        }
+
+        if (!meta) {
+            return renderRoomPrompt('No existe un examen con ese código. Verificá el código en la pantalla.');
+        }
+
+        if (submitted) return renderSubmitted();
+        // El cierre se chequea antes de pedir el nombre: no tiene sentido hacer identificarse a
+        // alguien que llega cuando el examen ya terminó.
+        if (meta.status === 'closed') return renderClosed();
+        if (!studentName) return renderNamePrompt();
+
+        if (meta.status === 'lobby') return renderLobby();
+
+        if (meta.status === 'running') {
+            if (questions.length === 0) {
+                try {
+                    questions = (await fbGet(`efuRooms/${roomId}/exam/questions`)) || [];
+                } catch (err) {
+                    return renderStatus('📡', 'Sin conexión', 'No se pudieron cargar las preguntas. Reintentando...');
+                }
+            }
+            if (questions.length === 0) {
+                return renderStatus('⚠️', 'Examen sin preguntas', 'Avisale al docente.');
+            }
+            // Si el orden guardado no coincide con la cantidad de preguntas (ej: el docente rehízo
+            // el examen con la misma sala), se recalcula desde cero.
+            if (qOrder.length !== questions.length) buildOrders();
+            return renderExam();
+        }
+
+        renderStatus('⏳', 'Esperando al docente', 'El examen todavía no comenzó.');
+    }
+
+    function startPolling() {
+        stopPolling();
+        pollTimer = setInterval(async () => {
+            if (submitted) return stopPolling();
+            let newMeta;
+            try {
+                newMeta = await fbGet(`efuRooms/${roomId}/exam/meta`);
+            } catch (err) { return; }
+            if (!newMeta) return;
+            const wasStatus = meta ? meta.status : '';
+            meta = newMeta;
+            // Sólo se re-renderiza al cambiar de fase, para no borrar lo que el alumno está tocando.
+            if (newMeta.status !== wasStatus) refresh();
+        }, 5000);
+    }
+
+    function stopPolling() {
+        if (pollTimer) clearInterval(pollTimer);
+        pollTimer = null;
+    }
+
+    function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, c => (
+            { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+        ));
+    }
+
+    function boot() {
+        if (!roomId) return renderRoomPrompt();
+        loadLocalState();
+        refresh();
+        startPolling();
+    }
+
+    // Aviso al intentar cerrar la pestaña con el examen en curso sin enviar.
+    window.addEventListener('beforeunload', (e) => {
+        if (meta && meta.status === 'running' && !submitted && studentName) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    boot();
+</script>
+</body>
+</html>
