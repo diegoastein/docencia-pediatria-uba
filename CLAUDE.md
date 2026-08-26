@@ -198,16 +198,21 @@ respuesta se guarda sola en Firebase apenas se toca una opción, así que quedar
 recargar la página no pierde nada.
 
 **Reglas de corrección** (definidas por el docente, 24/08/2026):
-- Cada pregunta vale **1 punto**, otorgado en forma **proporcional: aciertos ÷ cantidad de
-  opciones correctas**, **sin penalizar** las incorrectas.
+- Cada pregunta vale **1 punto crudo** (unidad intermedia, no la nota final), otorgado en forma
+  **proporcional: aciertos ÷ cantidad de opciones correctas**, **sin penalizar** las incorrectas.
+  Esos puntos crudos se suman y se dividen por la cantidad de preguntas del examen para obtener
+  un **porcentaje** — recién ese porcentaje entra a la escala de nota de abajo. Por eso el
+  resultado no depende de cuántas preguntas tenga el examen (5, 10, 20): no hace falta que cada
+  pregunta valga "10 ÷ cantidad de preguntas" para que la nota final quede sobre 10.
 - Marcar **más de 3 opciones anula la pregunta**: 0 puntos, pero sigue contando en el puntaje
   máximo (si no, marcar de más saldría gratis). El celular **no bloquea** la cuarta marca a
   propósito — avisa en rojo, igual que la regla del EFU real.
 - El armador **sólo ofrece casos con exactamente 3 opciones correctas** (141 de los 167 del banco).
   Hay un checkbox para ver los demás, pero quedan deshabilitados.
-- **Escala de nota:** lineal en dos tramos, **0% → 0**, **60% → 4** (aprobado), **100% → 10** —
-  mantiene la escala estándar de 0 a 10. La "nota final" entera nunca aprueba por redondeo: con
-  menos del 60% se topea en 3 (si no, un 59,9% redondearía a 4).
+- **Escala de nota:** aplicada sobre el porcentaje del punto anterior, lineal en dos tramos,
+  **0% → 0**, **60% → 4** (aprobado), **100% → 10** — mantiene la escala estándar de 0 a 10. La
+  "nota final" entera nunca aprueba por redondeo: con menos del 60% se topea en 3 (si no, un
+  59,9% redondearía a 4).
 - **Mezclado opcional** de orden de preguntas y de opciones, distinto para cada alumno. Se calcula
   en el celular y se guarda en su `localStorage` (una recarga no reordena el examen a mitad de
   camino). Las respuestas viajan **siempre con la letra canónica del banco**, nunca con la letra

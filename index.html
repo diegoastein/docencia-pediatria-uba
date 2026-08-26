@@ -9024,10 +9024,10 @@ Equipo Docente de Pediatría</textarea>
                 <div class="exam-panel">
                     <h3>Cómo se corrige</h3>
                     <ul style="margin: 0; padding-left: 20px; font-size: 0.9rem; color: #3c4043; line-height: 1.7;">
-                        <li>Cada pregunta vale <strong>1 punto</strong>: el alumno recibe <strong>aciertos ÷ cantidad de opciones correctas</strong>, sin descuento por marcar una incorrecta.</li>
+                        <li>Cada pregunta vale <strong>1 punto crudo</strong>: el alumno recibe <strong>aciertos ÷ cantidad de opciones correctas</strong>, sin descuento por marcar una incorrecta. Esos puntos se suman y se dividen por la cantidad de preguntas del examen para obtener un porcentaje.</li>
                         <li>Si marca <strong>más de ${EXAM_MAX_MARKS} opciones</strong>, esa pregunta se <strong>anula</strong> (0 puntos, pero sigue contando en el puntaje máximo).</li>
                         <li>Sólo se ofrecen casos con exactamente <strong>${EXAM_REQUIRED_CORRECT} opciones correctas</strong>.</li>
-                        <li>Escala de nota: <strong>0% → 1</strong>, <strong>60% → 4</strong> (aprobado), <strong>100% → 10</strong>, lineal en dos tramos. La nota entera nunca aprueba por redondeo.</li>
+                        <li>Escala de nota (sobre ese porcentaje): <strong>0% → 0</strong>, <strong>60% → 4</strong> (aprobado), <strong>100% → 10</strong>, lineal en dos tramos. La nota entera nunca aprueba por redondeo.</li>
                     </ul>
                 </div>
             `;
@@ -10155,10 +10155,11 @@ Equipo Docente de Pediatría</textarea>
                     <tbody>${filasHtml}</tbody>
                 </table>
                 <div class="criterio">
-                    <strong>Criterio de corrección:</strong> cada pregunta vale 1 punto y se otorga en forma proporcional
-                    (aciertos ÷ cantidad de opciones correctas), sin descuento por opciones incorrectas.
+                    <strong>Criterio de corrección:</strong> cada pregunta vale 1 punto crudo, otorgado en forma proporcional
+                    (aciertos ÷ cantidad de opciones correctas), sin descuento por opciones incorrectas. Esos puntos se suman
+                    y se dividen por la cantidad de preguntas para obtener un porcentaje.
                     Las preguntas con más de ${EXAM_MAX_MARKS} opciones marcadas se anulan (0 puntos) pero siguen contando en el puntaje máximo.
-                    Escala de nota lineal en dos tramos: 0% = 1, 60% = 4 (aprobado), 100% = 10.
+                    Escala de nota (sobre ese porcentaje) lineal en dos tramos: 0% = 0, 60% = 4 (aprobado), 100% = 10.
                 </div>
                 <div class="firma"><div>Firma y aclaración del docente</div></div>
                 ${analisisHtml}
