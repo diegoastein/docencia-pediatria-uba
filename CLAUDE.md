@@ -216,6 +216,38 @@ recargar la página no pierde nada.
   es quién. Con los nombres ocultos la tabla se **reordena por puntaje** — si se ordenara por
   apellido, la posición en la lista delataría igual cada fila.
 
+**Desempeño pregunta por pregunta y corrección posterior (agregado 25/08/2026):**
+- La tabla de desempeño (en vivo y final) suma columnas **P1…Pn**, una por pregunta, con
+  **`aciertos/correctas`** (`3/3`, `2/3`, `0/3`, `—` sin responder, `✕` anulada) y color por
+  puntaje. Como todas las preguntas tienen 3 correctas, ese número se lee directo como "cuántas
+  acertó"; el puntaje exacto y las letras marcadas están en el tooltip de cada celda. Toggle
+  "🔢 Ver pregunta por pregunta" para volver a la tabla compacta.
+- **Al finalizar** (sólo con la sala en `closed`, nunca durante el examen — si no, proyectar la
+  pantalla del docente delataría la clave) aparece el panel **"🔍 Qué hay que repasar"**:
+  - Cada pregunta con su **% promedio del grupo**, badge de dificultad (🔴 <40% · 🟠 40-59% ·
+    🟡 60-79% · 🟢 ≥80%), cuántos alumnos la resolvieron completa/parcial/ninguna/sin
+    responder/anulada, la clave, y la **distribución de opciones marcadas**: en verde las
+    correctas y en rojo los distractores elegidos por **≥1/3 del curso** (los que conviene
+    discutir explícitamente en la corrección).
+  - **"📚 Temas que requieren más estudio":** promedio del grupo agregado por palabra clave de
+    `data-tema`. Como una pregunta lista varias palabras, suma a todas; si hay al menos 2 temas
+    que aparecen en 2+ preguntas se muestran sólo esos (un tema de una sola pregunta señala un
+    caso puntual, no un contenido flojo). **Depende de que el `data-tema` de cada tarjeta sea
+    correcto** — hay al menos un caso mal etiquetado en el banco (ver nota al final).
+  - **"📽️ Corregir en el proyector":** abre el Modo Presentación con las preguntas por debajo
+    del 60%, de peor a mejor (si ninguna bajó de 60%, con las 3 más flojas). Reutiliza el mismo
+    Modo Presentación de los talleres vía `startPresentation(false, cards)` — el tercer
+    parámetro `explicitCards` se agregó para esto — sin tocar la selección "a medida" que el
+    docente tenga armada. Por pregunta también hay "📽️ Proyectar este caso" y "👁️ Ver el caso
+    con la respuesta" (`verCasoEnTalleres`, que limpia filtro de semana y búsqueda antes de
+    scrollear: si no, la tarjeta puede estar en `display:none`).
+- Todo esto se calcula en el navegador del docente con los datos que **ya** se usaban para
+  corregir: **nada nuevo viaja a Firebase** (siguen subiéndose sólo enunciado y opciones).
+- Las exportaciones lo incluyen: el **Excel** suma la hoja **"Análisis"** (ranking por
+  dificultad + opciones marcadas + temas) y un bloque de `aciertos/correctas` en "Detalle"; el
+  **PDF** suma esas tres tablas en **páginas aparte** (`page-break-before: always`), después del
+  acta con la firma.
+
 **Modelo de datos (Firebase):** cuelga de `efuRooms/{roomId}/exam/` — se eligió ese nodo **a
 propósito** porque las reglas de seguridad ya desplegadas habilitan lectura/escritura bajo
 `efuRooms/$roomId`, así que **no hace falta tocar ni redesplegar las reglas**. (La validación de
@@ -248,6 +280,12 @@ pierden los exámenes y las notas**. Exportar a Excel/PDF después de cada toma.
   entre con un nombre distinto o que rinda por otro: la identificación es por texto libre, sin
   login. Se eligió texto libre a propósito para no publicar la nómina real en una base pública
   (ver sección de datos sensibles).
+- **Hay `data-tema` mal etiquetados en el banco de casos.** Detectado el 25/08/2026: la tarjeta
+  `ans4` ("Caso EFU 4: Juan de 6 años y 3 meses — Auxología / Baja Talla y Blanco Genético")
+  tiene `data-tema="desarrollo, comportamiento, 18 meses"`, que corresponde al caso 8 ("Juan de
+  18 meses"). No se corrigió porque las palabras clave son curación del docente, no dato
+  derivable del código. Afecta al buscador por tema y al resumen "Temas que requieren más
+  estudio" del análisis post-examen. No se auditaron los 167 casos.
 - El **PDF sale por la ventana de impresión** del navegador ("Destino: Guardar como PDF"), no por
   una librería: es un acta con formato propio, no suma otro CDN y sigue funcionando si el aula se
   queda sin internet después de cargar la página.

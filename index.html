@@ -1934,6 +1934,162 @@
             font-weight: 600;
             margin: 0 8px 8px 0;
         }
+
+        /* --- Detalle pregunta por pregunta en la tabla de desempeño --- */
+        .exam-table th.qcol {
+            text-align: center;
+            padding: 9px 4px;
+            font-size: 0.68rem;
+            min-width: 34px;
+        }
+        .exam-table td.qcell {
+            text-align: center;
+            padding: 5px 4px;
+            font-variant-numeric: tabular-nums;
+        }
+        .exam-qmark {
+            display: inline-block;
+            min-width: 30px;
+            padding: 3px 5px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .exam-qmark.full    { background: #e6f4ea; color: #137333; }
+        .exam-qmark.partial { background: #fef7e0; color: #b45309; }
+        .exam-qmark.zero    { background: #fce8e6; color: #c5221f; }
+        .exam-qmark.blank   { background: #f1f3f4; color: #9aa0a6; font-weight: 600; }
+        .exam-qmark.void    { background: #fde8ff; color: #8e24aa; }
+        .exam-col-sep { border-left: 2px solid #dadce0; }
+
+        /* --- Análisis por pregunta (resumen post-examen) --- */
+        .exam-analysis-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .exam-analysis-hint {
+            font-size: 0.84rem;
+            color: #5f6368;
+            margin: 0 0 18px 0;
+            line-height: 1.55;
+        }
+        .exam-qrow {
+            border: 1px solid #e8eaed;
+            border-left-width: 5px;
+            border-radius: 10px;
+            padding: 13px 16px;
+            margin-bottom: 11px;
+            background: #fff;
+        }
+        .exam-qrow.dif-critica { border-left-color: #c5221f; background: #fffafa; }
+        .exam-qrow.dif-dificil { border-left-color: #ea8600; background: #fffdf7; }
+        .exam-qrow.dif-media   { border-left-color: #f9ab00; }
+        .exam-qrow.dif-bien    { border-left-color: #34a853; }
+        .exam-qrow-top {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .exam-qnum {
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: #202124;
+            flex-shrink: 0;
+        }
+        .exam-qtitle { font-size: 0.93rem; font-weight: 600; color: #202124; }
+        .exam-qtema {
+            font-size: 0.72rem;
+            background: #e8f0fe;
+            color: #1967d2;
+            padding: 2px 9px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .exam-dif-badge {
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 3px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-left: auto;
+        }
+        .exam-dif-badge.dif-critica { background: #fce8e6; color: #c5221f; }
+        .exam-dif-badge.dif-dificil { background: #feefc3; color: #b45309; }
+        .exam-dif-badge.dif-media   { background: #fef7e0; color: #8a6d00; }
+        .exam-dif-badge.dif-bien    { background: #e6f4ea; color: #137333; }
+        .exam-bar-track {
+            height: 9px;
+            background: #f1f3f4;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 9px 0 7px 0;
+        }
+        .exam-bar-fill { height: 100%; border-radius: 5px; }
+        .exam-bar-fill.dif-critica { background: #c5221f; }
+        .exam-bar-fill.dif-dificil { background: #ea8600; }
+        .exam-bar-fill.dif-media   { background: #f9ab00; }
+        .exam-bar-fill.dif-bien    { background: #34a853; }
+        .exam-qstats {
+            font-size: 0.82rem;
+            color: #5f6368;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .exam-qstats strong { color: #202124; }
+        .exam-opt-grid {
+            margin-top: 11px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 5px 16px;
+        }
+        .exam-opt-line {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.8rem;
+            color: #3c4043;
+        }
+        .exam-opt-letter {
+            font-weight: 800;
+            width: 15px;
+            flex-shrink: 0;
+        }
+        .exam-opt-track {
+            flex: 1;
+            height: 7px;
+            background: #f1f3f4;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .exam-opt-fill { height: 100%; background: #dadce0; }
+        .exam-opt-line.ok .exam-opt-letter { color: #137333; }
+        .exam-opt-line.ok .exam-opt-fill { background: #34a853; }
+        .exam-opt-line.trampa .exam-opt-letter { color: #c5221f; }
+        .exam-opt-line.trampa .exam-opt-fill { background: #ef5350; }
+        .exam-opt-count { width: 58px; text-align: right; flex-shrink: 0; color: #80868b; }
+        .exam-qactions { margin-top: 11px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .exam-btn.mini { padding: 5px 12px; font-size: 0.78rem; }
+        .exam-tema-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 7px 0;
+            border-bottom: 1px solid #f1f3f4;
+            font-size: 0.86rem;
+        }
+        .exam-tema-row:last-child { border-bottom: none; }
+        .exam-tema-name { flex: 1; min-width: 150px; color: #202124; font-weight: 600; }
+        .exam-tema-track { flex: 2; height: 9px; background: #f1f3f4; border-radius: 5px; overflow: hidden; min-width: 90px; }
+        .exam-tema-pct { width: 96px; text-align: right; color: #5f6368; font-variant-numeric: tabular-nums; }
     </style>
 </head>
 <body>
@@ -7852,16 +8008,23 @@ Equipo Docente de Pediatría</textarea>
             });
         }
 
-        function startPresentation(useSelection = false) {
-            if (useSelection) {
+        // `explicitCards` permite presentar un conjunto puntual de tarjetas (lo usa la corrección
+        // post-examen para proyectar las preguntas más difíciles) sin pasar por el filtro de
+        // semana ni por la selección "a medida".
+        function startPresentation(useSelection = false, explicitCards = null) {
+            if (explicitCards) {
+                initPresentationData(explicitCards);
+            } else if (useSelection) {
                 initPresentationData(getSelectedEfuCards());
             } else {
                 initPresentationData();
             }
             if (presentationCases.length === 0) {
-                alert(useSelection
-                    ? 'Todavía no armaste ninguna selección. Buscá casos y tocá "☆ Agregar a selección" en los que quieras sumar.'
-                    : 'No hay casos para presentar con el filtro/búsqueda actual.');
+                alert(explicitCards
+                    ? 'No se pudieron cargar esos casos para presentar.'
+                    : (useSelection
+                        ? 'Todavía no armaste ninguna selección. Buscá casos y tocá "☆ Agregar a selección" en los que quieras sumar.'
+                        : 'No hay casos para presentar con el filtro/búsqueda actual.'));
                 return;
             }
 
@@ -8679,6 +8842,8 @@ Equipo Docente de Pediatría</textarea>
         let examRoom = null;           // { roomId, examId, status, students, answers }
         let examPollTimer = null;
         let examAnonymize = false;
+        let examShowDetail = true;      // columnas P1..Pn con el desempeño pregunta por pregunta
+        let examAnalysisSort = 'dificultad'; // 'dificultad' | 'orden'
 
         function saveExams() {
             localStorage.setItem('pediatriaExams', JSON.stringify(exams));
@@ -8734,18 +8899,23 @@ Equipo Docente de Pediatría</textarea>
         // pero sigue contando en el puntaje máximo, si no marcar de más saldría gratis.
         function gradeQuestion(caseObj, letters) {
             const marks = letters || [];
-            if (!caseObj) return { pts: 0, estado: 'sin caso' };
-            if (marks.length === 0) return { pts: 0, estado: 'sin responder' };
-            if (marks.length > EXAM_MAX_MARKS) return { pts: 0, estado: 'anulada' };
+            if (!caseObj) return { pts: 0, estado: 'sin caso', aciertos: 0, nCorrectas: 0, nMarcadas: marks.length };
 
             const correctas = caseObj.opciones.filter(o => o.correct).map(o => o.letter);
-            if (correctas.length === 0) return { pts: 0, estado: 'sin grilla' };
-
+            // aciertos se cuenta siempre (incluso en preguntas anuladas): la pregunta no suma
+            // puntos, pero para el análisis posterior interesa saber si el alumno tenía la idea.
             const aciertos = marks.filter(l => correctas.includes(l)).length;
+            const base = { aciertos: aciertos, nCorrectas: correctas.length, nMarcadas: marks.length };
+
+            if (marks.length === 0) return { pts: 0, estado: 'sin responder', ...base, aciertos: 0 };
+            if (marks.length > EXAM_MAX_MARKS) return { pts: 0, estado: 'anulada', ...base };
+            if (correctas.length === 0) return { pts: 0, estado: 'sin grilla', ...base, aciertos: 0 };
+
             const pts = aciertos / correctas.length;
             return {
                 pts: pts,
-                estado: pts === 1 ? 'correcta' : (pts > 0 ? 'parcial' : 'incorrecta')
+                estado: pts === 1 ? 'correcta' : (pts > 0 ? 'parcial' : 'incorrecta'),
+                ...base
             };
         }
 
@@ -8780,10 +8950,13 @@ Equipo Docente de Pediatría</textarea>
                     n: i + 1,
                     caseId: caseId,
                     titulo: caseObj ? caseObj.titulo : '(caso no encontrado)',
+                    tema: caseObj ? (caseObj.tema || '') : '',
                     correctas: caseObj ? caseObj.opciones.filter(o => o.correct).map(o => o.letter) : [],
                     marcadas: letters,
                     pts: r.pts,
-                    estado: r.estado
+                    estado: r.estado,
+                    aciertos: r.aciertos,
+                    nCorrectas: r.nCorrectas
                 });
             });
 
@@ -9208,6 +9381,23 @@ Equipo Docente de Pediatría</textarea>
             renderVoteQr('examRoomQr', url);
         }
 
+        // Celda del detalle pregunta por pregunta: muestra "aciertos/correctas" (con 3 correctas
+        // por pregunta, "2/3" se lee directo como cuántas acertó) y el color codifica el puntaje.
+        function examQCellHtml(d) {
+            if (d.estado === 'sin responder') {
+                return `<span class="exam-qmark blank" title="P${d.n}: sin responder">—</span>`;
+            }
+            if (d.estado === 'anulada') {
+                return `<span class="exam-qmark void" title="P${d.n}: anulada — marcó ${d.marcadas.length} opciones (${examEscape(d.marcadas.join(', '))}). 0 puntos.">✕</span>`;
+            }
+            if (d.estado === 'sin caso' || d.estado === 'sin grilla') {
+                return `<span class="exam-qmark blank" title="P${d.n}: ${d.estado}">?</span>`;
+            }
+            const cls = d.pts === 1 ? 'full' : (d.pts > 0 ? 'partial' : 'zero');
+            const tip = `P${d.n}: marcó ${examEscape(d.marcadas.join(', '))} · correctas ${examEscape(d.correctas.join(', '))} · ${d.pts.toFixed(2)} pts`;
+            return `<span class="exam-qmark ${cls}" title="${tip}">${d.aciertos}/${d.nCorrectas}</span>`;
+        }
+
         function renderExamLiveTable(exam) {
             const students = examRoom.students || {};
             const answers = examRoom.answers || {};
@@ -9227,8 +9417,14 @@ Equipo Docente de Pediatría</textarea>
             const promedio = filas.length ? filas.reduce((s, f) => s + f.nota, 0) / filas.length : 0;
             const aprobados = filas.filter(f => f.pct >= 60).length;
 
+            const nPreg = exam.caseIds.length;
+            const colsPregunta = examShowDetail
+                ? exam.caseIds.map((_, i) => `<th class="qcol${i === 0 ? ' exam-col-sep' : ''}" title="Pregunta ${i + 1}">P${i + 1}</th>`).join('')
+                : '';
+            const nCols = 8 + (examShowDetail ? nPreg : 0);
+
             const filasHtml = filas.length === 0
-                ? `<tr><td colspan="8" class="exam-empty">Nadie rindió todavía.</td></tr>`
+                ? `<tr><td colspan="${nCols}" class="exam-empty">Nadie rindió todavía.</td></tr>`
                 : filas.map((f, i) => `
                     <tr class="${f.entregado ? 'submitted' : ''}">
                         <td>${i + 1}</td>
@@ -9239,6 +9435,7 @@ Equipo Docente de Pediatría</textarea>
                         <td>${f.puntaje.toFixed(2)}</td>
                         <td>${f.pct.toFixed(0)}%</td>
                         <td><span class="exam-nota ${f.pct >= 60 ? 'aprobado' : 'desaprobado'}">${f.nota.toFixed(2)}</span></td>
+                        ${examShowDetail ? f.detalle.map((d, j) => `<td class="qcell${j === 0 ? ' exam-col-sep' : ''}">${examQCellHtml(d)}</td>`).join('') : ''}
                     </tr>
                 `).join('');
 
@@ -9247,11 +9444,27 @@ Equipo Docente de Pediatría</textarea>
                 : `<button class="exam-btn" onclick="exportExamXLSX('${exam.id}')">📥 Exportar a Excel</button>
                    <button class="exam-btn secondary" onclick="exportExamPDF('${exam.id}')">📄 Exportar a PDF</button>`;
 
+            const leyenda = examShowDetail
+                ? `<p style="font-size: 0.8rem; color: #80868b; margin: 12px 0 0 0; line-height: 1.7;">
+                     <strong>Columnas P1…P${nPreg}:</strong> opciones correctas acertadas sobre el total de correctas de esa pregunta.
+                     <span class="exam-qmark full">3/3</span> completa ·
+                     <span class="exam-qmark partial">2/3</span> parcial ·
+                     <span class="exam-qmark zero">0/3</span> ninguna ·
+                     <span class="exam-qmark blank">—</span> sin responder ·
+                     <span class="exam-qmark void">✕</span> anulada (marcó más de ${EXAM_MAX_MARKS}).
+                     Pasando el mouse por cada celda se ven las letras que marcó.
+                   </p>`
+                : '';
+
             return `
                 <div class="exam-panel">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
                         <h3 style="margin: 0;">Desempeño ${examRoom.status === 'running' ? 'en vivo' : 'final'}</h3>
                         <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                            <label class="exam-check">
+                                <input type="checkbox" ${examShowDetail ? 'checked' : ''} onchange="toggleExamShowDetail(this.checked)">
+                                🔢 Ver pregunta por pregunta
+                            </label>
                             <label class="exam-check">
                                 <input type="checkbox" ${examAnonymize ? 'checked' : ''} onchange="toggleExamAnonymize(this.checked)">
                                 🙈 Ocultar nombres
@@ -9271,11 +9484,13 @@ Equipo Docente de Pediatría</textarea>
                                 <tr>
                                     <th>#</th><th>Alumno</th><th>Respondidas</th><th>Anuladas</th>
                                     <th>Estado</th><th>Puntaje</th><th>%</th><th>Nota</th>
+                                    ${colsPregunta}
                                 </tr>
                             </thead>
                             <tbody>${filasHtml}</tbody>
                         </table>
                     </div>
+                    ${leyenda}
                     ${examRoom.status === 'running'
                         ? `<p style="font-size: 0.82rem; color: #80868b; margin: 14px 0 0 0;">
                              Se actualiza solo cada 5 segundos. Al finalizar, a los alumnos que no hayan
@@ -9283,7 +9498,250 @@ Equipo Docente de Pediatría</textarea>
                            </p>`
                         : ''}
                 </div>
+                ${examRoom.status === 'closed' ? renderExamAnalysis(exam, filas) : ''}
             `;
+        }
+
+        function toggleExamShowDetail(checked) {
+            examShowDetail = checked;
+            renderExamTab();
+        }
+
+        // ------------------------------------------------- análisis por pregunta (post-examen)
+        // Se calcula sobre los mismos datos que ya se usan para corregir (nada nuevo viaja a
+        // Firebase): para cada pregunta, cuánto rindió el grupo y qué opciones marcó, para poder
+        // proyectar después del examen qué conviene repasar.
+        function computeExamQuestionStats(exam, filas) {
+            const nAlumnos = filas.length;
+            return exam.caseIds.map((caseId, i) => {
+                const caseObj = examCaseById(caseId);
+                const opciones = caseObj ? caseObj.opciones : [];
+                const correctas = opciones.filter(o => o.correct).map(o => o.letter);
+                const counts = {};
+                opciones.forEach(o => { counts[o.letter] = 0; });
+
+                let sumPts = 0, sumAciertos = 0;
+                let full = 0, partial = 0, zero = 0, blank = 0, anulada = 0;
+
+                filas.forEach((f) => {
+                    const d = f.detalle[i];
+                    if (!d) return;
+                    sumPts += d.pts;
+                    sumAciertos += d.aciertos || 0;
+                    if (d.estado === 'anulada') anulada++;
+                    else if (d.estado === 'sin responder') blank++;
+                    else if (d.pts === 1) full++;
+                    else if (d.pts > 0) partial++;
+                    else zero++;
+                    (d.marcadas || []).forEach((l) => {
+                        counts[l] = (counts[l] || 0) + 1;
+                    });
+                });
+
+                return {
+                    n: i + 1,
+                    caseId: caseId,
+                    titulo: caseObj ? caseObj.titulo : '(caso no encontrado)',
+                    tema: caseObj ? (caseObj.tema || '') : '',
+                    opciones: opciones,
+                    correctas: correctas,
+                    counts: counts,
+                    nAlumnos: nAlumnos,
+                    pct: nAlumnos ? (sumPts / nAlumnos) * 100 : 0,
+                    promedioAciertos: nAlumnos ? sumAciertos / nAlumnos : 0,
+                    full, partial, zero, blank, anulada
+                };
+            });
+        }
+
+        function examDifLevel(pct) {
+            if (pct < 40) return { cls: 'dif-critica', label: '🔴 Crítica' };
+            if (pct < 60) return { cls: 'dif-dificil', label: '🟠 Difícil' };
+            if (pct < 80) return { cls: 'dif-media', label: '🟡 Media' };
+            return { cls: 'dif-bien', label: '🟢 Bien' };
+        }
+
+        // Los temas vienen del data-tema de cada tarjeta, que es una lista de palabras clave
+        // separadas por coma: una pregunta suma su rendimiento a cada una de sus palabras.
+        function computeExamTemaStats(stats) {
+            const acc = {};
+            stats.forEach((q) => {
+                const keys = (q.tema || '').split(',').map(t => t.trim()).filter(Boolean);
+                (keys.length ? keys : ['(sin tema)']).forEach((k) => {
+                    if (!acc[k]) acc[k] = { tema: k, suma: 0, nPreguntas: 0, preguntas: [] };
+                    acc[k].suma += q.pct;
+                    acc[k].nPreguntas++;
+                    acc[k].preguntas.push(q.n);
+                });
+            });
+            const todos = Object.values(acc).map(t => ({ ...t, pct: t.suma / t.nPreguntas }));
+            // Con pocas preguntas casi todas las palabras clave aparecen una sola vez; cuando hay
+            // suficientes temas transversales (2+ preguntas) se muestran sólo esos, que es lo que
+            // realmente señala un contenido flojo y no un caso puntual.
+            const transversales = todos.filter(t => t.nPreguntas >= 2);
+            const base = transversales.length >= 2 ? transversales : todos;
+            return base.sort((a, b) => a.pct - b.pct || b.nPreguntas - a.nPreguntas);
+        }
+
+        function setExamAnalysisSort(value) {
+            examAnalysisSort = value;
+            renderExamTab();
+        }
+
+        function renderExamAnalysis(exam, filas) {
+            if (!filas || filas.length === 0) return '';
+
+            const stats = computeExamQuestionStats(exam, filas);
+            const ordenadas = examAnalysisSort === 'orden'
+                ? stats.slice()
+                : stats.slice().sort((a, b) => a.pct - b.pct);
+
+            // "Para repasar" = todo lo que no llegó al 60% (el mismo corte que define el aprobado).
+            // Si el grupo anduvo bien en todo, se ofrecen igual las 3 más flojas.
+            let paraRepasar = stats.filter(q => q.pct < 60).sort((a, b) => a.pct - b.pct);
+            let repasoEsFallback = false;
+            if (paraRepasar.length === 0) {
+                paraRepasar = stats.slice().sort((a, b) => a.pct - b.pct).slice(0, 3);
+                repasoEsFallback = true;
+            }
+            const idsRepaso = paraRepasar.map(q => q.caseId);
+
+            const criticas = stats.filter(q => q.pct < 40).length;
+            const dificiles = stats.filter(q => q.pct >= 40 && q.pct < 60).length;
+            const bien = stats.filter(q => q.pct >= 80).length;
+
+            const temas = computeExamTemaStats(stats).slice(0, 12);
+            const temasHtml = temas.map((t) => {
+                const lvl = examDifLevel(t.pct);
+                return `
+                    <div class="exam-tema-row">
+                        <span class="exam-tema-name">${examEscape(t.tema)}</span>
+                        <span style="font-size: 0.78rem; color: #80868b; white-space: nowrap;">P${t.preguntas.join(', P')}</span>
+                        <span class="exam-tema-track"><span class="exam-bar-fill ${lvl.cls}" style="width: ${Math.max(2, t.pct).toFixed(1)}%; display: block; height: 100%;"></span></span>
+                        <span class="exam-tema-pct"><strong>${t.pct.toFixed(0)}%</strong></span>
+                    </div>
+                `;
+            }).join('');
+
+            const preguntasHtml = ordenadas.map((q) => {
+                const lvl = examDifLevel(q.pct);
+                const maxCount = Math.max(1, ...Object.values(q.counts));
+                const opcionesHtml = q.opciones.map((o) => {
+                    const c = q.counts[o.letter] || 0;
+                    const pctOpt = q.nAlumnos ? (c / q.nAlumnos) * 100 : 0;
+                    // "Trampa": distractor marcado por al menos un tercio del curso — el que hay
+                    // que discutir explícitamente en la corrección.
+                    const trampa = !o.correct && pctOpt >= 33;
+                    return `
+                        <div class="exam-opt-line ${o.correct ? 'ok' : (trampa ? 'trampa' : '')}">
+                            <span class="exam-opt-letter">${o.letter}${o.correct ? '✓' : ''}</span>
+                            <span class="exam-opt-track"><span class="exam-opt-fill" style="width: ${(c / maxCount * 100).toFixed(1)}%; display: block;"></span></span>
+                            <span class="exam-opt-count">${c} (${pctOpt.toFixed(0)}%)</span>
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                    <div class="exam-qrow ${lvl.cls}">
+                        <div class="exam-qrow-top">
+                            <span class="exam-qnum">P${q.n}</span>
+                            <span class="exam-qtitle">${examEscape(q.titulo)}</span>
+                            ${q.tema ? `<span class="exam-qtema">${examEscape(q.tema)}</span>` : ''}
+                            <span class="exam-dif-badge ${lvl.cls}">${lvl.label} · ${q.pct.toFixed(0)}%</span>
+                        </div>
+                        <div class="exam-bar-track"><span class="exam-bar-fill ${lvl.cls}" style="width: ${Math.max(2, q.pct).toFixed(1)}%; display: block;"></span></div>
+                        <div class="exam-qstats">
+                            <span>Promedio <strong>${q.promedioAciertos.toFixed(1)}/${q.correctas.length}</strong> correctas</span>
+                            <span>✅ <strong>${q.full}</strong> completas</span>
+                            <span>🟡 <strong>${q.partial}</strong> parciales</span>
+                            <span>❌ <strong>${q.zero}</strong> ninguna</span>
+                            ${q.blank ? `<span>➖ <strong>${q.blank}</strong> sin responder</span>` : ''}
+                            ${q.anulada ? `<span>✕ <strong>${q.anulada}</strong> anuladas</span>` : ''}
+                            <span style="color: #137333;">Clave: <strong>${q.correctas.join(', ')}</strong></span>
+                        </div>
+                        <div class="exam-opt-grid">${opcionesHtml}</div>
+                        <div class="exam-qactions">
+                            <button class="exam-btn secondary mini" onclick="presentExamCases(['${q.caseId}'])">📽️ Proyectar este caso</button>
+                            <button class="exam-btn secondary mini" onclick="verCasoEnTalleres('${q.caseId}')">👁️ Ver el caso con la respuesta</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="exam-panel" id="exam-analysis">
+                    <div class="exam-analysis-head">
+                        <h3 style="margin: 0;">🔍 Qué hay que repasar — análisis por pregunta</h3>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                            <select class="exam-btn secondary" style="padding: 7px 12px;" onchange="setExamAnalysisSort(this.value)">
+                                <option value="dificultad" ${examAnalysisSort === 'dificultad' ? 'selected' : ''}>Ordenar por dificultad</option>
+                                <option value="orden" ${examAnalysisSort === 'orden' ? 'selected' : ''}>Ordenar por número de pregunta</option>
+                            </select>
+                            <button class="exam-btn warn" onclick="presentExamCases(${JSON.stringify(idsRepaso).replace(/"/g, '&quot;')})">
+                                📽️ Corregir en el proyector (${paraRepasar.length} caso${paraRepasar.length === 1 ? '' : 's'})
+                            </button>
+                        </div>
+                    </div>
+                    <p class="exam-analysis-hint">
+                        Sobre <strong>${filas.length}</strong> alumnos:
+                        <strong style="color: #c5221f;">${criticas}</strong> pregunta(s) crítica(s) (&lt;40%),
+                        <strong style="color: #b45309;">${dificiles}</strong> difícil(es) (40–59%),
+                        <strong style="color: #137333;">${bien}</strong> bien resuelta(s) (≥80%).
+                        ${repasoEsFallback
+                            ? 'Ninguna pregunta quedó por debajo del 60%: el botón de corrección proyecta las 3 más flojas igual.'
+                            : 'El botón de corrección abre el Modo Presentación con las preguntas por debajo del 60%, en orden de peor a mejor.'}
+                    </p>
+
+                    <h4 style="margin: 22px 0 8px 0; font-size: 0.95rem; color: #202124;">📚 Temas que requieren más estudio</h4>
+                    <div style="margin-bottom: 8px;">${temasHtml || '<div class="exam-empty">Sin temas cargados en los casos.</div>'}</div>
+                    <p style="font-size: 0.78rem; color: #9aa0a6; margin: 0 0 22px 0;">
+                        Promedio del grupo en las preguntas que tocan cada tema (los temas salen de las palabras
+                        clave de cada caso, así que una pregunta puede aparecer en varios).
+                    </p>
+
+                    <h4 style="margin: 0 0 12px 0; font-size: 0.95rem; color: #202124;">Pregunta por pregunta</h4>
+                    ${preguntasHtml}
+                    <p style="font-size: 0.78rem; color: #9aa0a6; margin: 6px 0 0 0;">
+                        En cada pregunta, las barras muestran cuántos alumnos marcaron cada opción.
+                        Las correctas van en verde con ✓; en rojo, los distractores que eligió al menos un tercio del curso.
+                    </p>
+                </div>
+            `;
+        }
+
+        // Lleva al Modo Presentación (proyector) los casos indicados, sin tocar la selección
+        // "a medida" que el docente pueda tener armada en Talleres EFU.
+        function presentExamCases(caseIds) {
+            const cards = (caseIds || []).map((id) => {
+                const box = document.getElementById('ans' + id);
+                return box ? box.closest('.card') : null;
+            }).filter(Boolean);
+            if (cards.length === 0) return alert('No se encontraron esos casos en la pestaña Talleres EFU.');
+            startPresentation(false, cards);
+        }
+
+        // Abre la tarjeta del caso en Talleres EFU con la respuesta ya revelada. Limpia el filtro
+        // de semana y la búsqueda por tema, porque el caso puede estar oculto por cualquiera de
+        // los dos y si no el scroll iría a un nodo con display:none.
+        function verCasoEnTalleres(caseId) {
+            const box = document.getElementById('ans' + caseId);
+            if (!box) return alert('No se encontró ese caso en la pestaña Talleres EFU.');
+            const card = box.closest('.card');
+
+            if (typeof clearThemeSearch === 'function' && document.getElementById('theme-search-input')) {
+                clearThemeSearch();
+            } else {
+                efuSearchQuery = '';
+            }
+            const btnTodas = document.querySelector('#efu-week-filter .subtab-btn');
+            filterEfuWeek('all', btnTodas);
+
+            const tabBtn = Array.from(document.querySelectorAll('.tab-btn'))
+                .find(b => (b.getAttribute('onclick') || '').includes('tab-efu'));
+            if (tabBtn) switchTab('tab-efu', tabBtn);
+
+            if (!box.classList.contains('visible')) toggleAnswer(box.id);
+            if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function toggleExamAnonymize(checked) {
@@ -9502,11 +9960,60 @@ Equipo Docente de Pediatría</textarea>
                 })));
             });
             detalle.push([]);
+            detalle.push(['Opciones correctas acertadas por pregunta (sobre el total de correctas)']);
+            filas.forEach((f) => {
+                detalle.push([f.nombre].concat(f.detalle.map(d => {
+                    if (d.estado === 'anulada') return 'anulada';
+                    if (d.estado === 'sin responder') return '—';
+                    return `${d.aciertos}/${d.nCorrectas}`;
+                })));
+            });
+            detalle.push([]);
             detalle.push(['Puntaje por pregunta (0 a 1)']);
             filas.forEach((f) => {
                 detalle.push([f.nombre].concat(f.detalle.map(d => Number(d.pts.toFixed(2)))));
             });
             XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(detalle), 'Detalle');
+
+            // Hoja de análisis: la misma lectura que se ve en pantalla al finalizar, para poder
+            // llevarla impresa a la corrección o compararla entre comisiones.
+            const stats = computeExamQuestionStats(exam, filas);
+            const porDificultad = stats.slice().sort((a, b) => a.pct - b.pct);
+            const analisis = [
+                ['Análisis por pregunta — de mayor a menor dificultad'],
+                [`${filas.length} alumnos`],
+                [],
+                ['#', 'Caso', 'Tema', 'Clave', '% del grupo', 'Prom. correctas', 'Completas', 'Parciales', 'Ninguna', 'Sin responder', 'Anuladas', 'Dificultad']
+            ];
+            porDificultad.forEach((q) => {
+                analisis.push([
+                    q.n, q.titulo, q.tema, q.correctas.join(', '),
+                    Number(q.pct.toFixed(1)), Number(q.promedioAciertos.toFixed(2)),
+                    q.full, q.partial, q.zero, q.blank, q.anulada,
+                    examDifLevel(q.pct).label.replace(/^\S+\s/, '')
+                ]);
+            });
+
+            analisis.push([]);
+            analisis.push(['Opciones marcadas por pregunta (cantidad de alumnos; ✓ = correcta)']);
+            analisis.push(['#', 'Caso'].concat('ABCDEFGH'.split('')));
+            stats.forEach((q) => {
+                const fila = [q.n, q.titulo];
+                'ABCDEFGH'.split('').forEach((L) => {
+                    const op = q.opciones.find(o => o.letter === L);
+                    if (!op) { fila.push(''); return; }
+                    fila.push(`${q.counts[L] || 0}${op.correct ? ' ✓' : ''}`);
+                });
+                analisis.push(fila);
+            });
+
+            analisis.push([]);
+            analisis.push(['Temas que requieren más estudio (promedio del grupo)']);
+            analisis.push(['Tema', 'Preguntas', '% del grupo']);
+            computeExamTemaStats(stats).forEach((t) => {
+                analisis.push([t.tema, 'P' + t.preguntas.join(', P'), Number(t.pct.toFixed(1))]);
+            });
+            XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(analisis), 'Análisis');
 
             const clave = [['#', 'Caso', 'Opciones correctas']];
             exam.caseIds.forEach((id, i) => {
@@ -9529,6 +10036,70 @@ Equipo Docente de Pediatría</textarea>
             const filas = examResultRows(exam);
             const aprobados = filas.filter(f => f.pct >= 60).length;
             const promedio = filas.length ? filas.reduce((s, f) => s + f.nota, 0) / filas.length : 0;
+
+            const stats = computeExamQuestionStats(exam, filas);
+            const porDificultad = stats.slice().sort((a, b) => a.pct - b.pct);
+            const temasPdf = computeExamTemaStats(stats).slice(0, 12);
+
+            const analisisHtml = `
+                <div class="analisis">
+                    <h2>Análisis por pregunta — qué repasar con el curso</h2>
+                    <div class="sub">Ordenado de mayor a menor dificultad · ${filas.length} alumnos</div>
+                    <table>
+                        <thead><tr>
+                            <th>#</th><th>Caso</th><th>Clave</th><th>% grupo</th>
+                            <th>Prom.</th><th>Compl.</th><th>Parc.</th><th>Ning.</th><th>S/R</th><th>Anul.</th>
+                        </tr></thead>
+                        <tbody>${porDificultad.map(q => `
+                            <tr class="${q.pct < 60 ? 'flojo' : ''}">
+                                <td class="c"><strong>${q.n}</strong></td>
+                                <td>${examEscape(q.titulo)}</td>
+                                <td class="c">${q.correctas.join(', ')}</td>
+                                <td class="c"><strong>${q.pct.toFixed(0)}%</strong></td>
+                                <td class="c">${q.promedioAciertos.toFixed(1)}/${q.correctas.length}</td>
+                                <td class="c">${q.full}</td>
+                                <td class="c">${q.partial}</td>
+                                <td class="c">${q.zero}</td>
+                                <td class="c">${q.blank || '—'}</td>
+                                <td class="c">${q.anulada || '—'}</td>
+                            </tr>`).join('')}
+                        </tbody>
+                    </table>
+                    <div class="nota-analisis">
+                        Sombreadas, las preguntas en las que el grupo no llegó al 60%.
+                        <strong>Prom.</strong> = promedio de opciones correctas marcadas por alumno sobre el total de correctas.
+                    </div>
+
+                    <h2 style="margin-top: 26px;">Opciones marcadas por pregunta</h2>
+                    <table>
+                        <thead><tr><th>#</th><th>Caso</th>${'ABCDEFGH'.split('').map(L => `<th class="c">${L}</th>`).join('')}</tr></thead>
+                        <tbody>${stats.map(q => `
+                            <tr>
+                                <td class="c"><strong>${q.n}</strong></td>
+                                <td>${examEscape(q.titulo)}</td>
+                                ${'ABCDEFGH'.split('').map((L) => {
+                                    const op = q.opciones.find(o => o.letter === L);
+                                    if (!op) return '<td class="c">—</td>';
+                                    return `<td class="c${op.correct ? ' ok' : ''}">${q.counts[L] || 0}${op.correct ? ' ✓' : ''}</td>`;
+                                }).join('')}
+                            </tr>`).join('')}
+                        </tbody>
+                    </table>
+                    <div class="nota-analisis">Cantidad de alumnos que marcó cada opción. ✓ = opción correcta.</div>
+
+                    <h2 style="margin-top: 26px;">Temas que requieren más estudio</h2>
+                    <table>
+                        <thead><tr><th>Tema</th><th>Preguntas</th><th class="c">% del grupo</th></tr></thead>
+                        <tbody>${temasPdf.map(t => `
+                            <tr class="${t.pct < 60 ? 'flojo' : ''}">
+                                <td>${examEscape(t.tema)}</td>
+                                <td>P${t.preguntas.join(', P')}</td>
+                                <td class="c"><strong>${t.pct.toFixed(0)}%</strong></td>
+                            </tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
 
             const filasHtml = filas.map((f, i) => `
                 <tr>
@@ -9562,6 +10133,11 @@ Equipo Docente de Pediatría</textarea>
                     .criterio { font-size: 0.72rem; color: #555; margin-top: 22px; font-family: Arial, sans-serif; line-height: 1.6; }
                     .firma { margin-top: 54px; font-size: 0.8rem; font-family: Arial, sans-serif; }
                     .firma div { border-top: 1px solid #333; width: 260px; padding-top: 5px; }
+                    .analisis { page-break-before: always; font-family: Arial, sans-serif; }
+                    .analisis h2 { font-size: 1.05rem; margin: 0 0 3px 0; font-family: Georgia, serif; }
+                    .analisis tr.flojo td { background: #f4f4f4; }
+                    .analisis td.ok { font-weight: 700; }
+                    .nota-analisis { font-size: 0.72rem; color: #555; margin-top: 7px; line-height: 1.5; }
                     @media print { body { margin: 14mm; } }
                 </style></head><body>
                 <h1>${examEscape(exam.titulo)}</h1>
@@ -9585,6 +10161,7 @@ Equipo Docente de Pediatría</textarea>
                     Escala de nota lineal en dos tramos: 0% = 1, 60% = 4 (aprobado), 100% = 10.
                 </div>
                 <div class="firma"><div>Firma y aclaración del docente</div></div>
+                ${analisisHtml}
                 </body></html>`);
             win.document.close();
             win.focus();
