@@ -1419,6 +1419,10 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
+        /* Sub-solapas dentro de Talleres (EFU / generales) */
+        .taller-subtab { display: none; }
+        .taller-subtab.active { display: block; }
+
         .filter-bar {
             display: flex;
             gap: 10px;
@@ -2179,14 +2183,16 @@
 
     <!-- Navigation Tabs -->
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('tab-anuncios', this)">📢 Anuncios Classroom</button>
-        <button class="tab-btn" onclick="switchTab('tab-efu', this)">📝 Talleres EFU (Viernes)</button>
+        <!-- Anuncios Classroom: oculto por ahora (no se usa). Para volver a activarlo,
+             sacar el style="display:none" de este botón. El contenido sigue intacto. -->
+        <button class="tab-btn" onclick="switchTab('tab-anuncios', this)" style="display: none;">📢 Anuncios Classroom</button>
+        <button class="tab-btn active" onclick="switchTab('tab-efu', this)">📝 Talleres</button>
         <button class="tab-btn" onclick="switchTab('tab-practicos', this)">🩺 Control de Prácticos</button>
         <button class="tab-btn" onclick="switchTab('tab-evaluaciones', this)">📋 Evaluaciones</button>
     </div>
 
     <!-- TAB 1: ANUNCIOS CLASSROOM -->
-    <div id="tab-anuncios" class="tab-content active">
+    <div id="tab-anuncios" class="tab-content">
 
         <div class="card">
             <h2>1. Mensaje de Bienvenida</h2>
@@ -2264,7 +2270,15 @@ Equipo Docente de Pediatría</textarea>
     </div>
 
     <!-- TAB 2: TALLERES EFU (VIERNES) -->
-    <div id="tab-efu" class="tab-content">
+    <div id="tab-efu" class="tab-content active">
+
+        <!-- Sub-solapas de Talleres -->
+        <div class="subtab-buttons" id="taller-subtabs" style="margin-bottom: 22px; width: fit-content;">
+            <button class="subtab-btn active" onclick="switchTallerSubtab('subtab-efu', this)">📝 Talleres EFU</button>
+            <button class="subtab-btn" onclick="switchTallerSubtab('subtab-generales', this)">🧪 Talleres generales</button>
+        </div>
+
+        <div id="subtab-efu" class="taller-subtab active">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; background: #e8f0fe; padding: 18px 24px; border-radius: 12px; border: 1px solid #d2e3fc;">
             <p style="margin: 0; font-size: 1.1rem; color: #1967d2; font-weight: 500;">
                 🏫 <strong>Ejercitación EFU:</strong> Usa el Modo Presentación interactivo para debatir y repasar los casos en clase con los alumnos.
@@ -6958,6 +6972,43 @@ Equipo Docente de Pediatría</textarea>
             </div>
         </div>
 
+        </div><!-- /subtab-efu -->
+
+        <!-- ============ SUB-SOLAPA: TALLERES GENERALES ============ -->
+        <div id="subtab-generales" class="taller-subtab">
+
+            <div style="background: #f5f3ff; border: 1px solid #ddd6fe; border-radius: 12px; padding: 18px 24px; margin-bottom: 25px;">
+                <p style="margin: 0; font-size: 1.05rem; color: #5b21b6;">
+                    🧪 <strong>Talleres autoguiados:</strong> los resuelve cada alumno por su cuenta, desde el celular, sin encuentro sincrónico. Se publican en Classroom como link y el alumno entrega el resumen que genera la página.
+                </p>
+            </div>
+
+            <div class="card">
+                <span class="badge" style="background: #ede9fe; color: #5b21b6;">Taller autoguiado — Asincrónico</span>
+                <h2>Trastornos del Estado Ácido-Base en Pediatría</h2>
+                <p style="color: #475569; margin-bottom: 16px;">
+                    Cuatro módulos y 26 consignas con corrección instantánea: el método de los 5 pasos, seis pacientes (uno por patrón), caza del error y un desafío mixto. Cada consigna explica el fundamento de <strong>todas</strong> las opciones, también las que el alumno no eligió.
+                </p>
+                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 18px;">
+                    ⏱️ 60 a 75 minutos · 👤 Individual · 📄 Entrega: el alumno pega el resumen en la tarea de Classroom
+                </p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <a href="taller_eab_online.html" target="_blank" rel="noopener"
+                       style="display: inline-block; padding: 11px 20px; border-radius: 9px; background: linear-gradient(135deg, #7c3aed, #5b21b6); color: #fff; font-weight: 700; text-decoration: none; font-size: 0.95rem;">
+                        Abrir el taller ↗
+                    </a>
+                    <button class="reveal-btn" onclick="copiarLinkTaller(this)">🔗 Copiar link para Classroom</button>
+                </div>
+            </div>
+
+            <div class="card" style="border-style: dashed; background: #fafafa;">
+                <h2 style="color: #94a3b8;">Próximos talleres</h2>
+                <p style="color: #94a3b8; margin: 0;">
+                    Acá se van a ir sumando los talleres autoguiados que se armen más adelante. Cada uno es una página independiente, con su propio link para Classroom.
+                </p>
+            </div>
+
+        </div><!-- /subtab-generales -->
 
     </div>
 
@@ -7017,7 +7068,7 @@ Equipo Docente de Pediatría</textarea>
 
             <!-- Sub-tab Navigation Bar & Filters -->
             <div class="practicos-nav-bar">
-                <div class="subtab-buttons">
+                <div class="subtab-buttons" id="practicos-subtabs">
                     <button class="subtab-btn active" id="btnSubtabMatrix" onclick="switchPracticosSubtab('matrix')">📊 Planilla Matriz</button>
                     <button class="subtab-btn" id="btnSubtabBatch" onclick="switchPracticosSubtab('batch')">⚡ Toma de Lista por Fecha</button>
                 </div>
@@ -7112,6 +7163,24 @@ Equipo Docente de Pediatría</textarea>
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             btn.classList.add('active');
+        }
+
+        // Sub-solapas de Talleres. Ojo: los botones se buscan dentro de #taller-subtabs
+        // y no con un selector global de .subtab-btn, porque esa clase la comparten el
+        // filtro por semana y las sub-solapas de Prácticos.
+        function switchTallerSubtab(subtabId, btn) {
+            document.querySelectorAll('.taller-subtab').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('#taller-subtabs .subtab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(subtabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function copiarLinkTaller(btn) {
+            const url = new URL('taller_eab_online.html', window.location.href).href;
+            navigator.clipboard.writeText(url);
+            const original = btn.innerText;
+            btn.innerText = '¡Link copiado!';
+            setTimeout(() => { btn.innerText = original; }, 2000);
         }
 
         function copiar(id, btn) {
@@ -8389,7 +8458,9 @@ Equipo Docente de Pediatría</textarea>
         function switchPracticosSubtab(subtabKey) {
             activePracticosSubtab = subtabKey;
             
-            document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('active'));
+            // Acotado a su propio contenedor: antes apagaba TODOS los .subtab-btn de la
+            // página, incluidos el filtro por semana de EFU y las sub-solapas de Talleres.
+            document.querySelectorAll('#practicos-subtabs .subtab-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById('viewPracticosMatrix').style.display = 'none';
             document.getElementById('viewPracticosBatch').style.display = 'none';
 
@@ -9725,7 +9796,7 @@ Equipo Docente de Pediatría</textarea>
         // los dos y si no el scroll iría a un nodo con display:none.
         function verCasoEnTalleres(caseId) {
             const box = document.getElementById('ans' + caseId);
-            if (!box) return alert('No se encontró ese caso en la pestaña Talleres EFU.');
+            if (!box) return alert('No se encontró ese caso en la pestaña Talleres.');
             const card = box.closest('.card');
 
             if (typeof clearThemeSearch === 'function' && document.getElementById('theme-search-input')) {
@@ -9739,6 +9810,11 @@ Equipo Docente de Pediatría</textarea>
             const tabBtn = Array.from(document.querySelectorAll('.tab-btn'))
                 .find(b => (b.getAttribute('onclick') || '').includes('tab-efu'));
             if (tabBtn) switchTab('tab-efu', tabBtn);
+
+            // Si el docente estaba parado en "Talleres generales", la tarjeta del caso
+            // está en un contenedor con display:none y el scroll no llegaría.
+            const subBtn = document.querySelector('#taller-subtabs .subtab-btn');
+            if (subBtn) switchTallerSubtab('subtab-efu', subBtn);
 
             if (!box.classList.contains('visible')) toggleAnswer(box.id);
             if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });

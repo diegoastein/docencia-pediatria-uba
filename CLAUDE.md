@@ -33,7 +33,24 @@ Este archivo configura las reglas de comportamiento y contexto de proyecto para 
 - `banco_casos_efu.json`: Banco estructurado de casos EFU (fuente de verdad intermedia, ver sección "Banco Estructurado de Casos EFU").
 - `validar_banco_casos_efu.py`: Script de validación de `banco_casos_efu.json` contra las reglas del proyecto.
 - `prompt_extraccion_antigravity.md`: Prompt listo para pegar en Antigravity que genera `banco_casos_efu.json` desde `fuentes_pdf/`.
-- `index.html`: Herramienta interactiva publicada en GitHub Pages, con cuatro solapas: **Anuncios Classroom** (botón de copiado directo), **Talleres EFU** (modo presentación con votación de alumnos), **Control de Prácticos** (matriz de asistencia con sincronización en la nube y exportación XLSX) y **Evaluaciones** (armado y toma de parciales/prefinales, ver sección propia más abajo).
+- `index.html`: Herramienta interactiva publicada en GitHub Pages. **Tres solapas visibles**
+  (27/08/2026): **Talleres**, **Control de Prácticos** (matriz de asistencia con sincronización
+  en la nube y exportación XLSX) y **Evaluaciones** (armado y toma de parciales/prefinales, ver
+  sección propia más abajo). La solapa **Anuncios Classroom** sigue en el HTML pero está
+  **oculta** (`style="display:none"` en su botón) porque el docente no la usa; para reactivarla
+  alcanza con sacar ese `style`, el contenido está intacto.
+  La solapa **Talleres** (id `tab-efu`, se mantuvo el id para no romper los selectores
+  `#tab-efu .card[data-semana]` que usan el filtro por semana, el buscador y el Modo
+  Presentación) tiene dos sub-solapas: **Talleres EFU** (`#subtab-efu`, todo lo que antes era la
+  solapa entera) y **Talleres generales** (`#subtab-generales`, links a los talleres autoguiados
+  como el de Estado Ácido-Base).
+- `taller_eab_online.html`: Taller autoguiado y asincrónico de Trastornos del Estado Ácido-Base,
+  publicado como página aparte y enlazado desde Classroom (ver sección propia más abajo).
+- `crear_formulario_classroom.gs`: Script de Apps Script que genera el cuestionario del taller
+  en Google Forms extrayendo las preguntas del propio HTML. **No se usa** en la configuración
+  actual; queda por si el taller alguna vez tiene que llevar nota.
+- `taller_eab_guia_docente.md`: Documentación del taller de EAB (estructura, publicación,
+  constancia en Classroom, decisiones de contenido).
 - `generar_planilla_excel.py`: Generador de la planilla Excel de control de prácticos. Lee la
   nómina real de `nomina_alumnos.txt` (no versionado, ver sección "Control de Ingreso y Datos
   Sensibles" más abajo) — el script ya no trae nombres hardcodeados.
@@ -294,6 +311,36 @@ pierden los exámenes y las notas**. Exportar a Excel/PDF después de cada toma.
 - El **PDF sale por la ventana de impresión** del navegador ("Destino: Guardar como PDF"), no por
   una librería: es un acta con formato propio, no suma otro CDN y sigue funcionando si el aula se
   queda sin internet después de cargar la página.
+
+---
+
+## 🧪 Taller Autoguiado de Estado Ácido-Base (agregado 27/08/2026)
+
+Primer taller **asincrónico e individual** del proyecto: el alumno lo resuelve solo, desde el
+celular, sin encuentro sincrónico. Vive en `taller_eab_online.html`, una página autocontenida
+(sin CDN, sin librerías, sin backend, sin Firebase) publicada en GitHub Pages y enlazada desde
+Classroom. Detalle completo en `taller_eab_guia_docente.md`; acá van sólo las decisiones que
+condicionan el código.
+
+- **Queda FUERA de la pantalla de contraseña** de `index.html`, a propósito: los alumnos entran
+  directo por el link de la tarea. No integrarlo dentro de `index.html`.
+- **Las viñetas son de elaboración propia, NO son casos EFU** — decisión explícita del docente.
+  Los 7 estados ácido-base fueron construidos para ser internamente consistentes: cada uno
+  verifica la ecuación de Henderson (`[H⁺] ≈ 24 × pCO₂ / HCO₃`, ±0,01 de pH) y la fórmula de
+  compensación de su patrón, así que un alumno puede calcular sobre ellos sin encontrar
+  contradicciones. Si se agregan casos nuevos, mantener esa verificación.
+- **El feedback muestra el fundamento de TODAS las opciones**, también las no elegidas. Es la
+  decisión de diseño que sostiene el taller: sin docente presente, el feedback tiene que estar
+  escrito de antemano o es un cuestionario disfrazado.
+- **Constancia en Classroom:** el alumno pega el resumen que genera la página. Classroom no
+  puede detectar que abrió el link — sólo registra lo que se entrega adentro de Classroom. El
+  resumen es editable antes de pegarlo, lo cual **no importa porque el taller no lleva nota**;
+  si alguna vez llevara, el camino es el formulario de `crear_formulario_classroom.gs`.
+- **El progreso se guarda en `localStorage`** del dispositivo del alumno (`tallerEAB_v1`). Si
+  cambia de teléfono o borra los datos, empieza de nuevo. Está avisado en la página.
+- **Sin firma institucional:** el material es desarrollo propio del docente y lleva su nombre en
+  el pie de la página y en el resumen de entrega. No agregar menciones a la cátedra, la Facultad
+  ni el hospital en el material que se genere.
 
 ---
 
