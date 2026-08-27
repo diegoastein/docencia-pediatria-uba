@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller: Estado Ácido-Base en Pediatría</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0; padding: 0 14px 60px;
+        background: #f8f9fa; color: #202124;
+        line-height: 1.55;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; }
+
+    /* ---------- Encabezado y progreso ---------- */
+    header { padding: 26px 0 16px; }
+    header .kicker { font-size: .78rem; font-weight: 800; letter-spacing: .08em;
+        text-transform: uppercase; color: #7c3aed; margin: 0 0 6px; }
+    header h1 { font-size: 1.55rem; line-height: 1.25; margin: 0 0 8px; color: #2c1a5e; }
+    header .meta { color: #5f6368; font-size: .92rem; margin: 0; }
+
+    #progress-bar {
+        position: sticky; top: 0; z-index: 20;
+        background: #f8f9fa; padding: 10px 0 12px; margin: 0 0 18px;
+        border-bottom: 1px solid #e5e0f5;
+    }
+    #progress-track { height: 9px; background: #e9e4f8; border-radius: 6px; overflow: hidden; }
+    #progress-fill { height: 100%; width: 0%; border-radius: 6px;
+        background: linear-gradient(90deg, #7c3aed, #5b21b6); transition: width .35s ease; }
+    #progress-text { font-size: .8rem; color: #5f6368; margin: 6px 0 0; font-weight: 600; }
+
+    /* ---------- Bloques ---------- */
+    .box { background: #fff; border: 1px solid #dadce0; border-radius: 14px;
+        padding: 20px; margin-bottom: 18px; }
+    .box.intro { border-left: 5px solid #7c3aed; }
+    .box.aviso { background: #fffbeb; border-color: #fde68a; }
+
+    h2 { font-size: 1.18rem; color: #2c1a5e; margin: 34px 0 14px;
+        padding-bottom: 8px; border-bottom: 2px solid #e9e4f8; }
+    h3 { font-size: 1.02rem; margin: 0 0 10px; color: #2c1a5e; }
+    p { margin: 0 0 12px; }
+    ul, ol { margin: 0 0 12px; padding-left: 22px; }
+    li { margin-bottom: 6px; }
+
+    .badge { display: inline-block; background: #f5f3ff; color: #5b21b6;
+        padding: 4px 11px; border-radius: 12px; font-size: .76rem; font-weight: 800;
+        margin-bottom: 10px; letter-spacing: .02em; }
+    .badge.gris { background: #f1f3f4; color: #5f6368; }
+    .badge.rojo { background: #fee2e2; color: #b91c1c; }
+
+    /* ---------- Viñeta clínica y laboratorio ---------- */
+    .vineta { background: #faf9ff; border: 1px solid #e9e4f8; border-radius: 10px;
+        padding: 14px 16px; margin-bottom: 14px; font-size: .95rem; }
+    .lab { border-collapse: collapse; width: 100%; margin: 0 0 14px; font-size: .9rem; }
+    .lab caption { text-align: left; font-weight: 800; font-size: .82rem; color: #5b21b6;
+        padding-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
+    .lab td { border-bottom: 1px solid #eceff1; padding: 7px 8px; }
+    .lab td:first-child { color: #5f6368; width: 46%; }
+    .lab td:last-child { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .lab .alterado td:last-child { color: #b91c1c; }
+    .lab .ref { color: #9aa0a6; font-weight: 400; font-size: .85em; }
+
+    /* ---------- Preguntas ---------- */
+    .q { margin: 20px 0 0; padding-top: 18px; border-top: 1px dashed #dadce0; }
+    .q:first-of-type { border-top: none; padding-top: 0; }
+    .q-text { font-weight: 700; margin: 0 0 4px; }
+    .q-hint { font-size: .84rem; color: #5f6368; margin: 0 0 12px; }
+    .opts { list-style: none; padding: 0; margin: 0 0 14px;
+        display: flex; flex-direction: column; gap: 9px; }
+    .opt { display: flex; gap: 11px; align-items: flex-start;
+        padding: 12px 14px; border: 2px solid #dadce0; border-radius: 10px;
+        cursor: pointer; background: #fff; transition: border-color .15s, background .15s; }
+    .opt:hover { border-color: #b9a5ec; }
+    .opt input { margin: 3px 0 0; flex-shrink: 0; width: 18px; height: 18px; accent-color: #5b21b6; }
+    .opt .letra { font-weight: 800; color: #5b21b6; flex-shrink: 0; }
+    .opt.sel { border-color: #7c3aed; background: #faf9ff; }
+    .opt.ok { border-color: #16a34a; background: #f0fdf4; }
+    .opt.mal { border-color: #dc2626; background: #fef2f2; }
+    .opt.perdida { border-color: #16a34a; background: #fff; border-style: dashed; }
+    .fb { font-size: .88rem; margin: 8px 0 0 29px; padding-left: 12px;
+        border-left: 3px solid #dadce0; color: #3c4043; }
+    .fb.ok { border-color: #16a34a; }
+    .fb.mal { border-color: #dc2626; }
+
+    button.check { padding: 11px 22px; font-size: .95rem; font-weight: 700;
+        border: none; border-radius: 9px; cursor: pointer;
+        background: linear-gradient(135deg, #7c3aed, #5b21b6); color: #fff; }
+    button.check:disabled { opacity: .4; cursor: not-allowed; }
+    button.sec { background: #fff; color: #5b21b6; border: 2px solid #ddd6fe; }
+
+    .veredicto { margin: 12px 0 0; padding: 11px 14px; border-radius: 9px;
+        font-weight: 700; font-size: .92rem; display: none; }
+    .veredicto.ok { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .veredicto.parcial { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .veredicto.mal { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+    details { margin-top: 14px; background: #f8f9fa; border: 1px solid #e0e0e0;
+        border-radius: 9px; padding: 0; }
+    details summary { cursor: pointer; padding: 12px 14px; font-weight: 700;
+        font-size: .92rem; color: #5b21b6; list-style-position: inside; }
+    details[open] summary { border-bottom: 1px solid #e0e0e0; }
+    details .cuerpo { padding: 14px; font-size: .92rem; }
+
+    /* ---------- Tablas de referencia ---------- */
+    .tabla-ref { width: 100%; border-collapse: collapse; font-size: .87rem; margin-bottom: 14px; }
+    .tabla-ref th { background: #f5f3ff; color: #2c1a5e; text-align: left;
+        padding: 9px 10px; border: 1px solid #e0dcf0; font-size: .82rem; }
+    .tabla-ref td { padding: 9px 10px; border: 1px solid #eceff1; vertical-align: top; }
+    .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    .paso { display: flex; gap: 13px; margin-bottom: 15px; }
+    .paso .n { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
+        background: #5b21b6; color: #fff; font-weight: 800; font-size: .92rem;
+        display: flex; align-items: center; justify-content: center; }
+    .paso .cont { flex: 1; }
+    .paso .cont strong { display: block; margin-bottom: 2px; }
+    .paso .cont span { font-size: .91rem; color: #3c4043; }
+
+    code { background: #f1f3f4; padding: 2px 6px; border-radius: 4px;
+        font-size: .89em; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+    /* ---------- Entrega ---------- */
+    textarea { width: 100%; min-height: 110px; padding: 12px; font-size: .95rem;
+        font-family: inherit; border: 2px solid #dadce0; border-radius: 10px;
+        margin-bottom: 14px; resize: vertical; }
+    #resumen { width: 100%; min-height: 220px; font-family: ui-monospace, Menlo, Consolas, monospace;
+        font-size: .82rem; background: #f8f9fa; }
+    .puntaje-final { text-align: center; padding: 22px; }
+    .puntaje-final .num { font-size: 2.8rem; font-weight: 800; color: #5b21b6; line-height: 1; }
+    .puntaje-final .de { color: #5f6368; font-size: .95rem; }
+
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    footer { text-align: center; padding: 26px 0 10px; margin-top: 10px;
+        border-top: 1px solid #e5e0f5; color: #5f6368; font-size: .86rem; }
+    footer .autor { font-weight: 700; color: #5b21b6; }
+
+    @media print {
+        body { background: #fff; }
+        .no-print, #progress-bar, button { display: none !important; }
+        .box { break-inside: avoid; border: 1px solid #999; }
+        details { display: none; }
+    }
+    @media (max-width: 520px) {
+        header h1 { font-size: 1.3rem; }
+        .box { padding: 16px; }
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+    <h1>Trastornos del Estado Ácido-Base en Pediatría</h1>
+    <p class="meta">Taller autoguiado · Modalidad asincrónica · Duración estimada: 60–75 minutos</p>
+</header>
+
+<div id="progress-bar" class="no-print">
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <p id="progress-text">0 de 20 consignas resueltas</p>
+</div>
+
+<div class="box intro">
+    <h3>Cómo funciona este taller</h3>
+    <ul>
+        <li>Se resuelve <strong>solo, a tu ritmo y desde cualquier dispositivo</strong>. No hay encuentro sincrónico.</li>
+        <li>Cada consigna se responde y se comprueba <strong>en el momento</strong>: vas a ver por qué cada opción es correcta o incorrecta, incluso las que no elegiste.</li>
+        <li><strong>Contestá antes de comprobar, aunque no estés seguro.</strong> El error es la parte que enseña; el puntaje no incide en la nota de la cursada.</li>
+        <li>Tu avance se guarda solo en este dispositivo. Podés cerrar y retomar después.</li>
+        <li>Al final, el taller genera un <strong>resumen de entrega</strong> que tenés que copiar y pegar en la tarea de Google Classroom.</li>
+    </ul>
+</div>
+
+<div class="box aviso">
+    <h3>⚠️ Antes de arrancar</h3>
+    <p style="margin-bottom:0">Este taller <strong>no</strong> tiene el formato del Examen Final Unificado. Las viñetas son de elaboración propia, construidas para que cada patrón aparezca de forma clara. La ejercitación con preguntas verbatim de EFU es un espacio aparte, el de los viernes.</p>
+</div>
+
+<!-- ============ MÓDULO 0 ============ -->
+<h2>Módulo 0 · Qué sabés antes de empezar</h2>
+<div class="box">
+    <p style="font-size:.92rem;color:#5f6368">Dos preguntas de sondeo. No suman puntaje: sirven para que compares tu punto de partida con lo que pensás al terminar.</p>
+    <div id="m0"></div>
+</div>
+
+<!-- ============ MÓDULO 1 ============ -->
+<h2>Módulo 1 · Leer un EAB en cinco pasos</h2>
+
+<div class="box">
+    <p>Un estado ácido-base no se "interpreta de memoria": se recorre siempre en el mismo orden. Si salteás un paso, el error clásico aparece en el paso que salteaste.</p>
+
+    <div class="paso"><div class="n">1</div><div class="cont">
+        <strong>¿Acidemia o alcalemia?</strong>
+        <span>Mirá <em>solo</em> el pH. Por debajo de 7,35 hay acidemia; por encima de 7,45, alcalemia. Un pH normal no descarta nada todavía: puede haber dos trastornos que se cancelan.</span>
+    </div></div>
+
+    <div class="paso"><div class="n">2</div><div class="cont">
+        <strong>¿Quién lo explica: el pulmón o el riñón?</strong>
+        <span>Buscá cuál de los dos se movió <em>en la misma dirección</em> que el pH. Si el pH bajó y el HCO₃ está bajo → acidosis metabólica. Si el pH bajó y la pCO₂ está alta → acidosis respiratoria. El otro valor, si se movió, es la compensación.</span>
+    </div></div>
+
+    <div class="paso"><div class="n">3</div><div class="cont">
+        <strong>¿La compensación es la que corresponde?</strong>
+        <span>Se calcula, no se estima a ojo. Si la compensación real es distinta de la esperada, hay <em>un segundo trastorno</em>. Este es el paso que más se saltea y el que más diagnósticos revela.</span>
+    </div></div>
+
+    <div class="paso"><div class="n">4</div><div class="cont">
+        <strong>Si es acidosis metabólica: calculá el anion gap.</strong>
+        <span><code>AG = Na⁺ − (Cl⁻ + HCO₃⁻)</code>. Divide el diagnóstico en dos mundos completamente distintos: gap aumentado (se agregó un ácido) o gap normal (se perdió bicarbonato).</span>
+    </div></div>
+
+    <div class="paso"><div class="n">5</div><div class="cont">
+        <strong>¿Cierra con el paciente que tenés adelante?</strong>
+        <span>Si el número no explica la clínica, el que está mal es tu razonamiento, no el paciente. Volvé al paso 3.</span>
+    </div></div>
+</div>
+
+<div class="box">
+    <h3>Valores normales: el chico no es un adulto chico</h3>
+    <p>El recién nacido y el lactante manejan un <strong>bicarbonato basal más bajo</strong> por un umbral renal de reabsorción menor. Un HCO₃ de 20 mEq/L es normal en un lactante y sería una acidosis metabólica leve en un adolescente.</p>
+    <div class="scroll-x">
+    <table class="tabla-ref">
+        <tr><th></th><th>Recién nacido</th><th>Lactante / niño pequeño</th><th>Niño mayor y adolescente</th></tr>
+        <tr><td><strong>pH</strong></td><td>7,30 – 7,40</td><td>7,35 – 7,45</td><td>7,35 – 7,45</td></tr>
+        <tr><td><strong>pCO₂</strong> (mmHg)</td><td>30 – 40</td><td>30 – 40</td><td>35 – 45</td></tr>
+        <tr><td><strong>HCO₃</strong> (mEq/L)</td><td>18 – 22</td><td>20 – 24</td><td>22 – 26</td></tr>
+        <tr><td><strong>EB</strong> (mEq/L)</td><td>−4 a +4</td><td>−3 a +3</td><td>−3 a +3</td></tr>
+    </table>
+    </div>
+    <p style="margin-bottom:0"><strong>Anion gap:</strong> 8 – 16 mEq/L (sin potasio). Si la albúmina está baja, el gap se subestima: sumá <code>2,5</code> por cada <code>1 g/dL</code> de albúmina por debajo de 4 — relevante en el desnutrido y en el síndrome nefrótico.</p>
+</div>
+
+<div class="box">
+    <h3>Arterial, venoso o capilar</h3>
+    <p>En pediatría la mayoría de los EAB no son arteriales, y está bien que así sea. Lo que hay que saber es qué se pierde en cada muestra:</p>
+    <div class="scroll-x">
+    <table class="tabla-ref">
+        <tr><th>Muestra</th><th>Diferencia respecto del arterial</th><th>Para qué sirve</th></tr>
+        <tr><td><strong>Venoso</strong></td><td>pH ≈ 0,03–0,04 más bajo · pCO₂ ≈ 4–8 mmHg más alta · HCO₃ ≈ 1–2 más alto</td><td>Excelente para pH, HCO₃ y anion gap. La pO₂ <strong>no se interpreta</strong>. La pCO₂ orienta, pero no reemplaza a la arterial en insuficiencia respiratoria.</td></tr>
+        <tr><td><strong>Capilar</strong> (talón/dedo bien perfundido y entibiado)</td><td>Muy cercano al arterial para pH y pCO₂</td><td>El habitual en neonatología y lactantes. La pO₂ tampoco es confiable.</td></tr>
+        <tr><td><strong>Arterial</strong></td><td>—</td><td>El único que informa oxigenación. Se reserva para el paciente crítico o con requerimiento de O₂ en aumento.</td></tr>
+    </table>
+    </div>
+    <p style="margin-bottom:0">Regla práctica: <strong>si lo que te importa es el metabolismo, alcanza con una venosa; si lo que te importa es el oxígeno, necesitás una arterial</strong> — o un oxímetro de pulso, que en la mayoría de los casos responde la misma pregunta sin pinchar.</p>
+</div>
+
+<div class="box">
+    <h3>Compensaciones esperadas</h3>
+    <p>Estas cuatro fórmulas son todo lo que hace falta para el paso 3. Guardalas: se usan en cada uno de los casos de este taller.</p>
+    <div class="scroll-x">
+    <table class="tabla-ref">
+        <tr><th>Trastorno primario</th><th>Compensación esperada</th></tr>
+        <tr><td><strong>Acidosis metabólica</strong></td><td><em>Fórmula de Winter:</em> pCO₂ esperada = <code>1,5 × HCO₃ + 8</code> (± 2)</td></tr>
+        <tr><td><strong>Alcalosis metabólica</strong></td><td>La pCO₂ sube <code>0,7 mmHg</code> por cada <code>1 mEq/L</code> que sube el HCO₃</td></tr>
+        <tr><td><strong>Acidosis respiratoria</strong></td><td>Aguda: HCO₃ sube <code>1</code> por cada <code>10 mmHg</code> de pCO₂ &nbsp;·&nbsp; Crónica: sube <code>3,5–4</code></td></tr>
+        <tr><td><strong>Alcalosis respiratoria</strong></td><td>Aguda: HCO₃ baja <code>2</code> por cada <code>10 mmHg</code> de pCO₂ &nbsp;·&nbsp; Crónica: baja <code>4–5</code></td></tr>
+    </table>
+    </div>
+    <p style="margin-bottom:0"><strong>Dos advertencias.</strong> La compensación <em>nunca</em> devuelve el pH al valor normal: si el pH está perfectamente normal con valores muy alterados, sospechá dos trastornos primarios. Y el pulmón compensa en minutos, mientras que el riñón tarda de 2 a 5 días — por eso la diferencia entre "aguda" y "crónica" en las respiratorias es clínica, no de laboratorio.</p>
+</div>
+
+<div class="box">
+    <h3>De dónde vienen: causas en pediatría</h3>
+    <div class="scroll-x">
+    <table class="tabla-ref">
+        <tr><th>Acidosis metabólica con <strong>AG aumentado</strong><br><span style="font-weight:400">(se agregó un ácido)</span></th>
+            <td>Cetoacidosis diabética · Acidosis láctica (shock, sepsis, hipoxia, deshidratación grave) · <strong>Errores congénitos del metabolismo</strong> (pensarlo siempre en el neonato con acidosis y mal estado sin foco) · Insuficiencia renal · Intoxicaciones (salicilatos, metanol, etilenglicol)</td></tr>
+        <tr><th>Acidosis metabólica con <strong>AG normal</strong><br><span style="font-weight:400">(se perdió bicarbonato)</span></th>
+            <td><strong>Diarrea — la causa número uno en pediatría</strong> · Acidosis tubular renal (I, II y IV) · Ostomías y fístulas de alto débito · Exceso de solución fisiológica · Acetazolamida</td></tr>
+        <tr><th><strong>Alcalosis metabólica</strong></th>
+            <td><em>Cloro-sensible</em> (Cl urinario &lt; 20): vómitos, <strong>estenosis hipertrófica del píloro</strong>, sonda nasogástrica, diuréticos suspendidos, pérdida por sudor en fibrosis quística · <em>Cloro-resistente</em> (Cl urinario &gt; 20): síndrome de Bartter y de Gitelman, hiperaldosteronismo, diurético en curso</td></tr>
+        <tr><th><strong>Acidosis respiratoria</strong></th>
+            <td>Bronquiolitis grave · Crisis asmática grave · Obstrucción de la vía aérea · Depresión del sensorio · Enfermedad neuromuscular · Displasia broncopulmonar (crónica, compensada)</td></tr>
+        <tr><th><strong>Alcalosis respiratoria</strong></th>
+            <td>Fiebre · Dolor · Llanto y ansiedad · <strong>Sepsis en fase precoz</strong> · Hipoxemia de cualquier causa · Ventilación mecánica excesiva · Intoxicación por salicilatos (en fase inicial)</td></tr>
+    </table>
+    </div>
+</div>
+
+<!-- ============ MÓDULO 2 ============ -->
+<h2>Módulo 2 · Seis pacientes, seis patrones</h2>
+<p style="font-size:.93rem;color:#5f6368;margin-bottom:18px">Recorré cada caso con los cinco pasos, en orden. Después de responder vas a poder desplegar el razonamiento completo.</p>
+<div id="m2"></div>
+
+<!-- ============ MÓDULO 3 ============ -->
+<h2>Módulo 3 · Caza del error</h2>
+<div class="box aviso">
+    <p style="margin-bottom:0">Los cuatro fragmentos que siguen son <strong>interpretaciones equivocadas</strong>, escritas tal como suelen decirse en un pase de guardia. Son los cuatro errores más frecuentes con el estado ácido-base en pediatría. Encontralos.</p>
+</div>
+<div id="m3"></div>
+
+<!-- ============ MÓDULO 4 ============ -->
+<h2>Módulo 4 · Desafío final</h2>
+<div id="m4"></div>
+
+<!-- ============ CIERRE ============ -->
+<h2>Para llevarse</h2>
+<div class="box">
+    <ol>
+        <li><strong>Siempre los cinco pasos, siempre en orden.</strong> El diagnóstico que se te escapa está en el paso que salteaste, y casi siempre es el paso 3.</li>
+        <li><strong>El bicarbonato casi nunca es el tratamiento.</strong> Lo que corrige una acidosis metabólica es tratar la causa: volumen, oxígeno, insulina, antibiótico. El bicarbonato queda para acidemias extremas y persistentes después de haber hecho todo lo demás.</li>
+        <li><strong>Un valor "normal" en el contexto equivocado es una señal de alarma.</strong> Una pCO₂ normal en un chico que hiperventila, o un potasio normal en plena acidosis, significan lo contrario de lo que parecen.</li>
+        <li><strong>El anion gap parte la acidosis metabólica en dos enfermedades distintas.</strong> No cuesta nada calcularlo y cambia por completo hacia dónde buscás.</li>
+        <li><strong>El lactante no es un adulto chico:</strong> su bicarbonato basal es más bajo y su reserva ventilatoria se agota mucho más rápido.</li>
+        <li><strong>El EAB no se trata: se trata el paciente.</strong> El laboratorio confirma una hipótesis que ya te tenía que haber dado la cama.</li>
+    </ol>
+</div>
+
+<div class="box">
+    <h3>🃏 Kit de bolsillo</h3>
+    <p style="font-size:.92rem;color:#5f6368">Para imprimir o guardar como captura. Contiene lo mínimo indispensable para resolver un EAB al lado de la cama.</p>
+    <div class="scroll-x">
+    <table class="tabla-ref">
+        <tr><th colspan="2">Los 5 pasos</th></tr>
+        <tr><td>1</td><td>pH → ¿acidemia (&lt;7,35) o alcalemia (&gt;7,45)?</td></tr>
+        <tr><td>2</td><td>¿Quién se movió en la misma dirección que el pH: HCO₃ (metabólico) o pCO₂ (respiratorio)?</td></tr>
+        <tr><td>3</td><td>¿La compensación es la esperada? Si no lo es → hay un segundo trastorno.</td></tr>
+        <tr><td>4</td><td>Si es acidosis metabólica: AG = Na − (Cl + HCO₃). Normal: 8–16.</td></tr>
+        <tr><td>5</td><td>¿Cierra con la clínica?</td></tr>
+        <tr><th colspan="2">Compensación esperada</th></tr>
+        <tr><td>Acidosis metabólica</td><td>pCO₂ = 1,5 × HCO₃ + 8 (± 2)</td></tr>
+        <tr><td>Alcalosis metabólica</td><td>pCO₂ ↑ 0,7 por cada 1 de HCO₃ ↑</td></tr>
+        <tr><td>Acidosis respiratoria</td><td>HCO₃ ↑ 1 (aguda) / 3,5–4 (crónica) cada 10 de pCO₂</td></tr>
+        <tr><td>Alcalosis respiratoria</td><td>HCO₃ ↓ 2 (aguda) / 4–5 (crónica) cada 10 de pCO₂</td></tr>
+        <tr><th colspan="2">Cuando el AG es normal y no hay diarrea</th></tr>
+        <tr><td>AG urinario</td><td>(Na + K)<sub>orina</sub> − Cl<sub>orina</sub></td></tr>
+        <tr><td><strong>Negativo</strong></td><td>Pérdida digestiva (el riñón responde bien: excreta amonio)</td></tr>
+        <tr><td><strong>Positivo</strong></td><td>Acidosis tubular renal (el riñón no logra excretar amonio)</td></tr>
+        <tr><th colspan="2">Correcciones útiles</th></tr>
+        <tr><td>Na corregido por glucemia</td><td>Na + 1,6 × [(glucemia − 100) / 100]</td></tr>
+        <tr><td>AG corregido por albúmina</td><td>AG + 2,5 × (4 − albúmina)</td></tr>
+    </table>
+    </div>
+</div>
+
+<!-- ============ ENTREGA ============ -->
+<h2>Entrega en Classroom</h2>
+<div class="box no-print">
+    <h3>Dos preguntas de cierre</h3>
+    <p style="font-size:.92rem"><strong>1.</strong> Explicá con tus palabras, como si se lo dijeras a un compañero, por qué en la deshidratación por diarrea casi nunca hace falta indicar bicarbonato.</p>
+    <textarea id="abierta1" placeholder="Tu respuesta..."></textarea>
+    <p style="font-size:.92rem"><strong>2.</strong> De los cuatro errores del Módulo 3, ¿cuál creés que podrías haber cometido vos? ¿Por qué?</p>
+    <textarea id="abierta2" placeholder="Tu respuesta..."></textarea>
+
+    <div class="puntaje-final">
+        <div class="num"><span id="pts">0</span></div>
+        <div class="de">de <span id="pts-max">20</span> consignas correctas</div>
+    </div>
+
+    <p style="font-size:.92rem"><strong>Último paso:</strong> completá tu nombre, generá el resumen, copialo y pegalo en la tarea de Classroom.</p>
+    <input type="text" id="alumno" placeholder="APELLIDO, Nombre"
+           style="width:100%;padding:12px 14px;font-size:1rem;border:2px solid #dadce0;border-radius:10px;margin-bottom:12px">
+    <div class="btn-row" style="margin-bottom:14px">
+        <button class="check" onclick="generarResumen()">Generar resumen de entrega</button>
+        <button class="check sec" onclick="copiarResumen()">Copiar al portapapeles</button>
+    </div>
+    <textarea id="resumen" readonly placeholder="El resumen aparece acá."></textarea>
+    <p id="copiado" style="display:none;color:#15803d;font-weight:700;font-size:.9rem">✓ Copiado. Pegalo en la tarea de Classroom.</p>
+</div>
+
+<div class="box no-print" style="text-align:center">
+    <button class="check sec" onclick="reiniciar()" style="width:auto">Borrar mis respuestas y empezar de nuevo</button>
+</div>
+
+<footer>
+    Taller desarrollado por <span class="autor">Diego Steinberg</span>
+</footer>
+
+</div>
+
+<script>
+/* =========================================================================
+   Contenido del taller. Cada consigna define sus opciones y el feedback
+   que el alumno lee al comprobar — incluido el de las opciones que no eligió.
+   ========================================================================= */
+
+const M0 = [
+  { id:'s1', puntua:false, tipo:'radio',
+    texto:'Un paciente tiene pH 7,38 (normal), pCO2 60 mmHg (alta) y HCO3 35 mEq/L (alto). ¿Qué decís?',
+    opts:[
+      {t:'El EAB es normal porque el pH es normal.', ok:false,
+       fb:'Es la trampa más común. El pH normal acá es el resultado de dos alteraciones grandes que se equilibran, no de un medio interno sano.'},
+      {t:'Hay un trastorno con su compensación, o bien dos trastornos primarios opuestos.', ok:true,
+       fb:'Correcto. Un pH normal con pCO2 y HCO3 muy alterados obliga a seguir al paso 3, nunca a cerrar el análisis.'},
+      {t:'El laboratorio se equivocó: esos valores son incompatibles.', ok:false,
+       fb:'Son perfectamente compatibles. Es el patrón típico de una acidosis respiratoria crónica bien compensada, por ejemplo en displasia broncopulmonar.'}
+    ]},
+  { id:'s2', puntua:false, tipo:'radio',
+    texto:'¿Con qué frecuencia dirías que hay que corregir con bicarbonato una acidosis metabólica en pediatría?',
+    opts:[
+      {t:'Casi siempre que el pH esté por debajo de 7,30.', ok:false,
+       fb:'Vas a ver a lo largo del taller por qué esta conducta hace más daño que beneficio en la mayoría de los escenarios.'},
+      {t:'Solo en situaciones excepcionales.', ok:true,
+       fb:'Esa es la respuesta que sostiene la evidencia actual. El taller te va a mostrar exactamente cuáles son esas excepciones y por qué son tan pocas.'},
+      {t:'Nunca, bajo ninguna circunstancia.', ok:false,
+       fb:'Casi. Hay un puñado de excepciones reales (hiperkalemia grave con cambios en el ECG, algunas intoxicaciones, acidemias extremas persistentes). Lo importante es que son excepciones, no la regla.'}
+    ]}
+];
+
+const M2 = [
+{
+  id:'c1', badge:'Caso 1 · Lactante con diarrea',
+  titulo:'Ana, 8 meses',
+  vineta:'Consulta por diarrea acuosa de 4 días de evolución, 8 a 10 deposiciones diarias, con vómitos ocasionales. Desde ayer rechaza el pecho y la madre la nota "dormida". <br><br><strong>Examen físico:</strong> letárgica pero reactiva al estímulo, ojos hundidos, mucosas secas, pliegue cutáneo que retrae lentamente, relleno capilar 3 segundos. FR 46/min sin tiraje ni ruidos agregados. FC 168/min. Peso actual 7,2 kg; pesaba 7,9 kg hace diez días.',
+  lab:[['pH','7,22',1],['pCO₂','25 mmHg',1],['HCO₃','10 mEq/L',1],['EB','−16 mEq/L',1],
+       ['Na⁺','138 mEq/L',0],['K⁺','3,4 mEq/L',1],['Cl⁻','117 mEq/L',1],
+       ['Glucemia','88 mg/dL',0],['Urea','48 mg/dL',1],['Creatinina','0,5 mg/dL',0]],
+  qs:[
+    { id:'c1q1', tipo:'radio', texto:'Pasos 1 y 2: ¿cuál es el trastorno primario?',
+      opts:[
+        {t:'Acidosis metabólica', ok:true, fb:'El pH bajó y el HCO₃ está bajo: los dos se movieron en la misma dirección. Ese es el trastorno primario.'},
+        {t:'Acidosis respiratoria', ok:false, fb:'Si fuera respiratoria, la pCO₂ tendría que estar alta. Acá está en 25 mmHg, es decir baja.'},
+        {t:'Alcalosis respiratoria', ok:false, fb:'La pCO₂ baja llama la atención, pero si fuera el trastorno primario el pH tendría que ser alto, y está en 7,22. Acá la pCO₂ baja es la compensación.'},
+        {t:'Trastorno mixto', ok:false, fb:'Todavía no podés afirmarlo: para eso hay que calcular primero si la compensación es la esperada. Ese es el paso 3.'}
+      ]},
+    { id:'c1q2', tipo:'radio', texto:'Paso 3: aplicá la fórmula de Winter. ¿La compensación respiratoria es adecuada?',
+      hint:'pCO₂ esperada = 1,5 × HCO₃ + 8 (± 2)',
+      opts:[
+        {t:'Sí, es exactamente la esperada', ok:true, fb:'1,5 × 10 + 8 = 23, con un rango de 21 a 25. La pCO₂ medida es 25: cae dentro del rango. La taquipnea de Ana es la compensación, no una neumonía.'},
+        {t:'Es insuficiente: debería tener una pCO₂ más baja', ok:false, fb:'La esperada es de 21 a 25 mmHg y la medida es 25. Está compensando lo que corresponde.'},
+        {t:'Es excesiva: hay además una alcalosis respiratoria', ok:false, fb:'Para afirmar eso la pCO₂ tendría que estar por debajo de 21. Con 25 está en el límite superior de lo esperado.'},
+        {t:'No se puede evaluar sin una muestra arterial', ok:false, fb:'Una muestra venosa es perfectamente válida para evaluar el componente metabólico y el anion gap. Solo la oxigenación exige sangre arterial.'}
+      ]},
+    { id:'c1q3', tipo:'radio', texto:'Paso 4: calculá el anion gap e interpretalo.',
+      hint:'AG = Na⁺ − (Cl⁻ + HCO₃⁻)',
+      opts:[
+        {t:'AG 11: normal → se perdió bicarbonato por vía digestiva', ok:true, fb:'138 − (117 + 10) = 11. Gap normal con cloro alto: acidosis metabólica hiperclorémica por pérdida intestinal de bicarbonato. Es el patrón clásico de la diarrea.'},
+        {t:'AG 11: normal → hay que buscar un ácido agregado', ok:false, fb:'Al revés: el gap normal indica que NO se agregó un ácido. Si se hubiera agregado (lactato, cetonas), el gap estaría aumentado.'},
+        {t:'AG 21: aumentado → probable acidosis láctica', ok:false, fb:'Ese 21 sale de olvidar sumar el bicarbonato dentro del paréntesis. La cuenta es 138 − (117 + 10) = 11, no 138 − 117.'},
+        {t:'No se puede calcular sin el lactato', ok:false, fb:'El anion gap se calcula solo con sodio, cloro y bicarbonato. Justamente sirve para sospechar un lactato alto cuando todavía no lo tenés.'}
+      ]},
+    { id:'c1q4', tipo:'multi', texto:'Paso 5: ¿cuáles son las conductas adecuadas? (elegí 2)',
+      opts:[
+        {t:'Expandir con solución fisiológica 20 ml/kg', ok:true, fb:'Correcto. Ana tiene signos de shock compensado (relleno 3 segundos, taquicardia, letargo): la prioridad es restituir volumen.'},
+        {t:'Rehidratar y reponer las pérdidas: el bicarbonato se recupera solo al restablecer la perfusión', ok:true, fb:'Correcto. Al mejorar la perfusión cae la producción de lactato y el riñón regenera bicarbonato. La acidosis se corrige sola en pocas horas.'},
+        {t:'Indicar bicarbonato de sodio 1–2 mEq/kg por vía endovenosa', ok:false, fb:'No. Aporta sodio, agrava la hipopotasemia (que ya está en 3,4) y no acelera la recuperación. Con un pH de 7,22 y una causa reversible, no está indicado.'},
+        {t:'Iniciar antibiótico por la taquipnea y el aumento de la urea', ok:false, fb:'La taquipnea es la compensación respiratoria de la acidosis, no un foco pulmonar: no hay tiraje ni ruidos agregados. La urea alta es prerrenal, por deshidratación.'},
+        {t:'Corregir la hipopotasemia antes de expandir', ok:false, fb:'La reposición de potasio se hace junto con la hidratación y una vez constatada la diuresis, nunca antes ni en lugar de la expansión.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> acidosis metabólica con anion gap normal (hiperclorémica), adecuadamente compensada, secundaria a pérdida intestinal de bicarbonato por diarrea, en una deshidratación grave con shock compensado.</p><p>La diarrea es la causa número uno de acidosis metabólica en pediatría. Las secreciones intestinales son ricas en bicarbonato: al perderlas, el riñón retiene cloro para mantener la electroneutralidad, y de ahí el cloro de 117 con el gap conservado.</p><p><strong>Lo que hay que retener:</strong> la taquipnea de un chico deshidratado casi siempre es la compensación de su acidosis. Si la interpretás como neumonía, indicás un antibiótico que no hace falta y, peor, retrasás la expansión que sí hace falta.</p>'
+},
+{
+  id:'c2', badge:'Caso 2 · Lactante que vomita',
+  titulo:'Bautista, 45 días',
+  vineta:'Vómitos posprandiales desde hace diez días, cada vez más intensos, no biliosos, "que salen despedidos". Queda con hambre y vuelve a pedir el pecho enseguida. <br><br><strong>Examen físico:</strong> ávido, algo irritable, con mucosas semisecas. Se observan ondas peristálticas en epigastrio después de la toma. Deposiciones escasas y oscuras. Peso 3,9 kg (nació con 3,5 kg; a los 15 días pesaba 3,8 kg).',
+  lab:[['pH','7,52',1],['pCO₂','47 mmHg',1],['HCO₃','38 mEq/L',1],
+       ['Na⁺','136 mEq/L',0],['K⁺','2,9 mEq/L',1],['Cl⁻','88 mEq/L',1]],
+  qs:[
+    { id:'c2q1', tipo:'radio', texto:'Pasos 1 a 3: ¿cómo lo clasificás?',
+      opts:[
+        {t:'Alcalosis metabólica con compensación respiratoria adecuada', ok:true, fb:'pH alto con HCO₃ alto: alcalosis metabólica. Esperabas que la pCO₂ subiera 0,7 × 14 ≈ 10 mmHg sobre 40, es decir alrededor de 50. Medís 47: compensación adecuada.'},
+        {t:'Alcalosis metabólica con acidosis respiratoria asociada', ok:false, fb:'La pCO₂ de 47 parece alta, pero es exactamente la hipoventilación compensadora que se espera. Solo hablarías de un segundo trastorno si estuviera muy por encima de 55.'},
+        {t:'Alcalosis respiratoria', ok:false, fb:'En una alcalosis respiratoria la pCO₂ estaría baja. Acá está alta.'},
+        {t:'Alcalosis mixta', ok:false, fb:'Para que fuera mixta la pCO₂ debería estar baja y sumarse al efecto del bicarbonato alto. Acá la pCO₂ alta va en sentido contrario: está compensando.'}
+      ]},
+    { id:'c2q2', tipo:'radio', texto:'Si pedís un ionograma urinario, ¿qué esperás encontrar y por qué?',
+      opts:[
+        {t:'Orina ácida con cloro urinario menor a 20 mEq/L', ok:true, fb:'Es la clásica aciduria paradojal. La hipovolemia activa la aldosterona, que reabsorbe sodio a cambio de eliminar H⁺ y K⁺: el riñón termina acidificando la orina de un paciente alcalótico. El cloro urinario bajo confirma que es una alcalosis cloro-sensible.'},
+        {t:'Orina alcalina, porque el paciente está alcalótico', ok:false, fb:'Es lo intuitivo y es lo que falla. Al principio del cuadro la orina sí es alcalina, pero una vez instalada la hipovolemia el riñón prioriza retener sodio y agua, y elimina H⁺: aparece la aciduria paradojal.'},
+        {t:'Cloro urinario mayor a 40 mEq/L', ok:false, fb:'Eso indicaría una alcalosis cloro-resistente (Bartter, Gitelman, hiperaldosteronismo). No corresponde a una pérdida por vómitos.'},
+        {t:'Un sedimento con cilindros hialinos, sin valor diagnóstico', ok:false, fb:'Puede aparecer, pero el dato que define la conducta acá es el cloro urinario.'}
+      ]},
+    { id:'c2q3', tipo:'radio', texto:'La ecografía confirma una estenosis hipertrófica del píloro. ¿Cuál es la conducta?',
+      opts:[
+        {t:'Internar, corregir el medio interno con solución fisiológica y potasio, y operar una vez normalizado', ok:true, fb:'Correcto, y es el mensaje central del caso. La piloromiotomía es una urgencia diferida: se opera cuando el cloro supera 100, el bicarbonato baja de 30 y el potasio se normalizó.'},
+        {t:'Derivar a quirófano de urgencia: el retraso empeora el pronóstico', ok:false, fb:'Este es el error clásico. La estenosis pilórica es una <strong>urgencia médica, no quirúrgica</strong>. Operar en plena alcalosis con hipopotasemia expone a arritmias y a apneas posanestésicas, porque la alcalosis deprime el centro respiratorio.'},
+        {t:'Probar tolerancia oral con fórmula espesada y controlar en 48 horas', ok:false, fb:'La obstrucción es mecánica: ningún cambio de la alimentación la resuelve, y se pierde tiempo mientras se agrava el medio interno.'},
+        {t:'Corregir la alcalosis con acetazolamida y luego operar', ok:false, fb:'No hace falta. Lo que corrige esta alcalosis es reponer cloro y volumen; con solución fisiológica y potasio alcanza.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> alcalosis metabólica hipoclorémica e hipopotasémica, compensada, por vómitos de contenido gástrico en una estenosis hipertrófica del píloro.</p><p>El vómito gástrico pierde ácido clorhídrico: se va H⁺ (alcalosis) y se va Cl⁻ (hipocloremia). Sin cloro, el riñón no puede excretar el exceso de bicarbonato y la alcalosis se perpetúa. Por eso el tratamiento es <em>reponer cloro</em>: la solución fisiológica no es acá un simple vehículo de volumen, es el tratamiento específico.</p><p><strong>Lo que hay que retener:</strong> el potasio de 2,9 está doblemente castigado, por la pérdida renal y porque la alcalosis lo desplaza hacia el interior de la célula. El déficit corporal real es todavía mayor que el que muestra el número.</p>'
+},
+{
+  id:'c3', badge:'Caso 3 · Lactante con dificultad respiratoria',
+  titulo:'Tomás, 3 meses',
+  vineta:'Cuarto día de un cuadro de rinorrea, tos y dificultad respiratoria progresiva. Ingresa a la guardia en pleno invierno.<br><br><strong>Examen físico:</strong> tiraje universal, quejido espiratorio, sibilancias y crepitantes diseminados. Saturación 88% con máscara de oxígeno. La madre refiere dos episodios de pausa respiratoria en el domicilio. En las últimas dos horas la frecuencia respiratoria <strong>bajó de 72 a 38</strong>, y el niño está hipotónico y con menor respuesta al estímulo.',
+  lab:[['pH (capilar)','7,21',1],['pCO₂','70 mmHg',1],['HCO₃','27 mEq/L',0],['EB','+1 mEq/L',0]],
+  qs:[
+    { id:'c3q1', tipo:'radio', texto:'Pasos 1 y 2: ¿cuál es el trastorno primario?',
+      opts:[
+        {t:'Acidosis respiratoria', ok:true, fb:'El pH bajó y la pCO₂ está alta: se movieron juntos. El pulmón no está eliminando CO₂.'},
+        {t:'Acidosis metabólica', ok:false, fb:'El bicarbonato está en 27, es decir normal-alto. En una acidosis metabólica estaría bajo.'},
+        {t:'Alcalosis metabólica con acidosis respiratoria', ok:false, fb:'Es una interpretación tentadora por el HCO₃ de 27, pero en la próxima pregunta vas a ver que ese valor es exactamente el que corresponde a la compensación.'},
+        {t:'Trastorno mixto respiratorio y metabólico', ok:false, fb:'El EB de +1 y el bicarbonato acorde a lo esperado no dejan lugar para un componente metabólico.'}
+      ]},
+    { id:'c3q2', tipo:'radio', texto:'Paso 3: el HCO₃ es 27. ¿Indica una alcalosis metabólica asociada?',
+      hint:'En la acidosis respiratoria aguda, el HCO₃ sube 1 mEq/L por cada 10 mmHg que sube la pCO₂.',
+      opts:[
+        {t:'No: es exactamente la compensación aguda esperada', ok:true, fb:'La pCO₂ subió 30 mmHg sobre 40, así que se esperaba que el HCO₃ subiera 3, de 24 a 27. Es lo que medís. Se trata de una acidosis respiratoria aguda pura.'},
+        {t:'Sí: cualquier HCO₃ por encima de 26 define una alcalosis metabólica', ok:false, fb:'Los valores de referencia se aplican al paciente sin trastorno primario. Frente a una acidosis respiratoria hay que comparar contra la compensación esperada, no contra el rango normal.'},
+        {t:'No, porque el HCO₃ capilar no es confiable', ok:false, fb:'La muestra capilar bien tomada es confiable para pH, pCO₂ y HCO₃. Lo que no se interpreta en una capilar es la pO₂.'},
+        {t:'Indica que el cuadro es crónico', ok:false, fb:'Al revés: si fuera crónico el HCO₃ habría subido 3,5 a 4 por cada 10 de pCO₂, es decir hasta 34 o 36. Que esté en 27 confirma que es agudo.'}
+      ]},
+    { id:'c3q3', tipo:'radio', texto:'¿Cuál es el dato más grave del caso?',
+      opts:[
+        {t:'Que la frecuencia respiratoria haya bajado de 72 a 38', ok:true, fb:'Exacto. En un lactante con hipercapnia progresiva, la caída de la frecuencia respiratoria no es mejoría: es agotamiento de los músculos respiratorios. Sumado a la hipotonía y a las apneas, define una insuficiencia respiratoria inminente.'},
+        {t:'La saturación de 88%', ok:false, fb:'Es preocupante y hay que corregirla, pero se resuelve con oxígeno. La retención de CO₂ con agotamiento es lo que anuncia el paro respiratorio.'},
+        {t:'El pH de 7,21', ok:false, fb:'Refleja la gravedad, pero es una consecuencia. El dato que obliga a actuar ahora mismo es la tendencia clínica.'},
+        {t:'Las sibilancias diseminadas', ok:false, fb:'Son esperables en una bronquiolitis. Su desaparición, en cambio, junto con la disminución de la entrada de aire, sí sería un signo ominoso.'}
+      ]},
+    { id:'c3q4', tipo:'radio', texto:'¿Cuál es la conducta?',
+      opts:[
+        {t:'Soporte ventilatorio inmediato y traslado a terapia intensiva', ok:true, fb:'Correcto. Cánula de alto flujo o ventilación no invasiva de entrada, con el equipo preparado para intubar. El tratamiento de la acidosis respiratoria es ventilar: no hay atajo farmacológico.'},
+        {t:'Corregir la acidosis con bicarbonato de sodio', ok:false, fb:'Es una conducta peligrosa. El bicarbonato administrado genera CO₂ que un paciente que ya no ventila no puede eliminar: la acidemia empeora, sobre todo dentro de la célula.'},
+        {t:'Aumentar el flujo de oxígeno y reevaluar en una hora', ok:false, fb:'El oxígeno corrige la saturación pero no elimina CO₂ y puede enmascarar el deterioro. Con apneas y agotamiento, una hora de espera es demasiado.'},
+        {t:'Nebulizar con salbutamol y adrenalina antes de decidir', ok:false, fb:'La evidencia no sostiene el uso rutinario de broncodilatadores en la bronquiolitis, y menos aún demorar por ellos el soporte ventilatorio de un paciente que se está agotando.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> acidosis respiratoria aguda pura, compensada de forma acorde, por insuficiencia ventilatoria en una bronquiolitis grave.</p><p>El caso muestra los dos rasgos del pulmón del lactante: se obstruye con facilidad, por vías aéreas de menor calibre, y se agota rápido, porque el diafragma tiene menos fibras resistentes a la fatiga. Por eso el lactante pasa de la taquipnea a la apnea en un tiempo mucho más corto que el adulto.</p><p><strong>Lo que hay que retener:</strong> la compensación renal de una acidosis respiratoria demora de dos a cinco días. Cualquier ascenso significativo del bicarbonato en un cuadro de horas indica que el problema no era solo agudo, o que hay un segundo trastorno.</p>'
+},
+{
+  id:'c4', badge:'Caso 4 · Adolescente con vómitos',
+  titulo:'Malena, 12 años',
+  vineta:'Consulta por decaimiento y vómitos de 48 horas. Los padres refieren que en el último mes bajó cuatro kilos, toma agua todo el tiempo y se levanta de noche a orinar.<br><br><strong>Examen físico:</strong> regular estado general, sensorio alternante. Mucosas secas, ojos hundidos. Respiración profunda y regular. FR 32/min. FC 124/min. TA 100/55 mmHg. Aliento con olor característico.',
+  lab:[['Glucemia','486 mg/dL',1],['pH','7,08',1],['pCO₂','15 mmHg',1],['HCO₃','4,4 mEq/L',1],
+       ['Na⁺','130 mEq/L',1],['K⁺','5,2 mEq/L',0],['Cl⁻','96 mEq/L',0],
+       ['Cetonemia','positiva +++',1]],
+  qs:[
+    { id:'c4q1', tipo:'radio', texto:'Clasificá el trastorno, con el anion gap incluido.',
+      opts:[
+        {t:'Acidosis metabólica con anion gap aumentado (≈30), con compensación respiratoria adecuada', ok:true, fb:'AG = 130 − (96 + 4,4) ≈ 30. Winter: 1,5 × 4,4 + 8 ≈ 15, con rango de 13 a 17; la pCO₂ medida es 15. Esa respiración profunda y regular es la respiración de Kussmaul, o sea la compensación funcionando a pleno.'},
+        {t:'Acidosis metabólica con anion gap normal', ok:false, fb:'Volvé a hacer la cuenta: 130 − (96 + 4,4) ≈ 30, muy por encima del rango de 8 a 16. Los cuerpos cetónicos son los aniones no medidos que lo elevan.'},
+        {t:'Acidosis mixta, metabólica y respiratoria', ok:false, fb:'La pCO₂ de 15 coincide con la esperada por Winter. No sobra ni falta compensación: no hay segundo trastorno.'},
+        {t:'Acidosis metabólica con compensación insuficiente', ok:false, fb:'Con un bicarbonato de 4,4, la pCO₂ esperada es de 13 a 17 mmHg. Medís 15: la compensación es máxima y adecuada. Cuidado, porque no puede bajar mucho más: esa es su reserva agotándose.'}
+      ]},
+    { id:'c4q2', tipo:'radio', texto:'El potasio es 5,2 mEq/L. ¿Cómo lo interpretás?',
+      opts:[
+        {t:'El potasio corporal total está disminuido y va a caer al iniciar la insulina', ok:true, fb:'Correcto, y es el concepto que más vidas salva en cetoacidosis. La acidosis y el déficit de insulina sacan potasio de la célula hacia el plasma, mientras la diuresis osmótica lo elimina por orina. La insulina lo devuelve al intracelular de golpe: si no reponés potasio con la hidratación, aparece la hipopotasemia grave con arritmia.'},
+        {t:'Hay hiperpotasemia: corresponde tratarla', ok:false, fb:'El valor está apenas por encima del rango y no refleja el contenido corporal real. Tratar esta "hiperpotasemia" precipitaría una hipopotasemia grave.'},
+        {t:'Es un valor normal y no requiere seguimiento', ok:false, fb:'Numéricamente casi lo es, pero en este contexto exige controles seriados y reposición. No hacer nada equivale a mirar para otro lado.'},
+        {t:'Indica insuficiencia renal', ok:false, fb:'Nada en el caso lo sugiere. El potasio se explica por completo por la redistribución de la acidosis y el déficit de insulina.'}
+      ]},
+    { id:'c4q3', tipo:'multi', texto:'Con un pH de 7,08, ¿cuáles son las conductas correctas? (elegí 2)',
+      opts:[
+        {t:'Expandir con solución fisiológica y luego iniciar insulina corriente en infusión continua', ok:true, fb:'Correcto. Primero volumen, después insulina, siempre en infusión continua y a dosis baja. La acidosis se corrige al frenar la cetogénesis, no al agregar álcali.'},
+        {t:'Reponer potasio junto con la hidratación, una vez constatada la diuresis', ok:true, fb:'Correcto. Es lo que evita la caída brusca del potasio al empezar la insulina. Con un potasio menor a 3,3 mEq/L, la insulina se posterga hasta reponerlo.'},
+        {t:'Indicar bicarbonato de sodio, porque el pH es menor a 7,10', ok:false, fb:'No. En cetoacidosis diabética el bicarbonato se asocia a mayor riesgo de <strong>edema cerebral</strong>, agrava la hipopotasemia y produce acidosis paradojal del sistema nervioso central. Se reserva para acidemias extremas y persistentes con compromiso hemodinámico, y aun ahí es discutido.'},
+        {t:'Administrar insulina NPH por vía subcutánea para cubrir las próximas 12 horas', ok:false, fb:'En la cetoacidosis la vía subcutánea no es confiable, por mala perfusión, y la insulina de acción intermedia no permite titular. Va insulina corriente endovenosa en infusión continua.'},
+        {t:'Corregir rápidamente la hiponatremia con solución hipertónica', ok:false, fb:'El sodio de 130 es en gran parte dilucional por la hiperglucemia. Corregido por glucemia da alrededor de 136, es decir prácticamente normal, y sube solo al bajar la glucemia. Una corrección rápida sería peligrosa.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> cetoacidosis diabética grave como forma de debut de una diabetes tipo 1. Acidosis metabólica con anion gap aumentado, con compensación respiratoria máxima.</p><p><strong>El sodio corregido:</strong> Na + 1,6 × [(486 − 100) / 100] = 130 + 6,2 ≈ 136. La hiponatremia es aparente: el exceso de glucosa arrastra agua al espacio extracelular y diluye el sodio. Vigilar que el sodio corregido <em>suba</em> a medida que baja la glucemia es uno de los controles de seguridad frente al edema cerebral.</p><p><strong>Lo que hay que retener:</strong> los tres pilares son volumen, insulina y potasio. El bicarbonato no está entre ellos. Y el descenso de la glucemia debe ser gradual, no más de 50 a 100 mg/dL por hora.</p>'
+},
+{
+  id:'c5', badge:'Caso 5 · Niña febril',
+  titulo:'Sofía, 5 años',
+  vineta:'Fiebre de 39,5 °C de 48 horas, tos y dolor en el costado derecho al respirar hondo.<br><br><strong>Examen físico:</strong> buen estado general, lúcida, bien perfundida, con relleno capilar menor a 2 segundos. FR 38/min <strong>sin tiraje ni quejido</strong>. Saturación 96% al aire ambiente. Hipoventilación en la base derecha. La radiografía muestra una consolidación en el lóbulo inferior derecho. El EAB lo trae de otra guardia, donde se lo pidieron por la taquipnea.',
+  lab:[['pH','7,50',1],['pCO₂','27 mmHg',1],['HCO₃','20 mEq/L',1],
+       ['Na⁺','137 mEq/L',0],['K⁺','3,8 mEq/L',0],['Cl⁻','104 mEq/L',0],['Lactato','1,2 mmol/L',0]],
+  qs:[
+    { id:'c5q1', tipo:'radio', texto:'¿Cómo lo clasificás?',
+      opts:[
+        {t:'Alcalosis respiratoria aguda, con descenso compensador del bicarbonato', ok:true, fb:'pH alto con pCO₂ baja: alcalosis respiratoria. La pCO₂ bajó 13 mmHg, así que se esperaba que el HCO₃ bajara alrededor de 2,6, de 24 a 21. Medís 20: compatible con un cuadro agudo.'},
+        {t:'Acidosis metabólica con alcalosis respiratoria', ok:false, fb:'El bicarbonato de 20 tienta a decirlo, pero es la respuesta esperable al descenso de la pCO₂, y el anion gap está en 13, es decir normal, con un lactato de 1,2. No hay acidosis metabólica.'},
+        {t:'Alcalosis metabólica', ok:false, fb:'En ese caso el bicarbonato estaría alto, y acá está bajo.'},
+        {t:'El EAB es normal para una niña de 5 años', ok:false, fb:'Un pH de 7,50 con pCO₂ de 27 está claramente fuera de rango a cualquier edad.'}
+      ]},
+    { id:'c5q2', tipo:'radio', texto:'¿Qué hacés con este estado ácido-base?',
+      opts:[
+        {t:'Nada dirigido al EAB: trato la fiebre, el dolor y la neumonía', ok:true, fb:'Correcto. La alcalosis respiratoria es una <em>respuesta</em> a la fiebre y al dolor pleurítico, no una enfermedad. Se corrige sola cuando se trata la causa. Es, además, el trastorno ácido-base más frecuente en el niño febril.'},
+        {t:'Indico reinhalación en bolsa para que retenga CO₂', ok:false, fb:'No corresponde. Sofía no hiperventila por ansiedad, sino por fiebre y dolor con una neumonía de base; frenarle la ventilación no aporta nada y puede ser riesgoso.'},
+        {t:'Repito el EAB cada 6 horas hasta que se normalice', ok:false, fb:'Repetir un estudio que no va a cambiar ninguna conducta solo agrega dolor y costo. La clínica alcanza para el seguimiento.'},
+        {t:'Interpreto la alcalosis como sepsis e inicio tratamiento en terapia intensiva', ok:false, fb:'Cuidado con el otro extremo. La alcalosis respiratoria puede ser el primer signo de una sepsis, y por eso siempre hay que buscarla, pero Sofía está lúcida, bien perfundida, con lactato normal y un foco claro. No hay criterios de sepsis grave.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> alcalosis respiratoria aguda secundaria a fiebre y dolor pleurítico, en el contexto de una neumonía de la comunidad.</p><p>Este caso está en el taller por una razón: <strong>no todo estado ácido-base alterado se trata</strong>. La hiperventilación cumple una función, y corregirla sería intervenir sobre un mecanismo adaptativo.</p><p><strong>Lo que hay que retener:</strong> la misma alcalosis respiratoria, en un chico con mal aspecto, mala perfusión o lactato en ascenso, sería el signo precoz de una sepsis. El número es idéntico; lo que cambia el significado es el paciente. Ese es exactamente el paso 5.</p>'
+},
+{
+  id:'c6', badge:'Caso 6 · Mal progreso de peso',
+  titulo:'Felipe, 2 años',
+  vineta:'Derivado por escaso progreso de peso y talla desde el año de vida. Toma mucho líquido y moja los pañales con abundante orina, incluso de noche. <strong>Nunca tuvo diarrea</strong> y no recibe medicación.<br><br><strong>Examen físico:</strong> peso en percentilo 3, talla en percentilo 3. Buen estado general, bien hidratado. Sin visceromegalias. Resto del examen sin particularidades.',
+  lab:[['pH','7,28',1],['pCO₂','30 mmHg',1],['HCO₃','14 mEq/L',1],
+       ['Na⁺','138 mEq/L',0],['K⁺','2,9 mEq/L',1],['Cl⁻','114 mEq/L',1],
+       ['Orina — pH','6,8',1],['Orina — Na⁺','42 mEq/L',0],['Orina — K⁺','28 mEq/L',0],['Orina — Cl⁻','30 mEq/L',0]],
+  qs:[
+    { id:'c6q1', tipo:'radio', texto:'Pasos 3 y 4: compensación y anion gap.',
+      opts:[
+        {t:'Compensación adecuada y AG de 10, es decir normal', ok:true, fb:'Winter: 1,5 × 14 + 8 = 29, con rango de 27 a 31, y la pCO₂ es 30. El AG es 138 − (114 + 14) = 10, dentro del rango normal. Estás frente a una acidosis metabólica hiperclorémica.'},
+        {t:'Compensación adecuada y AG de 24, es decir aumentado', ok:false, fb:'Revisá la cuenta: 138 − (114 + 14) = 10. El 24 sale de restar solo el cloro.'},
+        {t:'Compensación insuficiente y AG normal', ok:false, fb:'El anion gap está bien, pero la compensación no: la pCO₂ esperada es de 27 a 31 y medís 30. Es la adecuada.'},
+        {t:'No se puede calcular el AG sin la albúmina', ok:false, fb:'La albúmina refina el cálculo cuando está baja, pero el AG se calcula igual. Y como Felipe no tiene edemas ni signos de desnutrición grave, la corrección no cambiaría la categoría.'}
+      ]},
+    { id:'c6q2', tipo:'radio', texto:'Acidosis con AG normal y sin diarrea. Calculá el anion gap urinario e interpretalo.',
+      hint:'AG urinario = (Na⁺ + K⁺)ₒᵣᵢₙₐ − Cl⁻ₒᵣᵢₙₐ',
+      opts:[
+        {t:'+40: positivo → el riñón no logra excretar amonio, es una acidosis tubular renal', ok:true, fb:'(42 + 28) − 30 = +40. El amonio se excreta acompañado de cloro; si el cloro urinario es bajo frente a los cationes, es que hay poco amonio. Un gap urinario positivo en plena acidemia señala al riñón como responsable.'},
+        {t:'+40: positivo → pérdida digestiva de bicarbonato', ok:false, fb:'Es al revés. En la pérdida digestiva el riñón funciona bien, excreta amonio en abundancia y el gap urinario da <em>negativo</em>. Además, Felipe nunca tuvo diarrea.'},
+        {t:'−40: negativo → pérdida digestiva', ok:false, fb:'El signo está invertido: (42 + 28) − 30 da +40, no −40.'},
+        {t:'El anion gap urinario no es válido en menores de 5 años', ok:false, fb:'Sí es válido. Pierde utilidad ante poliuria extrema, cetonuria o insuficiencia renal avanzada, ninguna de las cuales aplica acá.'}
+      ]},
+    { id:'c6q3', tipo:'radio', texto:'El pH urinario es 6,8 pese a la acidemia. ¿Qué tipo de acidosis tubular renal sugiere?',
+      opts:[
+        {t:'Distal (tipo I): el túbulo distal no puede acidificar la orina', ok:true, fb:'Correcto. En la acidosis tubular distal el riñón es incapaz de bajar el pH urinario por debajo de 5,5 aun con acidemia grave. Se acompaña de hipopotasemia, hipercalciuria, nefrocalcinosis y retraso de crecimiento, que es justamente el motivo de consulta.'},
+        {t:'Proximal (tipo II): hay pérdida de bicarbonato en el túbulo proximal', ok:false, fb:'En la proximal el túbulo distal conserva su capacidad de acidificar: una vez que el bicarbonato plasmático cae por debajo del umbral, el pH urinario baja de 5,5. Suele además formar parte de un síndrome de Fanconi.'},
+        {t:'Tipo IV: por hipoaldosteronismo', ok:false, fb:'La tipo IV cursa con <strong>hiper</strong>potasemia, y Felipe tiene un potasio de 2,9.'},
+        {t:'No se puede diferenciar sin una prueba de sobrecarga ácida', ok:false, fb:'La prueba se reserva para casos dudosos o incompletos. Acá la tríada de pH urinario alto en acidemia, hipopotasemia y retraso de crecimiento orienta con claridad.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> acidosis metabólica hiperclorémica con anion gap normal, por acidosis tubular renal distal (tipo I).</p><p>La secuencia que resuelve el caso es la del paso 4: gap normal → ¿hay diarrea? → si no la hay, anion gap urinario. Dos preguntas y una cuenta de tres números separan una pérdida digestiva de una enfermedad renal.</p><p><strong>Lo que hay que retener:</strong> la acidosis tubular renal es una causa tratable de baja talla. El retraso de crecimiento es con frecuencia el único motivo de consulta, y el tratamiento con citrato de potasio permite recuperar el canal de crecimiento. Ante un chico con mal progreso pondoestatural sin causa evidente, un ionograma con estado ácido-base es un estudio barato que puede cambiarle la vida.</p>'
+}
+];
+
+const M3 = [
+  { id:'e1', badge:'Error 1', titulo:'El asmático de la guardia',
+    cita:'«Paciente de 10 años en crisis asmática, tercera hora de tratamiento. Frecuencia respiratoria 34, saturación 91%, habla por palabras sueltas y está sentado hacia adelante. Le pedí un EAB: pH 7,38, pCO₂ 41, HCO₃ 24. <strong>Gasometría normal</strong>, así que continúo con broncodilatadores y control en dos horas.»',
+    q:{ id:'e1q', tipo:'radio', texto:'¿Dónde está el error?',
+      opts:[
+        {t:'Una pCO₂ normal en un paciente que hiperventila significa fatiga muscular: es un signo de gravedad, no de normalidad', ok:true, fb:'Exacto. Un chico con una crisis grave y frecuencia respiratoria de 34 debería estar <em>eliminando</em> CO₂, con una pCO₂ de 25 a 30. Que esté en 41 indica que ya no logra sostener la ventilación. La pCO₂ "normalizándose" en un asmático es una de las señales de alarma más traicioneras de la pediatría: anuncia el paro respiratorio, no la mejoría.'},
+        {t:'El error fue pedir un EAB: en el asma no aporta información', ok:false, fb:'Pedirlo en una crisis grave que no responde es correcto. El error no fue pedirlo, sino leerlo sin mirar al paciente.'},
+        {t:'Debería haber pedido una muestra arterial', ok:false, fb:'La discusión sobre el tipo de muestra es secundaria. Con cualquier muestra, esa pCO₂ en ese contexto clínico es una señal de alarma.'},
+        {t:'El bicarbonato de 24 es demasiado bajo para una crisis de tres horas', ok:false, fb:'Es un valor normal, y sería lo esperable: el riñón no alcanza a compensar en tres horas.'}
+      ]}},
+  { id:'e2', badge:'Error 2', titulo:'La cetoacidosis',
+    cita:'«Adolescente con cetoacidosis diabética, pH 6,95, bicarbonato 3. Está muy acidótico, así que <strong>indiqué bicarbonato de sodio 1 mEq/kg en bolo</strong> para sacarlo del pH crítico, y arranco la insulina cuando el pH mejore.»',
+    q:{ id:'e2q', tipo:'radio', texto:'¿Dónde está el error?',
+      opts:[
+        {t:'Hay dos: el bolo de bicarbonato y demorar la insulina esperando que mejore el pH', ok:true, fb:'Correcto, y los dos son graves. El bicarbonato se asocia a mayor riesgo de edema cerebral en pediatría, agrava la hipopotasemia y genera acidosis paradojal del sistema nervioso central, porque el CO₂ que produce atraviesa la barrera hematoencefálica mucho más rápido que el bicarbonato. Y demorar la insulina mantiene abierta la cetogénesis, que es la fábrica de la acidosis: sin insulina, el pH no va a mejorar.'},
+        {t:'La dosis de bicarbonato es baja: correspondían 2 a 3 mEq/kg', ok:false, fb:'El problema no es la dosis sino la indicación. Aumentarla haría más daño.'},
+        {t:'No hay error: con un pH de 6,95 el bicarbonato está indicado en todas las guías', ok:false, fb:'Ninguna guía pediátrica actual recomienda el bicarbonato de rutina en cetoacidosis, ni siquiera con pH menor a 7. Se contempla solo en acidemia extrema persistente con compromiso hemodinámico, y sigue siendo discutido.'},
+        {t:'El error fue no pedir una tomografía de cerebro antes de tratar', ok:false, fb:'No corresponde de entrada. La neuroimagen se plantea ante deterioro neurológico durante el tratamiento, y aun así no debe demorar el manejo del edema cerebral si se sospecha.'}
+      ]}},
+  { id:'e3', badge:'Error 3', titulo:'El píloro',
+    cita:'«Lactante de 40 días con estenosis pilórica confirmada por ecografía. pH 7,55, bicarbonato 40, cloro 85, potasio 2,7. <strong>Aviso a cirugía para operarlo esta misma noche</strong>: cuanto antes se resuelva la obstrucción, antes se corrige el medio interno.»',
+    q:{ id:'e3q', tipo:'radio', texto:'¿Dónde está el error?',
+      opts:[
+        {t:'Es una urgencia médica, no quirúrgica: hay que corregir el medio interno antes de la anestesia', ok:true, fb:'Correcto. Operar con esa alcalosis y ese potasio expone a arritmias intraoperatorias y a <strong>apneas posanestésicas</strong>, porque la alcalosis deprime el centro respiratorio. Se corrige primero con solución fisiológica y potasio, y se opera cuando el cloro supera 100, el bicarbonato baja de 30 y el potasio se normaliza. Suelen ser de 24 a 48 horas.'},
+        {t:'El error es el diagnóstico: con esos valores hay que pensar en un síndrome de Bartter', ok:false, fb:'El cuadro clínico y la ecografía confirman la estenosis pilórica. Además, el Bartter cursa con cloro urinario alto y sin obstrucción.'},
+        {t:'Faltó indicar antibióticos antes de la cirugía', ok:false, fb:'No es el punto crítico. Lo que puede matar al paciente esta noche es el medio interno, no la profilaxis.'},
+        {t:'No hay error: la obstrucción es la causa y hay que resolverla cuanto antes', ok:false, fb:'Es el razonamiento intuitivo y es exactamente el error. La obstrucción no mata en 48 horas; la alcalosis con hipopotasemia bajo anestesia, sí.'}
+      ]}},
+  { id:'e4', badge:'Error 4', titulo:'El potasio tranquilizador',
+    cita:'«Lactante de 6 meses con diarrea, deshidratación grave y acidosis metabólica: pH 7,15, bicarbonato 8. El ionograma muestra un potasio de 4,6, así que <strong>está normal y no hace falta reponer potasio</strong>. Expando y sigo con el plan de hidratación.»',
+    q:{ id:'e4q', tipo:'radio', texto:'¿Dónde está el error?',
+      opts:[
+        {t:'Con esa acidemia, un potasio de 4,6 esconde un déficit corporal importante que se va a manifestar al corregir el pH', ok:true, fb:'Correcto. La acidosis desplaza potasio desde el interior de la célula hacia el plasma: por cada 0,1 que baja el pH, el potasio plasmático sube aproximadamente 0,3 a 0,6 mEq/L. Con un pH de 7,15, ese 4,6 corresponde a un potasio real bastante más bajo. Al corregirse la acidosis, el potasio vuelve a la célula y puede aparecer una hipopotasemia grave. La diarrea, además, ya venía perdiéndolo.'},
+        {t:'El error es haber expandido: primero hay que corregir el potasio', ok:false, fb:'No. La expansión frente a una deshidratación grave siempre va primero. El potasio se repone junto con el plan de hidratación, una vez constatada la diuresis.'},
+        {t:'Faltó indicar bicarbonato con un pH de 7,15', ok:false, fb:'Es la conducta contraria a la correcta. La acidosis de la diarrea se corrige con volumen; agregar bicarbonato empeoraría la hipopotasemia oculta.'},
+        {t:'No hay error: 4,6 mEq/L es un valor normal', ok:false, fb:'Es normal como número, pero el número no se lee solo. En el contexto de una acidemia importante, un potasio "normal" es un potasio bajo disfrazado.'}
+      ]}}
+];
+
+const M4 = {
+  id:'d1', badge:'Desafío', titulo:'Renzo, 2 años',
+  vineta:'Ingresa por fiebre alta de tres días y dificultad respiratoria progresiva. En las últimas seis horas está somnoliento y "no responde como siempre".<br><br><strong>Examen físico:</strong> mal estado general, palidez, moteado en rodillas. Relleno capilar 4 segundos, pulsos periféricos débiles. FC 180/min. TA 78/40 mmHg. FR 22/min con respiración superficial e irregular. Saturación 89% con máscara con reservorio. Hipoventilación generalizada, con crepitantes en ambas bases.',
+  lab:[['pH','7,18',1],['pCO₂','55 mmHg',1],['HCO₃','20 mEq/L',1],['EB','−8 mEq/L',1],
+       ['Na⁺','134 mEq/L',1],['K⁺','4,4 mEq/L',0],['Cl⁻','96 mEq/L',0],['Lactato','5,8 mmol/L',1]],
+  qs:[
+    { id:'d1q1', tipo:'radio', texto:'¿Cuántos trastornos ácido-base tiene Renzo?',
+      opts:[
+        {t:'Dos: acidosis respiratoria y acidosis metabólica', ok:true, fb:'Correcto. El pH bajo con pCO₂ alta define la acidosis respiratoria; el EB de −8 y el lactato de 5,8 delatan la acidosis metabólica sumada. Las dos empujan el pH en la misma dirección, y por eso la acidemia es tan marcada.'},
+        {t:'Uno: acidosis respiratoria con compensación metabólica', ok:false, fb:'No puede ser una compensación por dos razones: la compensación renal demora días, y sobre todo <em>iría en sentido contrario</em>, subiendo el bicarbonato, no bajándolo.'},
+        {t:'Uno: acidosis metabólica con compensación respiratoria', ok:false, fb:'Si la compensación respiratoria funcionara, la pCO₂ estaría <em>baja</em>. Está en 55: el pulmón no está compensando, está fallando.'},
+        {t:'Tres trastornos simultáneos', ok:false, fb:'No hay elementos para un tercero. Con dos acidosis sumadas alcanza para explicar todo el cuadro.'}
+      ]},
+    { id:'d1q2', tipo:'radio', texto:'El HCO₃ es 20, es decir apenas bajo. ¿Con qué argumento demostrás que hay una acidosis metabólica?',
+      hint:'Compará el bicarbonato medido contra el que esperarías por la acidosis respiratoria.',
+      opts:[
+        {t:'Porque en una acidosis respiratoria aguda el HCO₃ debería haber SUBIDO a unos 25,5, y en cambio está en 20', ok:true, fb:'Ese es exactamente el paso 3 haciendo su trabajo. La pCO₂ subió 15 mmHg, así que el bicarbonato debería haber subido 1,5, hasta unos 25,5. Que esté en 20 significa que algo se lo está consumiendo: la acidosis láctica del shock. Un bicarbonato "casi normal" puede esconder una acidosis metabólica grave.'},
+        {t:'Porque 20 mEq/L está por debajo del rango normal de 22 a 26', ok:false, fb:'Ese argumento es débil: en un lactante 20 podría ser normal. Lo que lo vuelve concluyente es la comparación contra la compensación esperada.'},
+        {t:'Porque el sodio de 134 está bajo', ok:false, fb:'La natremia no interviene en el diagnóstico del trastorno ácido-base, solo en el cálculo del anion gap.'},
+        {t:'No se puede demostrar sin repetir el EAB en dos horas', ok:false, fb:'Con los datos que ya tenés alcanza, y Renzo no está para esperar dos horas.'}
+      ]},
+    { id:'d1q3', tipo:'radio', texto:'Calculá el anion gap y decidí la conducta inmediata.',
+      opts:[
+        {t:'AG 18, aumentado por el lactato. Ventilar, expandir y administrar antibióticos precozmente', ok:true, fb:'134 − (96 + 20) = 18, aumentado, coherente con un lactato de 5,8. Renzo está en shock séptico con insuficiencia respiratoria: soporte ventilatorio, expansiones con solución fisiológica y antibióticos dentro de la primera hora. La acidosis se corrige al restablecer la perfusión y la ventilación.'},
+        {t:'AG 18, aumentado. Corregir con bicarbonato antes de expandir', ok:false, fb:'El cálculo está bien pero la conducta no. Con un paciente que retiene CO₂, el bicarbonato genera más CO₂ que no puede eliminar y empeora la acidosis intracelular.'},
+        {t:'AG 14, normal. Se trata de una acidosis hiperclorémica', ok:false, fb:'Revisá la cuenta: 134 − (96 + 20) = 18. Y un cloro de 96 no es alto.'},
+        {t:'AG 18, aumentado. Solicitar hemocultivos y esperar el resultado antes de iniciar antibióticos', ok:false, fb:'Los hemocultivos se toman, sí, pero no se demora el antibiótico por ellos. En shock séptico cada hora de retraso aumenta la mortalidad.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> acidosis mixta —respiratoria y metabólica con anion gap aumentado— en un shock séptico con insuficiencia respiratoria, probablemente de foco pulmonar.</p><p>Este caso reúne todo el taller. Tres datos hacen el diagnóstico y ninguno se ve si no se recorren los cinco pasos: la <strong>frecuencia respiratoria de 22</strong> en un chico que debería estar hiperventilando (agotamiento); el <strong>bicarbonato de 20</strong> cuando la compensación esperada era 25,5 (acidosis metabólica escondida); y el <strong>anion gap de 18</strong> con lactato de 5,8 (hipoperfusión).</p><p><strong>Lo que hay que retener:</strong> cuando las dos acidosis se suman, el pH cae mucho más rápido y no hay ningún sistema compensando. Es el escenario de mayor riesgo vital y el que exige la intervención más rápida — que no es corregir un número, sino ventilar y perfundir.</p>'
+};
+
+/* =========================================================================
+   Motor: renderizado, corrección y persistencia
+   ========================================================================= */
+
+const ESTADO_KEY = 'tallerEAB_v1';
+let estado = {};
+try { estado = JSON.parse(localStorage.getItem(ESTADO_KEY) || '{}'); } catch (e) { estado = {}; }
+
+const LETRAS = 'ABCDEFGH';
+let TODAS = [];  // ids de consignas que puntúan
+
+function guardar() {
+    try { localStorage.setItem(ESTADO_KEY, JSON.stringify(estado)); } catch (e) {}
+}
+
+function esc(s) { return s; }
+
+function renderPregunta(q, puntua) {
+    if (puntua !== false) TODAS.push(q.id);
+    const multi = q.tipo === 'multi';
+    let html = '<div class="q" id="q-' + q.id + '">';
+    html += '<p class="q-text">' + q.texto + '</p>';
+    if (q.hint) html += '<p class="q-hint">💡 ' + q.hint + '</p>';
+    html += '<ul class="opts">';
+    q.opts.forEach(function (o, i) {
+        html += '<li><label class="opt" data-i="' + i + '">' +
+                '<input type="' + (multi ? 'checkbox' : 'radio') + '" name="' + q.id + '" value="' + i + '">' +
+                '<span><span class="letra">' + LETRAS[i] + '.</span> ' + o.t + '</span>' +
+                '</label><div class="fb" style="display:none"></div></li>';
+    });
+    html += '</ul>';
+    html += '<button class="check" onclick="comprobar(\'' + q.id + '\')">Comprobar</button>';
+    html += '<div class="veredicto"></div>';
+    html += '</div>';
+    return html;
+}
+
+function renderLab(lab) {
+    let html = '<table class="lab"><caption>Exámenes complementarios</caption><tbody>';
+    lab.forEach(function (f) {
+        html += '<tr class="' + (f[2] ? 'alterado' : '') + '"><td>' + f[0] + '</td><td>' + f[1] + '</td></tr>';
+    });
+    return html + '</tbody></table>';
+}
+
+function renderCaso(c) {
+    let html = '<div class="box" id="box-' + c.id + '">';
+    html += '<span class="badge">' + c.badge + '</span>';
+    html += '<h3>' + c.titulo + '</h3>';
+    html += '<div class="vineta">' + c.vineta + '</div>';
+    html += renderLab(c.lab);
+    c.qs.forEach(function (q) { html += renderPregunta(q); });
+    html += '<details id="raz-' + c.id + '"><summary>Ver el razonamiento completo</summary>' +
+            '<div class="cuerpo">' + c.razonamiento + '</div></details>';
+    return html + '</div>';
+}
+
+function renderError(e) {
+    let html = '<div class="box" id="box-' + e.id + '">';
+    html += '<span class="badge rojo">' + e.badge + ' · ' + e.titulo + '</span>';
+    html += '<div class="vineta" style="background:#fef2f2;border-color:#fecaca;font-style:italic">' + e.cita + '</div>';
+    html += renderPregunta(e.q);
+    return html + '</div>';
+}
+
+// Registro global de preguntas para la corrección
+const REG = {};
+const ETIQUETA = {};   // id de consigna -> nombre legible para el docente
+function registrar(q) { REG[q.id] = q; }
+function etiquetar(qs, prefijo) {
+    qs.forEach(function (q, i) { ETIQUETA[q.id] = prefijo + ' · consigna ' + (i + 1); });
+}
+
+// --- Montaje ---
+(function montar() {
+    let h0 = '';
+    M0.forEach(function (q) { registrar(q); h0 += renderPregunta(q, false); });
+    document.getElementById('m0').innerHTML = h0;
+
+    let h2 = '';
+    M2.forEach(function (c, n) {
+        c.qs.forEach(registrar);
+        etiquetar(c.qs, 'Caso ' + (n + 1) + ' (' + c.titulo + ')');
+        h2 += renderCaso(c);
+    });
+    document.getElementById('m2').innerHTML = h2;
+
+    let h3 = '';
+    M3.forEach(function (e, n) {
+        registrar(e.q);
+        ETIQUETA[e.q.id] = 'Error ' + (n + 1) + ' (' + e.titulo + ')';
+        h3 += renderError(e);
+    });
+    document.getElementById('m3').innerHTML = h3;
+
+    M4.qs.forEach(registrar);
+    etiquetar(M4.qs, 'Desafío (' + M4.titulo + ')');
+    document.getElementById('m4').innerHTML = renderCaso(M4);
+
+    document.getElementById('pts-max').textContent = TODAS.length;
+    document.getElementById('progress-text').textContent = '0 de ' + TODAS.length + ' consignas resueltas';
+
+    // Marcar selección visual
+    document.querySelectorAll('.opt input').forEach(function (inp) {
+        inp.addEventListener('change', function () {
+            const lista = inp.closest('.opts');
+            if (inp.type === 'radio') {
+                lista.querySelectorAll('.opt').forEach(function (o) { o.classList.remove('sel'); });
+            }
+            inp.closest('.opt').classList.toggle('sel', inp.checked);
+        });
+    });
+
+    // Restaurar respuestas guardadas
+    Object.keys(estado).forEach(function (qid) {
+        if (!REG[qid]) return;
+        const guardadas = estado[qid].elegidas || [];
+        guardadas.forEach(function (i) {
+            const inp = document.querySelector('#q-' + qid + ' input[value="' + i + '"]');
+            if (inp) { inp.checked = true; inp.closest('.opt').classList.add('sel'); }
+        });
+        if (estado[qid].comprobada) pintar(qid, true);
+    });
+
+    ['abierta1', 'abierta2', 'alumno'].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (estado['_' + id]) el.value = estado['_' + id];
+        el.addEventListener('input', function () { estado['_' + id] = el.value; guardar(); });
+    });
+
+    actualizarProgreso();
+})();
+
+function comprobar(qid) {
+    const q = REG[qid];
+    const elegidas = [];
+    document.querySelectorAll('#q-' + qid + ' input:checked').forEach(function (i) {
+        elegidas.push(parseInt(i.value, 10));
+    });
+    if (elegidas.length === 0) {
+        alert('Elegí al menos una opción antes de comprobar. Aunque dudes: el error es la parte que enseña.');
+        return;
+    }
+    estado[qid] = { elegidas: elegidas, comprobada: true };
+    guardar();
+    pintar(qid, false);
+    actualizarProgreso();
+}
+
+function correcta(qid) {
+    const q = REG[qid], st = estado[qid];
+    if (!st) return false;
+    const correctas = [];
+    q.opts.forEach(function (o, i) { if (o.ok) correctas.push(i); });
+    if (st.elegidas.length !== correctas.length) return false;
+    return correctas.every(function (i) { return st.elegidas.indexOf(i) !== -1; });
+}
+
+function pintar(qid, restaurando) {
+    const q = REG[qid], st = estado[qid];
+    if (!st || !st.comprobada) return;
+    const cont = document.getElementById('q-' + qid);
+    const items = cont.querySelectorAll('.opts > li');
+
+    let aciertos = 0, correctasTotal = 0;
+    q.opts.forEach(function (o, i) {
+        const li = items[i];
+        const label = li.querySelector('.opt');
+        const fb = li.querySelector('.fb');
+        const elegida = st.elegidas.indexOf(i) !== -1;
+        if (o.ok) correctasTotal++;
+
+        label.classList.remove('sel', 'ok', 'mal', 'perdida');
+        if (elegida && o.ok) { label.classList.add('ok'); aciertos++; }
+        else if (elegida && !o.ok) { label.classList.add('mal'); }
+        else if (!elegida && o.ok) { label.classList.add('perdida'); }
+
+        // El feedback se muestra siempre: también el de las opciones no elegidas
+        fb.innerHTML = (o.ok ? '✔ ' : '✘ ') + o.fb;
+        fb.className = 'fb ' + (o.ok ? 'ok' : 'mal');
+        fb.style.display = 'block';
+        li.querySelector('input').disabled = true;
+    });
+
+    cont.querySelector('button.check').disabled = true;
+
+    const v = cont.querySelector('.veredicto');
+    const bien = correcta(qid);
+    const puntua = TODAS.indexOf(qid) !== -1;
+    v.style.display = 'block';
+    if (bien) {
+        v.className = 'veredicto ok';
+        v.textContent = puntua ? '✓ Correcto' : '✓ Buena lectura';
+    } else if (aciertos > 0 && aciertos < correctasTotal) {
+        v.className = 'veredicto parcial';
+        v.textContent = 'Parcialmente correcto: acertaste ' + aciertos + ' de ' + correctasTotal +
+                        '. Leé el fundamento de cada opción, incluidas las que no elegiste.';
+    } else {
+        v.className = 'veredicto mal';
+        v.textContent = puntua ? '✗ No es la respuesta correcta. La opción marcada en verde es la que corresponde.'
+                               : 'Anotá qué pensabas: al terminar el taller volvé a esta pregunta.';
+    }
+
+    // Abrir el razonamiento cuando el caso quedó completo
+    const caso = cont.closest('.box');
+    if (caso) {
+        const pendientes = caso.querySelectorAll('button.check:not(:disabled)').length;
+        const det = caso.querySelector('details');
+        if (pendientes === 0 && det && !restaurando) det.open = true;
+    }
+}
+
+function actualizarProgreso() {
+    let hechas = 0, buenas = 0;
+    TODAS.forEach(function (qid) {
+        if (estado[qid] && estado[qid].comprobada) { hechas++; if (correcta(qid)) buenas++; }
+    });
+    document.getElementById('progress-fill').style.width = (hechas / TODAS.length * 100) + '%';
+    document.getElementById('progress-text').textContent =
+        hechas + ' de ' + TODAS.length + ' consignas resueltas' +
+        (hechas ? ' · ' + buenas + (buenas === 1 ? ' correcta' : ' correctas') : '');
+    document.getElementById('pts').textContent = buenas;
+}
+
+function generarResumen() {
+    const nombre = document.getElementById('alumno').value.trim();
+    if (!nombre) { alert('Completá tu apellido y nombre antes de generar el resumen.'); return; }
+    let hechas = 0, buenas = 0;
+    const detalle = [];
+    TODAS.forEach(function (qid) {
+        const st = estado[qid];
+        if (st && st.comprobada) {
+            hechas++;
+            const bien = correcta(qid);
+            if (bien) buenas++;
+            detalle.push('  [' + (bien ? 'OK   ' : 'ERROR') + '] ' + (ETIQUETA[qid] || qid) +
+                         ' — marcó ' + st.elegidas.map(function (i) { return LETRAS[i]; }).join(', '));
+        } else {
+            detalle.push('  [  -  ] ' + (ETIQUETA[qid] || qid) + ' — sin responder');
+        }
+    });
+    const txt =
+'TALLER: TRASTORNOS DEL ESTADO ÁCIDO-BASE EN PEDIATRÍA\n' +
+'Taller desarrollado por Diego Steinberg\n' +
+'=====================================================\n' +
+'Alumno/a: ' + nombre + '\n' +
+'Fecha de finalización: ' + new Date().toLocaleString('es-AR') + '\n' +
+'Consignas resueltas: ' + hechas + ' de ' + TODAS.length + '\n' +
+'Respuestas correctas: ' + buenas + ' de ' + TODAS.length + '\n\n' +
+'DETALLE POR CONSIGNA\n' + detalle.join('\n') + '\n\n' +
+'PREGUNTA 1 — Por qué en la deshidratación por diarrea casi nunca hace falta bicarbonato:\n' +
+(document.getElementById('abierta1').value.trim() || '(sin responder)') + '\n\n' +
+'PREGUNTA 2 — Cuál de los cuatro errores podría haber cometido:\n' +
+(document.getElementById('abierta2').value.trim() || '(sin responder)') + '\n';
+    document.getElementById('resumen').value = txt;
+    document.getElementById('resumen').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function copiarResumen() {
+    const ta = document.getElementById('resumen');
+    if (!ta.value) { alert('Primero generá el resumen.'); return; }
+    ta.select();
+    ta.setSelectionRange(0, 99999);
+    try {
+        navigator.clipboard.writeText(ta.value);
+    } catch (e) {
+        document.execCommand('copy');
+    }
+    const av = document.getElementById('copiado');
+    av.style.display = 'block';
+    setTimeout(function () { av.style.display = 'none'; }, 4000);
+}
+
+function reiniciar() {
+    if (!confirm('Esto borra todas tus respuestas y el progreso guardado. ¿Confirmás?')) return;
+    localStorage.removeItem(ESTADO_KEY);
+    location.reload();
+}
+</script>
+</body>
+</html>
