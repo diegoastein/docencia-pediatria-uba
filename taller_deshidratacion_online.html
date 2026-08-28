@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller: Deshidratación y Rehidratación en Pediatría</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0; padding: 0 14px 60px;
+        background: #f8f9fa; color: #202124;
+        line-height: 1.55;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; }
+
+    /* ---------- Encabezado y progreso ---------- */
+    header { padding: 26px 0 16px; }
+    header .kicker { font-size: .78rem; font-weight: 800; letter-spacing: .08em;
+        text-transform: uppercase; color: #0284c7; margin: 0 0 6px; }
+    header h1 { font-size: 1.55rem; line-height: 1.25; margin: 0 0 8px; color: #0c4a6e; }
+    header .meta { color: #5f6368; font-size: .92rem; margin: 0; }
+
+    #progress-bar {
+        position: sticky; top: 0; z-index: 20;
+        background: #f8f9fa; padding: 10px 0 12px; margin: 0 0 18px;
+        border-bottom: 1px solid #e0f2fe;
+    }
+    #progress-track { height: 9px; background: #e0f2fe; border-radius: 6px; overflow: hidden; }
+    #progress-fill { height: 100%; width: 0%; border-radius: 6px;
+        background: linear-gradient(90deg, #0284c7, #075985); transition: width .35s ease; }
+    #progress-text { font-size: .8rem; color: #5f6368; margin: 6px 0 0; font-weight: 600; }
+
+    /* ---------- Bloques ---------- */
+    .box { background: #fff; border: 1px solid #dadce0; border-radius: 14px;
+        padding: 20px; margin-bottom: 18px; }
+    .box.intro { border-left: 5px solid #0284c7; }
+    .box.aviso { background: #fffbeb; border-color: #fde68a; }
+
+    h2 { font-size: 1.18rem; color: #0c4a6e; margin: 34px 0 14px;
+        padding-bottom: 8px; border-bottom: 2px solid #e0f2fe; }
+    h3 { font-size: 1.02rem; margin: 0 0 10px; color: #0c4a6e; }
+    p { margin: 0 0 12px; }
+    ul, ol { margin: 0 0 12px; padding-left: 22px; }
+    li { margin-bottom: 6px; }
+
+    .badge { display: inline-block; background: #f0f9ff; color: #075985;
+        padding: 4px 11px; border-radius: 12px; font-size: .76rem; font-weight: 800;
+        margin-bottom: 10px; letter-spacing: .02em; }
+    .badge.gris { background: #f1f3f4; color: #5f6368; }
+    .badge.rojo { background: #fee2e2; color: #b91c1c; }
+
+    /* ---------- Viñeta clínica y laboratorio ---------- */
+    .vineta { background: #f0f9ff; border: 1px solid #e0f2fe; border-radius: 10px;
+        padding: 14px 16px; margin-bottom: 14px; font-size: .95rem; }
+    .lab { border-collapse: collapse; width: 100%; margin: 0 0 14px; font-size: .9rem; }
+    .lab caption { text-align: left; font-weight: 800; font-size: .82rem; color: #075985;
+        padding-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
+    .lab td { border-bottom: 1px solid #eceff1; padding: 7px 8px; }
+    .lab td:first-child { color: #5f6368; width: 46%; }
+    .lab td:last-child { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .lab .alterado td:last-child { color: #b91c1c; }
+    .lab .ref { color: #9aa0a6; font-weight: 400; font-size: .85em; }
+
+    /* ---------- Preguntas ---------- */
+    .q { margin: 20px 0 0; padding-top: 18px; border-top: 1px dashed #dadce0; }
+    .q:first-of-type { border-top: none; padding-top: 0; }
+    .q-text { font-weight: 700; margin: 0 0 4px; }
+    .q-hint { font-size: .84rem; color: #5f6368; margin: 0 0 12px; }
+    .opts { list-style: none; padding: 0; margin: 0 0 14px;
+        display: flex; flex-direction: column; gap: 9px; }
+    .opt { display: flex; gap: 11px; align-items: flex-start;
+        padding: 12px 14px; border: 2px solid #dadce0; border-radius: 10px;
+        cursor: pointer; background: #fff; transition: border-color .15s, background .15s; }
+    .opt:hover { border-color: #7dd3fc; }
+    .opt input { margin: 3px 0 0; flex-shrink: 0; width: 18px; height: 18px; accent-color: #075985; }
+    .opt .letra { font-weight: 800; color: #075985; flex-shrink: 0; }
+    .opt.sel { border-color: #0284c7; background: #f0f9ff; }
+    .opt.ok { border-color: #16a34a; background: #f0fdf4; }
+    .opt.mal { border-color: #dc2626; background: #fef2f2; }
+    .opt.perdida { border-color: #16a34a; background: #fff; border-style: dashed; }
+    .fb { font-size: .88rem; margin: 8px 0 0 29px; padding-left: 12px;
+        border-left: 3px solid #dadce0; color: #3c4043; }
+    .fb.ok { border-color: #16a34a; }
+    .fb.mal { border-color: #dc2626; }
+
+    button.check { padding: 11px 22px; font-size: .95rem; font-weight: 700;
+        border: none; border-radius: 9px; cursor: pointer;
+        background: linear-gradient(135deg, #0284c7, #075985); color: #fff; }
+    button.check:disabled { opacity: .4; cursor: not-allowed; }
+    button.sec { background: #fff; color: #075985; border: 2px solid #bae6fd; }
+
+    .veredicto { margin: 12px 0 0; padding: 11px 14px; border-radius: 9px;
+        font-weight: 700; font-size: .92rem; display: none; }
+    .veredicto.ok { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .veredicto.parcial { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .veredicto.mal { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+    details { margin-top: 14px; background: #f8f9fa; border: 1px solid #e0e0e0;
+        border-radius: 9px; padding: 0; }
+    details summary { cursor: pointer; padding: 12px 14px; font-weight: 700;
+        font-size: .92rem; color: #075985; list-style-position: inside; }
+    details[open] summary { border-bottom: 1px solid #e0e0e0; }
+    details .cuerpo { padding: 14px; font-size: .92rem; }
+
+    /* ---------- Tablas de referencia ---------- */
+    .tabla-ref { width: 100%; border-collapse: collapse; font-size: .87rem; margin-bottom: 14px; }
+    .tabla-ref th { background: #f0f9ff; color: #0c4a6e; text-align: left;
+        padding: 9px 10px; border: 1px solid #e0f2fe; font-size: .82rem; }
+    .tabla-ref td { padding: 9px 10px; border: 1px solid #eceff1; vertical-align: top; }
+    .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    .paso { display: flex; gap: 13px; margin-bottom: 15px; }
+    .paso .n { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
+        background: #075985; color: #fff; font-weight: 800; font-size: .92rem;
+        display: flex; align-items: center; justify-content: center; }
+    .paso .cont { flex: 1; }
+    .paso .cont strong { display: block; margin-bottom: 2px; }
+    .paso .cont span { font-size: .91rem; color: #3c4043; }
+
+    code { background: #f1f3f4; padding: 2px 6px; border-radius: 4px;
+        font-size: .89em; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+    /* ---------- Entrega ---------- */
+    textarea { width: 100%; min-height: 110px; padding: 12px; font-size: .95rem;
+        font-family: inherit; border: 2px solid #dadce0; border-radius: 10px;
+        margin-bottom: 14px; resize: vertical; }
+    #resumen { width: 100%; min-height: 220px; font-family: ui-monospace, Menlo, Consolas, monospace;
+        font-size: .82rem; background: #f8f9fa; }
+    .puntaje-final { text-align: center; padding: 22px; }
+    .puntaje-final .num { font-size: 2.8rem; font-weight: 800; color: #075985; line-height: 1; }
+    .puntaje-final .de { color: #5f6368; font-size: .95rem; }
+
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    footer { text-align: center; padding: 26px 0 10px; margin-top: 10px;
+        border-top: 1px solid #e0f2fe; color: #5f6368; font-size: .86rem; }
+    footer .autor { font-weight: 700; color: #075985; }
+
+    @media print {
+        body { background: #fff; }
+        .no-print, #progress-bar, button { display: none !important; }
+        .box { break-inside: avoid; border: 1px solid #999; }
+        details { display: none; }
+    }
+    @media (max-width: 520px) {
+        header h1 { font-size: 1.3rem; }
+        .box { padding: 16px; }
+    }
+</style>
+</head>
+<body>
+
+<!-- ============ GATE DE ACTIVACIÓN REMOTA ============
+     Este taller, a diferencia de taller_eab_online.html, no es público desde que se
+     publica: nace con un interruptor que el docente prende desde index.html (pestaña
+     Talleres → Talleres generales), ya logueado en su #access-gate. El estado se lee acá
+     de Firebase al cargar la página — ver la nota junto a TALLER_ACTIVO_PATH más abajo. -->
+<div class="wrap" id="gate-loading">
+    <div class="box" style="text-align:center; margin-top:60px">
+        <p style="margin:0; color:#5f6368">Comprobando si el taller ya está habilitado…</p>
+    </div>
+</div>
+
+<div class="wrap" id="gate-blocked" style="display:none">
+    <div class="box aviso" style="margin-top:60px">
+        <h3>⏳ Este taller todavía no está habilitado</h3>
+        <p class="gate-msg" style="margin-bottom:14px">Tu docente todavía no activó este taller. Volvé a intentarlo más tarde, o esperá el aviso en Classroom.</p>
+        <button class="check" onclick="location.reload()">Reintentar</button>
+    </div>
+</div>
+
+<div class="wrap" id="app-content" style="display:none">
+
+<header>
+    <h1>Deshidratación y Rehidratación en Pediatría</h1>
+    <p class="meta">Taller autoguiado · Modalidad asincrónica · Duración estimada: 55–70 minutos</p>
+</header>
+
+<div id="progress-bar" class="no-print">
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <p id="progress-text">0 de 26 consignas resueltas</p>
+</div>
+
+<div class="box intro">
+    <h3>Cómo funciona este taller</h3>
+    <ul>
+        <li>Se resuelve <strong>solo, a tu ritmo y desde cualquier dispositivo</strong>. No hay encuentro sincrónico.</li>
+        <li>Cada consigna se responde y se comprueba <strong>en el momento</strong>: vas a ver por qué cada opción es correcta o incorrecta, incluso las que no elegiste.</li>
+        <li><strong>Contestá antes de comprobar, aunque no estés seguro.</strong> El error es la parte que enseña; el puntaje no incide en la nota de la cursada.</li>
+        <li>Tu avance se guarda solo en este dispositivo. Podés cerrar y retomar después.</li>
+        <li>Al final, el taller genera un <strong>resumen de entrega</strong> que tenés que copiar y pegar en la tarea de Google Classroom.</li>
+    </ul>
+</div>
+
+<div class="box aviso">
+    <h3>⚠️ Antes de arrancar</h3>
+    <p style="margin-bottom:0">Este taller <strong>no</strong> tiene el formato del Examen Final Unificado. Las viñetas son de elaboración propia, construidas para que cada patrón aparezca de forma clara. La ejercitación con preguntas verbatim de EFU es un espacio aparte, el de los viernes.</p>
+</div>
+
+<!-- ============ MÓDULO 0 ============ -->
+<h2>Módulo 0 · Qué sabés antes de empezar</h2>
+<div class="box">
+    <p style="font-size:.92rem;color:#5f6368">Dos preguntas de sondeo. No suman puntaje: sirven para que compares tu punto de partida con lo que pensás al terminar.</p>
+    <div id="m0"></div>
+</div>
+
+<!-- ============ MÓDULO 1 ============ -->
+<h2>Módulo 1 · Cómo se evalúa y se corrige una deshidratación</h2>
+
+<div class="box">
+    <p>Una deshidratación se describe con <strong>dos ejes independientes</strong>, y cada uno define una conducta distinta: cuánto volumen perdió (el grado) y qué tipo de agua perdió en relación al sodio (la natremia). Confundir los dos ejes es el error de fondo de casi todos los casos de este taller.</p>
+
+    <div class="paso"><div class="n">1</div><div class="cont">
+        <strong>¿Cuánto perdió? El grado de deshidratación.</strong>
+        <span>Si hay un peso previo confiable y reciente, es el dato más objetivo: <code>% pérdida = (peso previo − peso actual) / peso previo × 100</code>. Si no lo hay, se estima por signos clínicos.</span>
+    </div></div>
+
+    <div class="paso"><div class="n">2</div><div class="cont">
+        <strong>¿Hay signos de shock, ahora mismo?</strong>
+        <span>Relleno capilar prolongado, pulsos periféricos débiles, taquicardia marcada, alteración del sensorio. La hipotensión es un signo <em>tardío</em>: no esperarla para reconocer el shock. Si está presente, la conducta no espera al resto de la clasificación.</span>
+    </div></div>
+
+    <div class="paso"><div class="n">3</div><div class="cont">
+        <strong>¿Qué tipo de agua perdió? La natremia.</strong>
+        <span>Isotónica (la más frecuente, con signos clínicos "de manual" para cada %), hipotónica (signos más marcados de lo esperado, riesgo de convulsión) o hipertónica (signos <em>menos</em> marcados de lo esperado, piel de textura pastosa en vez del pliegue clásico). Define la velocidad de corrección, nunca la fase de emergencia.</span>
+    </div></div>
+
+    <div class="paso"><div class="n">4</div><div class="cont">
+        <strong>¿Cierra con el paciente que tenés adelante?</strong>
+        <span>Un lactante con signos leves pero antecedente de mala ingesta de agua libre puede estar hipernatrémico y grave. Un % de pérdida moderado con convulsión puede estar hiponatrémico. El número solo no alcanza.</span>
+    </div></div>
+</div>
+
+<div class="box">
+    <h3>Grados de deshidratación por signos clínicos</h3>
+    <p>Quiatro signos concentran la mayor parte del valor predictivo para deshidratación clínicamente significativa (≥5%): relleno capilar prolongado, turgencia cutánea disminuida (pliegue), patrón respiratorio anormal y ausencia de lágrimas.</p>
+    <div class="scroll-x">
+    <table class="tabla-ref">
+        <tr><th></th><th>Leve (&lt;5%)</th><th>Moderada (5–10%)</th><th>Grave (&gt;10%)</th></tr>
+        <tr><td><strong>Sensorio</strong></td><td>Alerta</td><td>Irritable, sediento</td><td>Letárgico o comatoso</td></tr>
+        <tr><td><strong>Mucosas</strong></td><td>Húmedas o discretamente secas</td><td>Secas</td><td>Muy secas</td></tr>
+        <tr><td><strong>Ojos / fontanela</strong></td><td>Normales</td><td>Algo hundidos</td><td>Muy hundidos</td></tr>
+        <tr><td><strong>Lágrimas</strong></td><td>Presentes</td><td>Disminuidas</td><td>Ausentes</td></tr>
+        <tr><td><strong>Pliegue cutáneo</strong></td><td>Se retrae rápido</td><td>Se retrae lento</td><td>Persiste (&gt;2 s)</td></tr>
+        <tr><td><strong>Relleno capilar</strong></td><td>&lt;2 s</td><td>2–3 s</td><td>&gt;3 s</td></tr>
+        <tr><td><strong>Pulsos / TA</strong></td><td>Normales</td><td>Normales o taquicardia leve</td><td>Débiles; hipotensión (tardía)</td></tr>
+        <tr><td><strong>Diuresis</strong></td><td>Conservada</td><td>Disminuida</td><td>Oligoanuria</td></tr>
+    </table>
+    </div>
+    <p style="margin-bottom:0"><strong>Cálculo del déficit, si tenés peso previo confiable:</strong> <code>déficit (mL) = % deshidratación × peso previo (kg) × 10</code>. Un 5% en un chico de 10 kg son 500 mL a reponer, además del mantenimiento y de lo que siga perdiendo.</p>
+</div>
+
+<div class="box">
+    <h3>Necesidades basales: la regla de Holliday-Segar</h3>
+    <p>Es el volumen de mantenimiento diario, independiente del déficit. Se suma por tramos de peso:</p>
+    <div class="scroll-x">
+    <table class="tabla-ref">
+        <tr><th>Peso</th><th>Volumen diario</th><th>Equivalente por hora</th></tr>
+        <tr><td>Primeros 10 kg</td><td>100 mL/kg</td><td>4 mL/kg/h</td></tr>
+        <tr><td>De 11 a 20 kg</td><td>+ 50 mL/kg</td><td>+ 2 mL/kg/h</td></tr>
+        <tr><td>Cada kg por encima de 20</td><td>+ 20 mL/kg</td><td>+ 1 mL/kg/h</td></tr>
+    </table>
+    </div>
+    <p style="margin-bottom:0">Ejemplo: un chico de 24 kg necesita <code>10×100 + 10×50 + 4×20 = 1580 mL/día</code>, o su equivalente en mL/h con la regla 4-2-1: <code>40 + 20 + 4 = 64 mL/h</code>.</p>
+</div>
+
+<div class="box">
+    <h3>Los tres planes de rehidratación</h3>
+    <div class="scroll-x">
+    <table class="tabla-ref">
+        <tr><th>Plan</th><th>Para quién</th><th>Cómo</th></tr>
+        <tr><td><strong>A</strong></td><td>Sin deshidratación clínica, prevención en domicilio</td><td>SRO libre tras cada deposición o vómito (≈50–100 mL en &lt;1 año, 100–200 mL en mayores), continuar la alimentación y la lactancia sin restricción</td></tr>
+        <tr><td><strong>B</strong></td><td>Deshidratación leve a moderada, sin shock</td><td>SRO 50 a 100 mL/kg en 4 horas, en tomas pequeñas y frecuentes (cucharadita o jeringa cada 1–2 minutos si hay vómitos). Reevaluar el grado a las 4 horas</td></tr>
+        <tr><td><strong>C</strong></td><td>Deshidratación grave, shock</td><td>Expansión endovenosa inmediata con solución fisiológica (o Ringer lactato) 20 mL/kg en bolo rápido, repetible según respuesta clínica, sin esperar laboratorio</td></tr>
+    </table>
+    </div>
+    <p style="margin-bottom:0"><strong>La sonda nasogástrica es una alternativa válida a la vía endovenosa</strong> cuando la deshidratación es leve-moderada, no hay shock, pero fracasa la vía oral por vómitos persistentes: goteo continuo de SRO por gastroclisis, tan eficaz como el suero endovenoso y con menos complicaciones.</p>
+</div>
+
+<div class="box">
+    <h3>Los tres tipos de deshidratación según la natremia</h3>
+    <div class="scroll-x">
+    <table class="tabla-ref">
+        <tr><th></th><th>Isotónica<br><span style="font-weight:400">Na 130–150, la más frecuente (≈80%)</span></th><th>Hipotónica<br><span style="font-weight:400">Na &lt;130</span></th><th>Hipertónica<br><span style="font-weight:400">Na &gt;150</span></th></tr>
+        <tr><td><strong>Qué se pierde</strong></td><td>Agua y sodio en proporción similar</td><td>Más sodio que agua (o reposición con líquidos hipotónicos)</td><td>Más agua que sodio (fiebre, poca ingesta de agua libre, fórmula mal preparada)</td></tr>
+        <tr><td><strong>Signos clínicos</strong></td><td>Los "de manual", proporcionales al % de pérdida</td><td>Más marcados de lo esperado para el % de pérdida (más shock relativo)</td><td>Menos marcados de lo esperado: piel de textura pastosa, no el pliegue clásico</td></tr>
+        <tr><td><strong>Riesgo específico</strong></td><td>El del grado de deshidratación</td><td>Convulsión por edema cerebral si el sodio cae mucho o rápido</td><td>Convulsión y edema cerebral <strong>si se corrige demasiado rápido</strong></td></tr>
+        <tr><td><strong>Velocidad de corrección</strong></td><td>La del plan que corresponda al grado</td><td>Lenta: no subir el sodio más de 8–10 mEq/L por día, salvo síntoma neurológico agudo</td><td>Lenta: no bajar el sodio más de 10–12 mEq/L por día (≈0,5 mEq/L/hora)</td></tr>
+    </table>
+    </div>
+    <p style="margin-bottom:0"><strong>Regla que no tiene excepción:</strong> la fase de emergencia frente al shock es <em>siempre</em> con solución isotónica, sea cual sea el tipo de deshidratación por sodio. El tipo de natremia decide la velocidad de la corrección posterior, nunca el bolo inicial.</p>
+</div>
+
+<div class="box">
+    <h3>Sales de rehidratación oral (SRO) y qué evitar</h3>
+    <p>La fórmula de osmolaridad reducida recomendada por la OMS: <strong>Na 75 mEq/L · glucosa 75 mmol/L · K 20 mEq/L · citrato 10 mEq/L · osmolaridad 245 mOsm/L.</strong> Esa relación de sodio y glucosa es la que permite el cotransporte intestinal que hace absorber agua incluso en plena diarrea secretora.</p>
+    <p style="margin-bottom:0">Las gaseosas, los jugos comerciales y las bebidas deportivas <strong>no reemplazan a la SRO</strong>: su osmolaridad es mucho más alta (por el exceso de azúcar) y pueden empeorar la diarrea por efecto osmótico. El ondansetrón en dosis única puede reducir los vómitos lo suficiente como para que la vía oral sea posible, y con eso baja la necesidad de vía endovenosa.</p>
+</div>
+
+<!-- ============ MÓDULO 2 ============ -->
+<h2>Módulo 2 · Cinco pacientes, cinco decisiones</h2>
+<p style="font-size:.93rem;color:#5f6368;margin-bottom:18px">Recorré cada caso clasificando primero el grado y después la natremia. Después de responder vas a poder desplegar el razonamiento completo.</p>
+<div id="m2"></div>
+
+<!-- ============ MÓDULO 3 ============ -->
+<h2>Módulo 3 · Caza del error</h2>
+<div class="box aviso">
+    <p style="margin-bottom:0">Los cuatro fragmentos que siguen son <strong>interpretaciones equivocadas</strong>, escritas tal como suelen decirse en un pase de guardia. Son los cuatro errores más frecuentes con la deshidratación en pediatría. Encontralos.</p>
+</div>
+<div id="m3"></div>
+
+<!-- ============ MÓDULO 4 ============ -->
+<h2>Módulo 4 · Desafío final</h2>
+<div id="m4"></div>
+
+<!-- ============ CIERRE ============ -->
+<h2>Para llevarse</h2>
+<div class="box">
+    <ol>
+        <li><strong>Clasificá siempre por los dos ejes: grado y natremia.</strong> Son independientes, y cada uno manda una conducta distinta.</li>
+        <li><strong>La fase de emergencia frente al shock es siempre con solución isotónica</strong>, sea cual sea el tipo de deshidratación por sodio. El tipo de natremia decide la velocidad de la corrección posterior, no el bolo inicial.</li>
+        <li><strong>La prisa por normalizar el sodio es lo que produce el daño neurológico</strong>, no la deshidratación en sí. Tanto la hipernatremia como la hiponatremia se corrigen lento, salvo síntoma agudo que amerite una corrección de urgencia.</li>
+        <li><strong>El ayuno no cura la diarrea.</strong> La realimentación precoz junto con la SRO acorta la evolución; el ayuno prolongado la empeora.</li>
+        <li><strong>La vía oral, o la sonda nasogástrica, alcanzan para la mayoría de las deshidrataciones leves-moderadas</strong>, con menos complicaciones que la vía endovenosa. Esta última se reserva para el shock o el fracaso comprobado de la vía oral.</li>
+        <li><strong>El potasio se agrega una vez confirmada la diuresis</strong>, nunca en la expansión inicial del shock.</li>
+    </ol>
+</div>
+
+<div class="box">
+    <h3>🃏 Kit de bolsillo</h3>
+    <p style="font-size:.92rem;color:#5f6368">Para imprimir o guardar como captura. Contiene lo mínimo indispensable para resolver una deshidratación al lado de la cama.</p>
+    <div class="scroll-x">
+    <table class="tabla-ref">
+        <tr><th colspan="2">Grados</th></tr>
+        <tr><td>Leve</td><td>&lt; 5% de pérdida de peso</td></tr>
+        <tr><td>Moderada</td><td>5 – 10%</td></tr>
+        <tr><td>Grave</td><td>&gt; 10%, con signos de shock</td></tr>
+        <tr><th colspan="2">Fórmulas</th></tr>
+        <tr><td>Déficit</td><td>% deshidratación × peso previo (kg) × 10 = mL</td></tr>
+        <tr><td>Holliday-Segar</td><td>100 mL/kg (0–10 kg) + 50 mL/kg (11–20 kg) + 20 mL/kg (&gt;20 kg) / día</td></tr>
+        <tr><td>Regla 4-2-1 (mL/h)</td><td>4 (0–10 kg) + 2 (11–20 kg) + 1 (&gt;20 kg) por cada kg del tramo</td></tr>
+        <tr><th colspan="2">Planes</th></tr>
+        <tr><td>A</td><td>SRO libre + alimentación sin restricción, sin deshidratación clínica</td></tr>
+        <tr><td>B</td><td>SRO 50–100 mL/kg en 4 h, fraccionada</td></tr>
+        <tr><td>C</td><td>SF o Ringer 20 mL/kg en bolo EV, repetible</td></tr>
+        <tr><th colspan="2">Velocidad máxima de corrección del sodio</th></tr>
+        <tr><td>Hipernatremia → baja</td><td>No más de 10–12 mEq/L/día (≈0,5 mEq/L/h)</td></tr>
+        <tr><td>Hiponatremia → sube</td><td>No más de 8–10 mEq/L/día, salvo síntoma neurológico agudo</td></tr>
+        <tr><th colspan="2">SRO (osmolaridad reducida, OMS)</th></tr>
+        <tr><td>Composición</td><td>Na 75 · glucosa 75 · K 20 · citrato 10 mEq ó mmol/L · Osm 245</td></tr>
+    </table>
+    </div>
+</div>
+
+<!-- ============ ENTREGA ============ -->
+<h2>Entrega en Classroom</h2>
+<div class="box no-print">
+    <h3>Dos preguntas de cierre</h3>
+    <p style="font-size:.92rem"><strong>1.</strong> Explicá con tus palabras, como si se lo dijeras a un compañero, por qué un chico con hipernatremia puede tener signos de deshidratación menos marcados de lo que su porcentaje de pérdida de peso sugeriría.</p>
+    <textarea id="abierta1" placeholder="Tu respuesta..."></textarea>
+    <p style="font-size:.92rem"><strong>2.</strong> De los cuatro errores del Módulo 3, ¿cuál creés que podrías haber cometido vos? ¿Por qué?</p>
+    <textarea id="abierta2" placeholder="Tu respuesta..."></textarea>
+
+    <div class="puntaje-final">
+        <div class="num"><span id="pts">0</span></div>
+        <div class="de">de <span id="pts-max">26</span> consignas correctas</div>
+    </div>
+
+    <p style="font-size:.92rem"><strong>Último paso:</strong> completá tu nombre, generá el resumen, copialo y pegalo en la tarea de Classroom.</p>
+    <input type="text" id="alumno" placeholder="APELLIDO, Nombre"
+           style="width:100%;padding:12px 14px;font-size:1rem;border:2px solid #dadce0;border-radius:10px;margin-bottom:12px">
+    <div class="btn-row" style="margin-bottom:14px">
+        <button class="check" onclick="generarResumen()">Generar resumen de entrega</button>
+        <button class="check sec" onclick="copiarResumen()">Copiar al portapapeles</button>
+    </div>
+    <textarea id="resumen" readonly placeholder="El resumen aparece acá."></textarea>
+    <p id="copiado" style="display:none;color:#15803d;font-weight:700;font-size:.9rem">✓ Copiado. Pegalo en la tarea de Classroom.</p>
+</div>
+
+<div class="box no-print" style="text-align:center">
+    <button class="check sec" onclick="reiniciar()" style="width:auto">Borrar mis respuestas y empezar de nuevo</button>
+</div>
+
+<footer>
+    Taller desarrollado por <span class="autor">Diego Steinberg</span>
+</footer>
+
+</div>
+
+<script>
+/* =========================================================================
+   Contenido del taller. Cada consigna define sus opciones y el feedback
+   que el alumno lee al comprobar — incluido el de las opciones que no eligió.
+   ========================================================================= */
+
+const M0 = [
+  { id:'s1', puntua:false, tipo:'radio',
+    texto:'Un lactante perdió el 8% de su peso corporal por diarrea, pero al examen físico los signos de deshidratación parecen menos marcados de lo esperado. ¿Qué pensás que podría explicarlo?',
+    opts:[
+      {t:'El porcentaje de pérdida de peso está mal calculado.', ok:false,
+       fb:'Puede pasar, pero no es lo primero que hay que pensar si el peso previo es confiable y reciente.'},
+      {t:'Probablemente se trate de una deshidratación hipertónica (hipernatrémica).', ok:true,
+       fb:'Correcto. En la hipernatremia el agua sale preferentemente del espacio intracelular, así que el volumen circulante queda relativamente mejor preservado: el examen físico "miente" hacia abajo.'},
+      {t:'No hay deshidratación real: el peso previo no es un dato confiable.', ok:false,
+       fb:'El peso previo reciente es, al contrario, el dato más objetivo que existe para calcular el grado.'}
+    ]},
+  { id:'s2', puntua:false, tipo:'radio',
+    texto:'¿Con qué frecuencia dirías que hace falta indicar suero endovenoso para rehidratar a un chico con diarrea?',
+    opts:[
+      {t:'Siempre que haya algún signo de deshidratación clínica.', ok:false,
+       fb:'Vas a ver a lo largo del taller que la gran mayoría de las deshidrataciones leves y moderadas se resuelven por vía oral o por sonda nasogástrica.'},
+      {t:'Solo en la deshidratación grave (shock) o cuando fracasa la vía oral.', ok:true,
+       fb:'Esa es la indicación real. El taller te va a mostrar por qué la vía oral es, siempre que se pueda, la primera opción.'},
+      {t:'Nunca: la vía oral siempre alcanza.', ok:false,
+       fb:'Casi. Frente al shock, la expansión endovenosa no tiene sustituto: no hay tiempo para que la absorción intestinal haga efecto.'}
+    ]}
+];
+
+const M2 = [
+{
+  id:'c1', badge:'Caso 1 · Gastroenteritis leve-moderada',
+  titulo:'Mateo, 14 meses',
+  vineta:'Diarrea acuosa de 2 días, unas 6 deposiciones diarias, sin sangre ni moco. Tolera la vía oral, algo decaído pero consolable, bebe con avidez cuando se le ofrece. Peso actual 9,5 kg; pesaba 10,0 kg hace una semana.<br><br><strong>Examen físico:</strong> alerta, sediento. Mucosas semisecas, ojos algo hundidos, llanto con lágrimas escasas, pliegue cutáneo se retrae con rapidez, relleno capilar menor a 2 segundos. FC 130/min, FR 28/min, TA normal para la edad.',
+  lab:[['Na⁺','138 mEq/L',0],['K⁺','4,0 mEq/L',0],['Cl⁻','102 mEq/L',0],['HCO₃','20 mEq/L',1],['Glucemia','92 mg/dL',0]],
+  qs:[
+    { id:'c1q1', tipo:'radio', texto:'Calculá el % de pérdida de peso y clasificá el grado de deshidratación.',
+      hint:'% pérdida = (peso previo − peso actual) / peso previo × 100',
+      opts:[
+        {t:'5% de pérdida: deshidratación leve a moderada', ok:true, fb:'(10,0 − 9,5) / 10,0 × 100 = 5%. Coincide además con el examen: mucosas semisecas, pliegue de retracción rápida, sin signos de shock.'},
+        {t:'10% de pérdida: deshidratación grave', ok:false, fb:'Revisá la cuenta: (10,0 − 9,5) / 10,0 = 0,05, es decir 5%, no 10%.'},
+        {t:'2% de pérdida: sin deshidratación clínica', ok:false, fb:'0,5 kg sobre 10 kg es 5%, no 2%. Y el examen físico ya muestra signos, así que no corresponde al Plan A.'},
+        {t:'No se puede clasificar sin un ionograma', ok:false, fb:'El grado se clasifica por el % de pérdida de peso y los signos clínicos. El ionograma sirve para el otro eje, la natremia, no para el grado.'}
+      ]},
+    { id:'c1q2', tipo:'radio', texto:'¿Qué plan de rehidratación corresponde, y cuánto volumen en 4 horas con el peso actual de Mateo?',
+      hint:'Plan B: SRO 50 a 100 mL/kg en 4 horas',
+      opts:[
+        {t:'Plan B: entre 475 y 950 mL de SRO en 4 horas, en tomas fraccionadas frecuentes', ok:true, fb:'9,5 kg × 50 a 100 mL/kg = 475 a 950 mL en 4 horas. Se ofrece en pequeñas cantidades y frecuentes, y se reevalúa el grado al finalizar.'},
+        {t:'Plan A: SRO libre tras cada deposición, sin volumen fijo', ok:false, fb:'El Plan A es para cuando no hay deshidratación clínica todavía, con fines de prevención. Mateo ya tiene signos de un 5%, así que necesita un volumen de reposición calculado, el Plan B.'},
+        {t:'Plan C: expansión endovenosa de 190 mL en bolo', ok:false, fb:'El Plan C es para el shock. Mateo está alerta, con relleno capilar normal y sin signos de hipoperfusión: tolera perfectamente la vía oral.'},
+        {t:'Ayuno hasta que ceda la diarrea, con SRO a demanda', ok:false, fb:'El ayuno no acorta la diarrea. La conducta correcta combina SRO con la alimentación habitual, sin restringirla.'}
+      ]},
+    { id:'c1q3', tipo:'multi', texto:'¿Cuáles de estas conductas son adecuadas para Mateo? (elegí 2)',
+      opts:[
+        {t:'Continuar la alimentación habitual (o la lactancia) sin restricción, junto con la SRO', ok:true, fb:'Correcto. La realimentación precoz acorta la evolución de la diarrea; no hay ningún motivo para suspenderla.'},
+        {t:'Ofrecer la SRO en tomas pequeñas y frecuentes, con cucharadita o jeringa si hay algún vómito', ok:true, fb:'Correcto. Fraccionar la toma reduce el riesgo de que un vómito arrastre todo el volumen ofrecido de una vez.'},
+        {t:'Reemplazar la SRO por una bebida deportiva, que también tiene sodio', ok:false, fb:'No. Su osmolaridad es mucho más alta que la de la SRO por el exceso de azúcar, y puede empeorar la diarrea por efecto osmótico.'},
+        {t:'Indicar loperamida para reducir el número de deposiciones', ok:false, fb:'Los antidiarreicos que enlentecen el tránsito intestinal están contraindicados en niños pequeños: favorecen la proliferación bacteriana y el íleo, sin acortar la enfermedad.'},
+        {t:'Indicar un antibiótico empírico para acortar el cuadro', ok:false, fb:'La mayoría de las gastroenteritis en pediatría son virales. El antibiótico de rutina no está indicado sin un foco bacteriano identificado.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> deshidratación isotónica leve a moderada (5%) por gastroenteritis aguda, sin signos de shock.</p><p>Es el escenario más frecuente en la guardia pediátrica, y el que más rápido se resuelve bien: SRO fraccionada, sin ayuno, con reevaluación a las 4 horas.</p><p><strong>Lo que hay que retener:</strong> la vía oral no es una alternativa de segunda categoría frente al suero endovenoso. Para la deshidratación leve-moderada es el tratamiento de elección, con menos complicaciones y sin necesidad de internación.</p>'
+},
+{
+  id:'c2', badge:'Caso 2 · Deshidratación grave con shock',
+  titulo:'Bianca, 10 meses',
+  vineta:'Diarrea y vómitos incoercibles de 3 días de evolución. En las últimas horas está hipoactiva y no logra tolerar nada por boca, ni siquiera pequeños sorbos de SRO. Peso actual 7,0 kg; pesaba 8,0 kg hace cuatro días.<br><br><strong>Examen físico:</strong> hipoactiva, responde poco al estímulo. Ojos muy hundidos, mucosas secas, fontanela muy hundida. Pliegue cutáneo persiste más de 2 segundos. Relleno capilar 4 segundos, pulsos periféricos débiles. FC 190/min, FR 44/min (respiración profunda), TA 74/38 mmHg.',
+  lab:[['pH','7,15',1],['pCO₂','18 mmHg',1],['HCO₃','8 mEq/L',1],['Na⁺','140 mEq/L',0],['K⁺','3,0 mEq/L',1],['Cl⁻','108 mEq/L',1],['Urea','62 mg/dL',1]],
+  qs:[
+    { id:'c2q1', tipo:'radio', texto:'Calculá el % de pérdida de peso y reconocé el grado.',
+      opts:[
+        {t:'12,5% de pérdida: deshidratación grave, con signos de shock', ok:true, fb:'(8,0 − 7,0) / 8,0 × 100 = 12,5%. Coincide con el examen: relleno capilar prolongado, pulsos débiles, alteración del sensorio. La hipotensión, cuando aparece, ya es un signo tardío.'},
+        {t:'8% de pérdida: deshidratación moderada', ok:false, fb:'Revisá la cuenta: 1 kg sobre 8 kg es 12,5%, no 8%.'},
+        {t:'No se puede clasificar el grado porque hay signos de shock', ok:false, fb:'Al revés: los signos de shock son justamente los que definen el grado grave. No hace falta esperar nada más para clasificarla.'},
+        {t:'5%, porque la TA todavía no está muy baja', ok:false, fb:'La tensión arterial baja es un signo tardío de shock: puede estar "casi normal" incluso en una deshidratación grave, como acá (74/38, en el límite bajo). No es el dato que define el grado.'}
+      ]},
+    { id:'c2q2', tipo:'radio', texto:'¿Cuál es la conducta inmediata?',
+      opts:[
+        {t:'Plan C: expansión con solución fisiológica 20 mL/kg en bolo rápido, sin esperar el laboratorio', ok:true, fb:'Correcto. 20 mL/kg × 7 kg = 140 mL en bolo, repetible según respuesta clínica. El shock no espera a que vuelvan los resultados.'},
+        {t:'Intentar primero SRO por sonda nasogástrica', ok:false, fb:'La sonda nasogástrica es una alternativa válida cuando fracasa la vía oral por vómitos, pero no cuando hay shock. El shock exige vía endovenosa de entrada.'},
+        {t:'Solicitar el laboratorio y decidir el plan según el resultado', ok:false, fb:'Esperar el laboratorio para expandir a un paciente en shock retrasa el tratamiento sin ningún beneficio: la indicación es clínica.'},
+        {t:'Corregir primero la acidosis con bicarbonato antes de expandir', ok:false, fb:'Es el orden invertido. La acidosis de Bianca es en gran parte por hipoperfusión: se corrige al restablecer la circulación, no antes.'}
+      ]},
+    { id:'c2q3', tipo:'radio', texto:'El pH es 7,15 y el HCO₃ es 8. ¿La compensación respiratoria es la esperada?',
+      hint:'Fórmula de Winter: pCO₂ esperada = 1,5 × HCO₃ + 8 (± 2)',
+      opts:[
+        {t:'Sí: 1,5 × 8 + 8 = 20, con rango de 18 a 22, y la pCO₂ medida es 18', ok:true, fb:'Correcto. La FR de 44 con respiración profunda es la compensación funcionando a pleno, no un signo respiratorio primario. Es acidosis metabólica pura, coherente con la hipoperfusión.'},
+        {t:'No, la pCO₂ debería ser más alta: hay una acidosis respiratoria asociada', ok:false, fb:'Es al revés: en la acidosis metabólica la pCO₂ esperada es baja, porque el pulmón hiperventila para compensar. 18 está dentro del rango esperado.'},
+        {t:'No se puede calcular sin saber si la muestra es arterial', ok:false, fb:'La fórmula de Winter se aplica igual con una muestra venosa o capilar bien tomada: sirve para el componente metabólico, no requiere sangre arterial.'},
+        {t:'No, la compensación es excesiva', ok:false, fb:'El rango esperado es de 18 a 22 mmHg, y la pCO₂ medida es exactamente 18: está en el límite del rango, no por debajo.'}
+      ]},
+    { id:'c2q4', tipo:'multi', texto:'Con el potasio en 3,0 mEq/L, ¿cuáles son las conductas correctas? (elegí 2)',
+      opts:[
+        {t:'Expandir primero con solución fisiológica sin potasio agregado', ok:true, fb:'Correcto. El potasio nunca se agrega al bolo de expansión inicial, sobre todo con función renal aún no evaluada.'},
+        {t:'Agregar potasio a la hidratación una vez confirmada la diuresis', ok:true, fb:'Correcto. Recién ahí, con la función renal demostrada, se repone el potasio junto con el plan de hidratación.'},
+        {t:'Agregar potasio directamente al primer bolo de expansión, para corregirlo cuanto antes', ok:false, fb:'No. Si hubiera algún grado de insuficiencia renal aguda no reconocida todavía, agregar potasio al bolo puede producir una hiperpotasemia peligrosa.'},
+        {t:'Indicar bicarbonato de sodio por el pH de 7,15', ok:false, fb:'No está indicado de rutina. La acidosis de causa hipoperfusiva se corrige al restablecer la circulación, igual que en cualquier shock.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> deshidratación grave (12,5%) con shock hipovolémico compensado, y acidosis metabólica secundaria a hipoperfusión, adecuadamente compensada.</p><p>El caso combina los dos talleres: el reconocimiento del shock (con sus signos de mayor valor, no la tensión arterial) y la lectura del estado ácido-base (Winter confirmando que la taquipnea es compensación, no un problema respiratorio primario).</p><p><strong>Lo que hay que retener:</strong> ante el shock, la secuencia es siempre volumen primero. El resto —potasio, bicarbonato, cualquier otra corrección— espera a que la perfusión esté restablecida.</p>'
+},
+{
+  id:'c3', badge:'Caso 3 · Deshidratación hipernatrémica',
+  titulo:'Renata, 20 días',
+  vineta:'Recién nacida alimentada a pecho exclusivo. La madre refiere "poca leche" y que la bebé duerme mucho, llora poco y moja pocos pañales desde hace una semana. Pesó 3,400 kg al nacer; hoy, a los 20 días, pesa 2,900 kg.<br><br><strong>Examen físico:</strong> letárgica la mayor parte del tiempo pero muy irritable al manipularla, con llanto agudo. Mucosas muy secas. Piel de <strong>textura pastosa</strong>, sin el pliegue clásico que se retrae lento. Fontanela hundida. Tono levemente aumentado.',
+  lab:[['Na⁺','165 mEq/L',1],['K⁺','5,0 mEq/L',1],['Cl⁻','130 mEq/L',1],['Glucemia','78 mg/dL',0],['Urea','58 mg/dL',1]],
+  qs:[
+    { id:'c3q1', tipo:'radio', texto:'Calculá el % de pérdida respecto del peso de nacimiento y clasificá el tipo de deshidratación por natremia.',
+      opts:[
+        {t:'14,7% de pérdida; hipertónica (hipernatrémica)', ok:true, fb:'(3,400 − 2,900) / 3,400 × 100 ≈ 14,7%, una pérdida neonatal muy significativa. Con un Na de 165, es una deshidratación hipertónica: el mecanismo es aporte insuficiente de leche materna en los primeros días de vida.'},
+        {t:'14,7% de pérdida; isotónica', ok:false, fb:'El porcentaje está bien calculado, pero con un sodio de 165 mEq/L la deshidratación es hipertónica, no isotónica.'},
+        {t:'5% de pérdida; hipertónica', ok:false, fb:'(3,400 − 2,900) / 3,400 no da 5%, da cerca de 14,7%. Revisá la resta: perdió medio kilo sobre 3,4 kg de partida.'},
+        {t:'No se puede clasificar sin conocer el peso de nacimiento exacto', ok:false, fb:'El peso de nacimiento (3,400 kg) ya está dado en la viñeta: es exactamente el dato que hace falta.'}
+      ]},
+    { id:'c3q2', tipo:'radio', texto:'¿Por qué el examen físico de Renata (piel pastosa, sin el pliegue clásico) parece menos grave de lo que sugiere un 14,7% de pérdida de peso?',
+      opts:[
+        {t:'En la hipernatremia el agua sale preferentemente del espacio intracelular, así que el volumen circulante (extracelular) queda relativamente mejor preservado', ok:true, fb:'Correcto. El sodio alto en el extracelular arrastra agua desde el intracelular por ósmosis, amortiguando la caída del volumen circulante. Por eso el shock aparece más tarde que en una deshidratación isotónica del mismo porcentaje, y el examen físico "subestima" la gravedad real.'},
+        {t:'Porque en realidad la deshidratación de Renata no es tan grave como sugiere el peso', ok:false, fb:'Al revés: es una pérdida neonatal muy importante, con una hipernatremia marcada. El examen físico es el que engaña, no el peso.'},
+        {t:'Porque a los 20 días de vida el pliegue cutáneo todavía no es un signo confiable', ok:false, fb:'El pliegue es un signo válido a cualquier edad pediátrica. Lo que cambia su forma de presentarse acá es el tipo de deshidratación, no la edad.'},
+        {t:'Porque el potasio alto compensa el efecto del sodio', ok:false, fb:'El potasio de 5,0 no compensa nada acá: refleja hemoconcentración y una probable injuria renal aguda prerrenal, coherente con la urea elevada.'}
+      ]},
+    { id:'c3q3', tipo:'radio', texto:'¿Cuál es el mayor riesgo en el tratamiento de Renata, y cómo se evita?',
+      hint:'Velocidad máxima: no bajar el sodio más de 10–12 mEq/L por día',
+      opts:[
+        {t:'Edema cerebral por corrección demasiado rápida del sodio; se evita bajándolo no más de 10 a 12 mEq/L por día', ok:true, fb:'Correcto. Las neuronas generaron osmoles idiogénicos para protegerse de la hipertonicidad. Si el sodio plasmático baja de golpe, el agua entra rápido a la célula y se produce edema cerebral, con convulsiones.'},
+        {t:'Hipopotasemia por la corrección; se evita no reponiendo potasio', ok:false, fb:'El potasio de Renata está alto, no bajo, y de todos modos el riesgo mayor y específico de la hipernatremia es el neurológico por la velocidad de corrección del sodio.'},
+        {t:'Insuficiencia renal; se evita restringiendo el volumen de hidratación', ok:false, fb:'La urea elevada es prerrenal, por la propia deshidratación: se corrige rehidratando, no restringiendo volumen.'},
+        {t:'Hipoglucemia; se evita con aporte alto de glucosa desde el inicio', ok:false, fb:'La glucemia de Renata es normal. El riesgo que domina este caso es neurológico, por la velocidad de corrección del sodio.'}
+      ]},
+    { id:'c3q4', tipo:'multi', texto:'¿Cuáles de estas conductas son correctas para Renata? (elegí 2)',
+      opts:[
+        {t:'Si en algún momento presenta signos de shock, expandir con solución fisiológica isotónica igual que en cualquier otra deshidratación', ok:true, fb:'Correcto. La regla no tiene excepción: la fase de emergencia es siempre isotónica, sea cual sea el tipo de deshidratación por sodio.'},
+        {t:'Corregir el déficit de agua libre en forma lenta, con controles de sodio cada 4 a 6 horas', ok:true, fb:'Correcto. El control seriado del sodio durante la corrección es lo que permite detectar a tiempo si está bajando más rápido de lo previsto y frenar antes de que aparezcan síntomas.'},
+        {t:'Corregir el déficit total en 6 a 8 horas para que la bebé se recupere cuanto antes', ok:false, fb:'Es exactamente el error a evitar. Una corrección tan rápida en una hipernatremia de 165 tiene alto riesgo de edema cerebral. La corrección debe planearse en 48 horas o más.'},
+        {t:'Suspender la lactancia materna y pasar a fórmula hasta normalizar el sodio', ok:false, fb:'No hace falta suspenderla; al contrario, hay que apoyar y relactar. El problema no es la leche materna en sí, sino que el aporte fue insuficiente en los primeros días.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> deshidratación hipernatrémica grave del recién nacido, por aporte insuficiente de leche materna ("hipernatremia por lactancia").</p><p>Es una causa reconocida y prevenible de deshidratación neonatal grave: la baja producción de leche en los primeros días, sin suplementación oportuna, puede llevar a pérdidas de peso muy significativas que pasan desapercibidas porque el examen físico "no acompaña" al grado real de pérdida.</p><p><strong>Lo que hay que retener:</strong> todo recién nacido con pérdida de peso mayor al 10% del peso de nacimiento necesita evaluación urgente, incluyendo un ionograma. Y una vez identificada la hipernatremia, la paciencia en la velocidad de corrección es, literalmente, lo que protege el cerebro.</p>'
+},
+{
+  id:'c4', badge:'Caso 4 · Deshidratación hiponatrémica con convulsión',
+  titulo:'Tomás, 18 meses',
+  vineta:'Diarrea de 4 días. La madre refiere que le fue dando mate cocido y agua durante todo el cuadro, "para que no se deshidrate", sin sales de rehidratación oral. Peso actual 11,0 kg; pesaba 12,0 kg antes del cuadro. Ingresa por un episodio convulsivo tónico-clónico generalizado de 2 minutos de duración, ya cedido.<br><br><strong>Examen físico:</strong> posconvulsivo, hipotónico, poco reactivo. Mucosas secas. Sin fiebre. Sin signos meníngeos.',
+  lab:[['Na⁺','118 mEq/L',1],['K⁺','3,2 mEq/L',1],['Glucemia','98 mg/dL',0],['Cl⁻','82 mEq/L',1]],
+  qs:[
+    { id:'c4q1', tipo:'radio', texto:'¿Cuál es la causa más probable de la convulsión?',
+      opts:[
+        {t:'Hiponatremia severa, con edema cerebral asociado', ok:true, fb:'Correcto. Un sodio de 118 mEq/L es una hiponatremia grave: el agua se desplaza hacia el espacio intracelular en el cerebro, produce edema cerebral, y ese es un desencadenante clásico de convulsiones en la infancia.'},
+        {t:'Hipoglucemia', ok:false, fb:'La glucemia de Tomás es normal (98 mg/dL). Siempre hay que descartarla ante una convulsión, y en este caso ya está descartada.'},
+        {t:'Fiebre (convulsión febril)', ok:false, fb:'No hay fiebre en el relato. Además, la edad y el contexto (diarrea con reposición de líquidos sin sodio) apuntan directamente a otra causa.'},
+        {t:'Meningitis', ok:false, fb:'No hay signos meníngeos ni fiebre. El dato de laboratorio que explica el cuadro está a la vista: el sodio.'}
+      ]},
+    { id:'c4q2', tipo:'radio', texto:'¿Cuál es la conducta inmediata frente a esta convulsión por hiponatremia sintomática?',
+      opts:[
+        {t:'Bolo de solución hipertónica al 3% (NaCl 3%), 3 a 5 mL/kg, para elevar el sodio rápido y controlar el síntoma', ok:true, fb:'Correcto. Frente a un síntoma neurológico agudo por hiponatremia (convulsión, coma), la excepción a la regla de "corregir lento" es indicar un bolo de solución hipertónica que suba el sodio apenas unos mEq/L, lo suficiente para frenar el edema cerebral agudo.'},
+        {t:'Iniciar de entrada la corrección lenta planificada, sin bolo hipertónico', ok:false, fb:'Con un síntoma neurológico agudo en curso no corresponde esperar: la corrección lenta es la regla general, pero acá hay una excepción justificada por el riesgo vital inmediato.'},
+        {t:'Reponer solo con solución fisiológica isotónica en bolo', ok:false, fb:'La solución fisiológica (Na 154) sube el sodio muy poco y muy lento para lo que necesita este síntoma agudo. Frente a la convulsión hiponatrémica se usa solución hipertónica.'},
+        {t:'Restringir todo aporte de líquidos hasta que suba el sodio espontáneamente', ok:false, fb:'La restricción de líquidos puede tener un rol en algunas hiponatremias crónicas asintomáticas, pero no en una convulsión activa: ahí hace falta subir el sodio de forma activa y rápida, aunque sea un poco.'}
+      ]},
+    { id:'c4q3', tipo:'radio', texto:'Una vez controlada la convulsión, ¿cómo continúa el manejo del sodio?',
+      hint:'Velocidad máxima: no más de 8–10 mEq/L por día',
+      opts:[
+        {t:'Enlentecer la corrección: no subir el sodio más de 8 a 10 mEq/L en las siguientes 24 horas', ok:true, fb:'Correcto. Después de controlar el síntoma agudo con el bolo inicial, el resto de la corrección vuelve a ser lenta, para evitar el riesgo de una desmielinización osmótica por corrección sostenida demasiado rápida.'},
+        {t:'Seguir subiendo el sodio con soluciones hipertónicas hasta normalizarlo del todo en pocas horas', ok:false, fb:'No. Una vez controlado el síntoma agudo, seguir corrigiendo rápido expone al riesgo de desmielinización osmótica. El resto de la corrección debe ser lenta.'},
+        {t:'Dejar de controlar el sodio: ya se resolvió el problema con la convulsión cedida', ok:false, fb:'Al contrario, es el momento de mayor vigilancia: hay que controlar el sodio en forma seriada para asegurarse de que la velocidad de ascenso quede dentro de lo seguro.'},
+        {t:'Volver a bajar el sodio con solución hipotónica para evitar la desmielinización', ok:false, fb:'No corresponde. Bajarlo de nuevo reexpondría a Tomás al mismo riesgo neurológico que motivó la convulsión. El objetivo es una corrección lenta pero sostenida hacia arriba.'}
+      ]},
+    { id:'c4q4', tipo:'multi', texto:'¿Qué explica esta hiponatremia, y qué hay que corregir hacia adelante? (elegí 2)',
+      opts:[
+        {t:'La reposición de las pérdidas con mate cocido y agua, sin sodio ni SRO, durante varios días', ok:true, fb:'Correcto. Reponer pérdidas ricas en electrolitos (la diarrea) con líquidos prácticamente libres de sodio diluye progresivamente la natremia. Es el mecanismo central del caso.'},
+        {t:'Indicar SRO para las próximas pérdidas, en lugar de agua o mate cocido', ok:true, fb:'Correcto. La composición de la SRO (con sodio) es justamente la que evita este mecanismo hacia adelante.'},
+        {t:'Es un cuadro esperable de cualquier diarrea, sin relación con lo que tomó', ok:false, fb:'No es lo esperable: la mayoría de las diarreas producen deshidratación isotónica. Esta hiponatremia tan marcada tiene una causa identificable, que es la reposición con líquidos sin sodio.'},
+        {t:'Indicar más agua libre para diluir mejor las pérdidas', ok:false, fb:'Es la conducta que agravaría el cuadro: más agua libre sin sodio profundiza la hiponatremia.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> deshidratación hipotónica grave (Na 118) por diarrea repuesta con líquidos hipotónicos (mate cocido y agua, sin SRO), con convulsión por edema cerebral secundario.</p><p>El caso ilustra el otro extremo del eje de la natremia: acá el problema no es que se pierda más agua que sodio, sino que se repuso con algo que casi no tiene sodio, diluyendo lo que quedaba.</p><p><strong>Lo que hay que retener:</strong> frente a un síntoma neurológico agudo por hiponatremia, sí se corrige rápido —pero solo lo suficiente para frenar el síntoma, con solución hipertónica en bolo pequeño— y después se vuelve a la corrección lenta. Es la misma lógica de "la prisa daña" que en la hipernatremia, aplicada con una excepción puntual cuando hay riesgo vital inmediato.</p>'
+},
+{
+  id:'c5', badge:'Caso 5 · Vómitos incoercibles',
+  titulo:'Uma, 3 años',
+  vineta:'Gastroenteritis con vómitos muy frecuentes: vomita prácticamente cada vez que intenta tomar algo, incluso pequeños sorbos. Sin diarrea todavía. Peso actual 14,0 kg; pesaba 14,9 kg hace tres días.<br><br><strong>Examen físico:</strong> alerta, irritable, llorando. Mucosas secas, ojos algo hundidos, pliegue se retrae con lentitud leve. Relleno capilar menor a 2 segundos, pulsos normales, bien perfundida.',
+  lab:[['Na⁺','136 mEq/L',0],['K⁺','3,5 mEq/L',0],['Cl⁻','98 mEq/L',0]],
+  qs:[
+    { id:'c5q1', tipo:'radio', texto:'Calculá el grado de deshidratación de Uma. ¿Está en condiciones de recibir SRO por boca?',
+      opts:[
+        {t:'6% de pérdida, deshidratación leve-moderada, sin signos de shock: en principio sí, pero los vómitos frecuentes lo dificultan', ok:true, fb:'(14,9 − 14,0) / 14,9 × 100 ≈ 6%. Está bien perfundida y sin shock, así que la vía oral sigue siendo la primera opción, aunque los vómitos frecuentes obligan a pensar cómo administrarla.'},
+        {t:'12% de pérdida, deshidratación grave: necesita vía endovenosa de entrada', ok:false, fb:'La cuenta da 6%, no 12%. Y el examen físico (bien perfundida, relleno capilar normal, pulsos normales) tampoco muestra signos de shock.'},
+        {t:'6% de pérdida, y como vomita todo debe pasar directo a vía endovenosa', ok:false, fb:'Los vómitos frecuentes son un obstáculo para la vía oral clásica, pero antes de saltar a la vía endovenosa hay una alternativa intermedia: seguí con las próximas preguntas.'},
+        {t:'No se puede calcular sin conocer la causa de los vómitos', ok:false, fb:'El grado se calcula con el peso previo y actual, que ya están dados. La causa de los vómitos no cambia esa cuenta.'}
+      ]},
+    { id:'c5q2', tipo:'radio', texto:'La SRO por boca fracasa: Uma vomita cada toma, incluso en cantidades muy pequeñas. ¿Cuál es el siguiente paso recomendado, antes de indicar vía endovenosa?',
+      opts:[
+        {t:'Sonda nasogástrica con SRO en goteo continuo (gastroclisis)', ok:true, fb:'Correcto. Para la deshidratación leve-moderada sin shock, con fracaso de la vía oral por vómitos, la sonda nasogástrica es tan eficaz como la vía endovenosa y con menos complicaciones. El goteo continuo suele tolerarse mejor que los bolos.'},
+        {t:'Vía endovenosa directamente, porque ya fracasó un intento de vía oral', ok:false, fb:'No es el siguiente paso recomendado. Antes de la vía endovenosa hay una alternativa menos invasiva y igual de eficaz para este grado de deshidratación: la sonda nasogástrica.'},
+        {t:'Suspender todo aporte de líquidos hasta que los vómitos cedan solos', ok:false, fb:'Suspender el aporte no trata la deshidratación, que sigue progresando. Hay que buscar una vía que sí tolere, no dejar de aportar.'},
+        {t:'Antieméticos por vía intramuscular en forma sostenida cada 6 horas', ok:false, fb:'No es la conducta de primera línea. El ondansetrón en dosis única puede ayudar a que tolere la vía oral, pero el uso sostenido e intramuscular no es lo indicado de entrada.'}
+      ]},
+    { id:'c5q3', tipo:'multi', texto:'¿Qué otras conductas son razonables en este momento? (elegí 2)',
+      opts:[
+        {t:'Considerar una dosis única de ondansetrón para facilitar la tolerancia oral antes de escalar a sonda o vía endovenosa', ok:true, fb:'Correcto. En dosis única puede reducir lo suficiente los vómitos como para que la SRO por boca vuelva a ser posible, evitando procedimientos más invasivos.'},
+        {t:'Reservar la vía endovenosa para si también fracasa la sonda nasogástrica, o si aparecen signos de shock', ok:true, fb:'Correcto. Es el último escalón, no el primero, para este grado de deshidratación.'},
+        {t:'Indicar vía endovenosa igual, porque es más rápida que esperar a ver si la sonda funciona', ok:false, fb:'La "velocidad" no es el criterio: para este grado sin shock, la eficacia de la sonda nasogástrica es equivalente a la endovenosa, con menos riesgo de complicaciones (infección del catéter, infiltración).'},
+        {t:'Indicar antieméticos de forma continua durante 48 horas para asegurar la tolerancia', ok:false, fb:'No es necesario ni lo indicado: la dosis única suele alcanzar para destrabar la vía oral en el momento agudo.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> deshidratación isotónica leve-moderada (6%) con vómitos incoercibles como principal obstáculo para la vía oral, sin signos de shock.</p><p>El caso está para desarmar una asociación automática: "vomita todo → vía endovenosa". Entre la SRO por boca y el suero endovenoso hay un escalón intermedio, la sonda nasogástrica, con evidencia sólida de eficacia equivalente y menos complicaciones.</p><p><strong>Lo que hay que retener:</strong> la vía endovenosa se reserva para el shock o para cuando de verdad fracasaron las alternativas menos invasivas, no para la primera dificultad con la vía oral.</p>'
+}
+];
+
+const M3 = [
+  { id:'e1', badge:'Error 1', titulo:'El ayuno prolongado',
+    cita:'«Lactante de 8 meses con diarrea de 2 días y deshidratación leve. Le indiqué SRO y <strong>suspendí la leche y los alimentos hasta que ceda la diarrea</strong>, para que el intestino descanse. Control en 48 horas.»',
+    q:{ id:'e1q', tipo:'radio', texto:'¿Dónde está el error?',
+      opts:[
+        {t:'El ayuno no acorta la diarrea, y puede prolongarla: hay que mantener la alimentación (o la lactancia) junto con la SRO', ok:true, fb:'Correcto. El ayuno prolongado retrasa la recuperación de la mucosa intestinal y no reduce el volumen ni la duración de la diarrea. La recomendación actual es realimentar precozmente, en paralelo a la rehidratación, no después de ella.'},
+        {t:'El error fue indicar SRO en lugar de suero endovenoso', ok:false, fb:'La SRO es exactamente la indicación correcta para una deshidratación leve. El problema del caso es otro: el ayuno.'},
+        {t:'El error fue no indicar un antibiótico', ok:false, fb:'Nada en el caso sugiere una causa bacteriana que requiera antibiótico. No es el error central de este fragmento.'},
+        {t:'No hay error: descansar el intestino acelera la recuperación', ok:false, fb:'Es la creencia intuitiva y es exactamente la que hay que revisar. La evidencia muestra lo contrario: la realimentación precoz mejora la evolución.'}
+      ]}},
+  { id:'e2', badge:'Error 2', titulo:'El mantenimiento hipotónico',
+    cita:'«Niño internado por una neumonía, con indicación de plan de hidratación parenteral de mantenimiento. Le indiqué <strong>dextrosa 5% en solución fisiológica al medio (0,45%)</strong>, como se hacía siempre, más el potasio correspondiente.»',
+    q:{ id:'e2q', tipo:'radio', texto:'¿Dónde está el error?',
+      opts:[
+        {t:'Las guías actuales recomiendan soluciones isotónicas para el mantenimiento endovenoso en niños agudos, por el riesgo de hiponatremia iatrogénica sintomática con las hipotónicas', ok:true, fb:'Correcto. En un chico enfermo agudo, con niveles de hormona antidiurética elevados por la enfermedad misma (dolor, náuseas, patología respiratoria), una solución de mantenimiento hipotónica retiene agua libre en exceso y puede producir una hiponatremia sintomática, a veces grave. Por eso el estándar actual es usar soluciones isotónicas (SF 0,9% o Ringer) con dextrosa y potasio también para el mantenimiento, no solo para el déficit.'},
+        {t:'El error es que no se puede dar potasio en el mismo frasco que el mantenimiento', ok:false, fb:'Sí se puede, y es la práctica habitual una vez confirmada la diuresis. El problema del caso es la tonicidad de la solución base, no el potasio.'},
+        {t:'El error es agregar dextrosa al plan de mantenimiento', ok:false, fb:'La dextrosa es una parte esperable del mantenimiento, para evitar el catabolismo y la cetosis por ayuno. No es el error del fragmento.'},
+        {t:'No hay error: es el esquema clásico de mantenimiento pediátrico', ok:false, fb:'Es cierto que fue el esquema clásico durante décadas, pero la evidencia acumulada de hiponatremia iatrogénica llevó a cambiar la recomendación hacia soluciones isotónicas.'}
+      ]}},
+  { id:'e3', badge:'Error 3', titulo:'La corrección apurada',
+    cita:'«Lactante con deshidratación hipernatrémica, sodio de 168 mEq/L, ya sin signos de shock. Armé el plan para <strong>normalizar el sodio en 12 horas</strong>: cuanto antes esté en rango, menos tiempo pasa expuesto a la hipernatremia.»',
+    q:{ id:'e3q', tipo:'radio', texto:'¿Dónde está el error?',
+      opts:[
+        {t:'La corrección del déficit de agua libre en la hipernatremia debe ser lenta (no más de 10 a 12 mEq/L por día), no en 12 horas', ok:true, fb:'Correcto. Bajar el sodio tan rápido produce un movimiento osmótico de agua hacia las neuronas, que ya generaron osmoles idiogénicos para protegerse de la hipertonicidad: el resultado es edema cerebral y convulsiones. El razonamiento "cuanto antes, mejor" es exactamente el que hay que evitar acá.'},
+        {t:'El error es haber descartado el shock antes de decidir el plan', ok:false, fb:'Descartar el shock primero es correcto: define si hace falta o no el bolo isotónico de emergencia antes de planificar la corrección del déficit.'},
+        {t:'El error es no haber usado solución hipertónica para corregir más rápido', ok:false, fb:'Es la conducta contraria a la correcta. La solución hipertónica sube el sodio, y acá lo que hace falta es bajarlo, y hacerlo lento.'},
+        {t:'No hay error: 12 horas es un tiempo razonable para un sodio de 168', ok:false, fb:'No lo es. Con esa hipernatremia, la corrección debería planificarse en 48 horas o más, bajando el sodio de forma gradual y controlada.'}
+      ]}},
+  { id:'e4', badge:'Error 4', titulo:'El potasio en el bolo',
+    cita:'«Lactante en shock por deshidratación grave. Indiqué la expansión con solución fisiológica 20 mL/kg <strong>con 20 mEq/L de potasio agregado</strong>, para adelantar la corrección de la hipopotasemia que seguro tiene.»',
+    q:{ id:'e4q', tipo:'radio', texto:'¿Dónde está el error?',
+      opts:[
+        {t:'El potasio nunca se agrega al bolo de expansión inicial del shock; se reserva para después de confirmar la diuresis', ok:true, fb:'Correcto. En pleno shock todavía no está evaluada la función renal. Si hubiera una insuficiencia renal aguda no reconocida, agregar potasio al bolo puede producir una hiperpotasemia peligrosa, con riesgo de arritmia. El potasio se agrega recién cuando la diuresis está confirmada.'},
+        {t:'El error es el volumen: 20 mL/kg es insuficiente para el shock', ok:false, fb:'20 mL/kg es exactamente el volumen de bolo recomendado para la expansión inicial, repetible según respuesta. El volumen no es el problema del caso.'},
+        {t:'El error es usar solución fisiológica en lugar de Ringer lactato', ok:false, fb:'Ambas son opciones válidas para la expansión del shock. La elección entre una y otra no es el error central acá.'},
+        {t:'No hay error: es mejor adelantar la corrección del potasio', ok:false, fb:'Es la intención que parece razonable y es la que hay que evitar. El riesgo de agregar potasio antes de confirmar la función renal supera cualquier beneficio de "adelantarse".'}
+      ]}}
+];
+
+const M4 = {
+  id:'d1', badge:'Desafío', titulo:'Joaquín, 7 meses',
+  vineta:'Diarrea y vómitos de 5 días de evolución. La familia refiere que, para "que rinda más", venía preparando la fórmula láctica con menos agua que la indicada en el envase. Peso actual 6,0 kg; pesaba 7,0 kg hace cinco días.<br><br><strong>Examen físico:</strong> letárgico, con llanto agudo al manipularlo. Mucosas muy secas, piel de textura pastosa. Relleno capilar 4 segundos, pulsos periféricos débiles. FC 186/min. TA 72/40 mmHg. FR 30/min, respiración profunda.',
+  lab:[['pH','7,20',1],['pCO₂','26 mmHg',1],['HCO₃','12 mEq/L',1],['Na⁺','158 mEq/L',1],['K⁺','5,5 mEq/L',1],['Cl⁻','120 mEq/L',1],['Glucemia','64 mg/dL',0],['Urea','70 mg/dL',1]],
+  qs:[
+    { id:'d1q1', tipo:'radio', texto:'Con signos claros de shock y un sodio de 158, ¿cuál es la conducta inicial?',
+      opts:[
+        {t:'Expandir con solución fisiológica isotónica 20 mL/kg en bolo, igual que ante cualquier shock', ok:true, fb:'Correcto. La regla no cambia por el tipo de deshidratación: la fase de emergencia frente al shock siempre es con solución isotónica. El tipo de natremia decide la velocidad de la corrección posterior, no el bolo inicial.'},
+        {t:'Expandir con solución hipotónica, para no elevar más el sodio ya alto', ok:false, fb:'Es un error peligroso: una solución hipotónica no restablece bien el volumen circulante en un shock, y el objetivo inmediato es la perfusión, no el sodio.'},
+        {t:'Corregir primero el sodio lentamente y recién después tratar el shock', ok:false, fb:'El shock no espera. La prioridad absoluta, en cualquier tipo de deshidratación, es restablecer la perfusión.'},
+        {t:'Indicar solución hipertónica al 3% para acelerar la corrección del sodio, dado lo grave del cuadro', ok:false, fb:'La solución hipertónica se reserva para la hiponatremia sintomática grave. Acá el sodio ya está alto: usarla lo empeoraría, y no es lo que necesita el shock.'}
+      ]},
+    { id:'d1q2', tipo:'radio', texto:'Calculá el anion gap e interpretá la acidosis metabólica asociada.',
+      hint:'AG = Na⁺ − (Cl⁻ + HCO₃⁻). Winter: pCO₂ esperada = 1,5 × HCO₃ + 8 (± 2)',
+      opts:[
+        {t:'AG 26, aumentado, coherente con acidosis láctica por hipoperfusión, con compensación respiratoria adecuada (pCO₂ esperada 24–28, medida 26)', ok:true, fb:'Correcto. 158 − (120 + 12) = 26, muy por encima de lo normal: un anion gap aumentado explicado por el lactato del shock. Y 1,5 × 12 + 8 = 26 (rango 24–28): la pCO₂ de 26 confirma que la compensación respiratoria está funcionando como corresponde.'},
+        {t:'AG 26, aumentado, y por eso corresponde indicar bicarbonato de sodio para corregir el pH antes de seguir', ok:false, fb:'El cálculo del AG está bien, pero la conducta no: igual que en el Caso 2, esta acidosis es por hipoperfusión y se corrige al restablecer la circulación, no con bicarbonato. Además la compensación respiratoria (pCO₂ 26, esperada 24–28) ya es adecuada, así que tampoco hay un segundo trastorno que justifique intervenir sobre el pH directamente.'},
+        {t:'AG 14, normal; se trata de una acidosis hiperclorémica pura', ok:false, fb:'Revisá la cuenta: 158 − (120 + 12) = 26, no 14. El cloro alto acompaña pero no explica todo el gap: hay un anión no medido de más, coherente con lactato.'},
+        {t:'No se puede calcular el anion gap sin conocer el lactato', ok:false, fb:'El anion gap se calcula solo con sodio, cloro y bicarbonato, que ya están en el laboratorio. Justamente sirve para sospechar el lactato alto antes de tenerlo medido.'}
+      ]},
+    { id:'d1q3', tipo:'radio', texto:'Una vez resuelto el shock, ¿cómo se planifica la corrección del sodio de Joaquín?',
+      opts:[
+        {t:'Lenta: no bajar el sodio más de 10 a 12 mEq/L por día, con controles seriados', ok:true, fb:'Correcto. El mismo principio del Caso 3: el sodio elevado generó osmoles idiogénicos protectores en el cerebro, y bajarlo rápido produce edema cerebral. Se planifica en 48 horas o más, con controles frecuentes.'},
+        {t:'Rápida: en 12 a 24 horas, dado que el paciente ya estuvo en shock y no puede esperar más', ok:false, fb:'Que haya estado en shock justifica la urgencia del bolo isotónico inicial, no una corrección rápida del sodio después. Son dos decisiones distintas: una es inmediata, la otra es lenta y planificada.'},
+        {t:'No hace falta un plan específico: el sodio se normaliza solo con el mantenimiento habitual', ok:false, fb:'Con un sodio de 158 sí hace falta un plan específico y controles seriados; dejarlo librado al mantenimiento habitual no garantiza una velocidad de corrección segura.'},
+        {t:'Se corrige a la misma velocidad que se corrigió el shock, es decir, en minutos', ok:false, fb:'Son fases distintas con objetivos distintos: el bolo de shock busca restablecer la perfusión en minutos; la corrección del sodio busca normalizar la natremia en días, sin apuro.'}
+      ]},
+    { id:'d1q4', tipo:'multi', texto:'¿Qué riesgos hay que vigilar en las próximas horas? (elegí 2)',
+      opts:[
+        {t:'Convulsiones o deterioro neurológico si el sodio desciende más rápido de lo planeado', ok:true, fb:'Correcto. Es el riesgo específico de la hipernatremia mal corregida: hay que controlar el sodio en forma seriada durante todo el proceso.'},
+        {t:'Hipopotasemia al corregirse la acidosis, pese al potasio inicial de 5,5', ok:true, fb:'Correcto. Igual que en cualquier acidosis metabólica, al mejorar el pH el potasio vuelve a entrar a la célula. Un potasio "alto" en plena acidemia grave puede caer rápido y requerir reposición temprana, con controles seriados.'},
+        {t:'Hipernatremia de rebote si se hidrata con SRO', ok:false, fb:'La SRO tiene una concentración de sodio (75 mEq/L) muy por debajo de la plasmática de Joaquín (158): ayuda a bajar el sodio, no lo sube.'},
+        {t:'Ninguno: una vez resuelto el shock, el cuadro ya no tiene riesgos relevantes', ok:false, fb:'Al contrario: resuelto el shock empieza la parte más delicada del manejo, que es la corrección cuidadosa y lenta del sodio, con el potasio bajo vigilancia estrecha.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> deshidratación grave (≈14%) con shock hipovolémico, hipernatremia marcada por preparación inadecuada de la fórmula láctica, y acidosis metabólica con anion gap aumentado por hipoperfusión, adecuadamente compensada.</p><p>Es el caso que reúne los dos talleres: el reconocimiento y tratamiento del shock (bolo isotónico, sin excepciones), la lectura del estado ácido-base (anion gap y Winter) y el manejo cuidadoso de la natremia una vez resuelta la urgencia.</p><p><strong>Lo que hay que retener:</strong> ninguna característica del sodio cambia la conducta frente al shock. Recién después de estabilizado el paciente empieza la segunda fase, la de la paciencia: corregir el sodio y vigilar el potasio, ambos lentamente y con controles seriados.</p>'
+};
+
+/* =========================================================================
+   Motor: renderizado, corrección y persistencia
+   ========================================================================= */
+
+const ESTADO_KEY = 'tallerDeshidratacion_v1';
+let estado = {};
+try { estado = JSON.parse(localStorage.getItem(ESTADO_KEY) || '{}'); } catch (e) { estado = {}; }
+
+const LETRAS = 'ABCDEFGH';
+let TODAS = [];  // ids de consignas que puntúan
+
+function guardar() {
+    try { localStorage.setItem(ESTADO_KEY, JSON.stringify(estado)); } catch (e) {}
+}
+
+function esc(s) { return s; }
+
+function renderPregunta(q, puntua) {
+    if (puntua !== false) TODAS.push(q.id);
+    const multi = q.tipo === 'multi';
+    let html = '<div class="q" id="q-' + q.id + '">';
+    html += '<p class="q-text">' + q.texto + '</p>';
+    if (q.hint) html += '<p class="q-hint">💡 ' + q.hint + '</p>';
+    html += '<ul class="opts">';
+    q.opts.forEach(function (o, i) {
+        html += '<li><label class="opt" data-i="' + i + '">' +
+                '<input type="' + (multi ? 'checkbox' : 'radio') + '" name="' + q.id + '" value="' + i + '">' +
+                '<span><span class="letra">' + LETRAS[i] + '.</span> ' + o.t + '</span>' +
+                '</label><div class="fb" style="display:none"></div></li>';
+    });
+    html += '</ul>';
+    html += '<button class="check" onclick="comprobar(\'' + q.id + '\')">Comprobar</button>';
+    html += '<div class="veredicto"></div>';
+    html += '</div>';
+    return html;
+}
+
+function renderLab(lab) {
+    let html = '<table class="lab"><caption>Exámenes complementarios</caption><tbody>';
+    lab.forEach(function (f) {
+        html += '<tr class="' + (f[2] ? 'alterado' : '') + '"><td>' + f[0] + '</td><td>' + f[1] + '</td></tr>';
+    });
+    return html + '</tbody></table>';
+}
+
+function renderCaso(c) {
+    let html = '<div class="box" id="box-' + c.id + '">';
+    html += '<span class="badge">' + c.badge + '</span>';
+    html += '<h3>' + c.titulo + '</h3>';
+    html += '<div class="vineta">' + c.vineta + '</div>';
+    html += renderLab(c.lab);
+    c.qs.forEach(function (q) { html += renderPregunta(q); });
+    html += '<details id="raz-' + c.id + '"><summary>Ver el razonamiento completo</summary>' +
+            '<div class="cuerpo">' + c.razonamiento + '</div></details>';
+    return html + '</div>';
+}
+
+function renderError(e) {
+    let html = '<div class="box" id="box-' + e.id + '">';
+    html += '<span class="badge rojo">' + e.badge + ' · ' + e.titulo + '</span>';
+    html += '<div class="vineta" style="background:#fef2f2;border-color:#fecaca;font-style:italic">' + e.cita + '</div>';
+    html += renderPregunta(e.q);
+    return html + '</div>';
+}
+
+// Registro global de preguntas para la corrección
+const REG = {};
+const ETIQUETA = {};   // id de consigna -> nombre legible para el docente
+function registrar(q) { REG[q.id] = q; }
+function etiquetar(qs, prefijo) {
+    qs.forEach(function (q, i) { ETIQUETA[q.id] = prefijo + ' · consigna ' + (i + 1); });
+}
+
+// --- Montaje ---
+function montar() {
+    let h0 = '';
+    M0.forEach(function (q) { registrar(q); h0 += renderPregunta(q, false); });
+    document.getElementById('m0').innerHTML = h0;
+
+    let h2 = '';
+    M2.forEach(function (c, n) {
+        c.qs.forEach(registrar);
+        etiquetar(c.qs, 'Caso ' + (n + 1) + ' (' + c.titulo + ')');
+        h2 += renderCaso(c);
+    });
+    document.getElementById('m2').innerHTML = h2;
+
+    let h3 = '';
+    M3.forEach(function (e, n) {
+        registrar(e.q);
+        ETIQUETA[e.q.id] = 'Error ' + (n + 1) + ' (' + e.titulo + ')';
+        h3 += renderError(e);
+    });
+    document.getElementById('m3').innerHTML = h3;
+
+    M4.qs.forEach(registrar);
+    etiquetar(M4.qs, 'Desafío (' + M4.titulo + ')');
+    document.getElementById('m4').innerHTML = renderCaso(M4);
+
+    document.getElementById('pts-max').textContent = TODAS.length;
+    document.getElementById('progress-text').textContent = '0 de ' + TODAS.length + ' consignas resueltas';
+
+    // Marcar selección visual
+    document.querySelectorAll('.opt input').forEach(function (inp) {
+        inp.addEventListener('change', function () {
+            const lista = inp.closest('.opts');
+            if (inp.type === 'radio') {
+                lista.querySelectorAll('.opt').forEach(function (o) { o.classList.remove('sel'); });
+            }
+            inp.closest('.opt').classList.toggle('sel', inp.checked);
+        });
+    });
+
+    // Restaurar respuestas guardadas
+    Object.keys(estado).forEach(function (qid) {
+        if (!REG[qid]) return;
+        const guardadas = estado[qid].elegidas || [];
+        guardadas.forEach(function (i) {
+            const inp = document.querySelector('#q-' + qid + ' input[value="' + i + '"]');
+            if (inp) { inp.checked = true; inp.closest('.opt').classList.add('sel'); }
+        });
+        if (estado[qid].comprobada) pintar(qid, true);
+    });
+
+    ['abierta1', 'abierta2', 'alumno'].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (estado['_' + id]) el.value = estado['_' + id];
+        el.addEventListener('input', function () { estado['_' + id] = el.value; guardar(); });
+    });
+
+    actualizarProgreso();
+}
+
+function comprobar(qid) {
+    const q = REG[qid];
+    const elegidas = [];
+    document.querySelectorAll('#q-' + qid + ' input:checked').forEach(function (i) {
+        elegidas.push(parseInt(i.value, 10));
+    });
+    if (elegidas.length === 0) {
+        alert('Elegí al menos una opción antes de comprobar. Aunque dudes: el error es la parte que enseña.');
+        return;
+    }
+    estado[qid] = { elegidas: elegidas, comprobada: true };
+    guardar();
+    pintar(qid, false);
+    actualizarProgreso();
+}
+
+function correcta(qid) {
+    const q = REG[qid], st = estado[qid];
+    if (!st) return false;
+    const correctas = [];
+    q.opts.forEach(function (o, i) { if (o.ok) correctas.push(i); });
+    if (st.elegidas.length !== correctas.length) return false;
+    return correctas.every(function (i) { return st.elegidas.indexOf(i) !== -1; });
+}
+
+function pintar(qid, restaurando) {
+    const q = REG[qid], st = estado[qid];
+    if (!st || !st.comprobada) return;
+    const cont = document.getElementById('q-' + qid);
+    const items = cont.querySelectorAll('.opts > li');
+
+    let aciertos = 0, correctasTotal = 0;
+    q.opts.forEach(function (o, i) {
+        const li = items[i];
+        const label = li.querySelector('.opt');
+        const fb = li.querySelector('.fb');
+        const elegida = st.elegidas.indexOf(i) !== -1;
+        if (o.ok) correctasTotal++;
+
+        label.classList.remove('sel', 'ok', 'mal', 'perdida');
+        if (elegida && o.ok) { label.classList.add('ok'); aciertos++; }
+        else if (elegida && !o.ok) { label.classList.add('mal'); }
+        else if (!elegida && o.ok) { label.classList.add('perdida'); }
+
+        // El feedback se muestra siempre: también el de las opciones no elegidas
+        fb.innerHTML = (o.ok ? '✔ ' : '✘ ') + o.fb;
+        fb.className = 'fb ' + (o.ok ? 'ok' : 'mal');
+        fb.style.display = 'block';
+        li.querySelector('input').disabled = true;
+    });
+
+    cont.querySelector('button.check').disabled = true;
+
+    const v = cont.querySelector('.veredicto');
+    const bien = correcta(qid);
+    const puntua = TODAS.indexOf(qid) !== -1;
+    v.style.display = 'block';
+    if (bien) {
+        v.className = 'veredicto ok';
+        v.textContent = puntua ? '✓ Correcto' : '✓ Buena lectura';
+    } else if (aciertos > 0 && aciertos < correctasTotal) {
+        v.className = 'veredicto parcial';
+        v.textContent = 'Parcialmente correcto: acertaste ' + aciertos + ' de ' + correctasTotal +
+                        '. Leé el fundamento de cada opción, incluidas las que no elegiste.';
+    } else {
+        v.className = 'veredicto mal';
+        v.textContent = puntua ? '✗ No es la respuesta correcta. La opción marcada en verde es la que corresponde.'
+                               : 'Anotá qué pensabas: al terminar el taller volvé a esta pregunta.';
+    }
+
+    // Abrir el razonamiento cuando el caso quedó completo
+    const caso = cont.closest('.box');
+    if (caso) {
+        const pendientes = caso.querySelectorAll('button.check:not(:disabled)').length;
+        const det = caso.querySelector('details');
+        if (pendientes === 0 && det && !restaurando) det.open = true;
+    }
+}
+
+function actualizarProgreso() {
+    let hechas = 0, buenas = 0;
+    TODAS.forEach(function (qid) {
+        if (estado[qid] && estado[qid].comprobada) { hechas++; if (correcta(qid)) buenas++; }
+    });
+    document.getElementById('progress-fill').style.width = (hechas / TODAS.length * 100) + '%';
+    document.getElementById('progress-text').textContent =
+        hechas + ' de ' + TODAS.length + ' consignas resueltas' +
+        (hechas ? ' · ' + buenas + (buenas === 1 ? ' correcta' : ' correctas') : '');
+    document.getElementById('pts').textContent = buenas;
+}
+
+function generarResumen() {
+    const nombre = document.getElementById('alumno').value.trim();
+    if (!nombre) { alert('Completá tu apellido y nombre antes de generar el resumen.'); return; }
+    let hechas = 0, buenas = 0;
+    const detalle = [];
+    TODAS.forEach(function (qid) {
+        const st = estado[qid];
+        if (st && st.comprobada) {
+            hechas++;
+            const bien = correcta(qid);
+            if (bien) buenas++;
+            detalle.push('  [' + (bien ? 'OK   ' : 'ERROR') + '] ' + (ETIQUETA[qid] || qid) +
+                         ' — marcó ' + st.elegidas.map(function (i) { return LETRAS[i]; }).join(', '));
+        } else {
+            detalle.push('  [  -  ] ' + (ETIQUETA[qid] || qid) + ' — sin responder');
+        }
+    });
+    const txt =
+'TALLER: DESHIDRATACIÓN Y REHIDRATACIÓN EN PEDIATRÍA\n' +
+'Taller desarrollado por Diego Steinberg\n' +
+'=====================================================\n' +
+'Alumno/a: ' + nombre + '\n' +
+'Fecha de finalización: ' + new Date().toLocaleString('es-AR') + '\n' +
+'Consignas resueltas: ' + hechas + ' de ' + TODAS.length + '\n' +
+'Respuestas correctas: ' + buenas + ' de ' + TODAS.length + '\n\n' +
+'DETALLE POR CONSIGNA\n' + detalle.join('\n') + '\n\n' +
+'PREGUNTA 1 — Por qué un chico hipernatrémico puede parecer menos deshidratado de lo que está:\n' +
+(document.getElementById('abierta1').value.trim() || '(sin responder)') + '\n\n' +
+'PREGUNTA 2 — Cuál de los cuatro errores podría haber cometido:\n' +
+(document.getElementById('abierta2').value.trim() || '(sin responder)') + '\n';
+    document.getElementById('resumen').value = txt;
+    document.getElementById('resumen').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function copiarResumen() {
+    const ta = document.getElementById('resumen');
+    if (!ta.value) { alert('Primero generá el resumen.'); return; }
+    ta.select();
+    ta.setSelectionRange(0, 99999);
+    try {
+        navigator.clipboard.writeText(ta.value);
+    } catch (e) {
+        document.execCommand('copy');
+    }
+    const av = document.getElementById('copiado');
+    av.style.display = 'block';
+    setTimeout(function () { av.style.display = 'none'; }, 4000);
+}
+
+function reiniciar() {
+    if (!confirm('Esto borra todas tus respuestas y el progreso guardado. ¿Confirmás?')) return;
+    localStorage.removeItem(ESTADO_KEY);
+    location.reload();
+}
+
+/* =========================================================================
+   Gate de activación remota.
+   Debe coincidir con el mismo databaseURL y la misma ruta que usa index.html
+   (TALLER_DESHIDRATACION_PATH, junto a las funciones efuFb*). Reutiliza el nodo
+   'efuRooms' cuyas reglas de seguridad ya están desplegadas (.read/.write true en
+   efuRooms/$roomId) usando 'talleresGenerales' como $roomId — no hace falta redesplegar
+   reglas. Esto agrega una dependencia de red que taller_eab_online.html evita a propósito
+   (ver taller_eab_guia_docente.md): es la contrapartida aceptada a cambio de poder
+   activar/desactivar el taller de forma remota desde index.html.
+   El chequeo corre al final del <script>, después de que gate-loading/gate-blocked/
+   app-content ya están parseados en el DOM — nunca antes, por la misma razón que el
+   #access-gate de index.html: si corriera antes, los getElementById de acá arriba
+   devolverían null.
+   ========================================================================= */
+const EFU_FIREBASE_DB_URL = 'https://pediatria-uba-efu-votos.firebaseio.com';
+const TALLER_ACTIVO_PATH = 'efuRooms/talleresGenerales/deshidratacion/activo';
+
+function mostrarBloqueado(mensaje) {
+    document.getElementById('gate-loading').style.display = 'none';
+    const bloqueado = document.getElementById('gate-blocked');
+    if (mensaje) bloqueado.querySelector('.gate-msg').textContent = mensaje;
+    bloqueado.style.display = 'block';
+}
+
+function mostrarTaller() {
+    document.getElementById('gate-loading').style.display = 'none';
+    document.getElementById('gate-blocked').style.display = 'none';
+    document.getElementById('app-content').style.display = 'block';
+    montar();
+}
+
+(function chequearActivacion() {
+    // Bypass para el docente: no es una segunda contraseña, es solo para poder revisar
+    // el contenido sin activarlo para el curso (ver el botón "Vista previa" en index.html).
+    if (new URLSearchParams(window.location.search).get('preview') === '1') {
+        mostrarTaller();
+        return;
+    }
+    fetch(EFU_FIREBASE_DB_URL + '/' + TALLER_ACTIVO_PATH + '.json')
+        .then(function (res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+        })
+        .then(function (activo) {
+            if (activo === true) mostrarTaller();
+            else mostrarBloqueado();
+        })
+        .catch(function () {
+            mostrarBloqueado('No se pudo comprobar el estado del taller — revisá tu conexión a internet e intentá de nuevo en un momento.');
+        });
+})();
+</script>
+</body>
+</html>

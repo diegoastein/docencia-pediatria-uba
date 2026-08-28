@@ -7001,6 +7001,29 @@ Equipo Docente de Pediatría</textarea>
                 </div>
             </div>
 
+            <div class="card">
+                <span class="badge" style="background: #e0f2fe; color: #075985;">Taller autoguiado — Asincrónico</span>
+                <h2>Deshidratación y Rehidratación en Pediatría</h2>
+                <p style="color: #475569; margin-bottom: 16px;">
+                    Cinco módulos y 26 consignas con corrección instantánea: grados de deshidratación, planes A/B/C, los tres tipos por natremia con sus riesgos de corrección, y un desafío final que combina shock, hipernatremia y acidosis metabólica.
+                </p>
+                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 12px;">
+                    ⏱️ 55 a 70 minutos · 👤 Individual · 📄 Entrega: el alumno pega el resumen en la tarea de Classroom
+                </p>
+                <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:9px; padding:10px 14px; margin-bottom:16px; font-size:0.88rem; color:#92400e;">
+                    <strong id="deshidratacionEstadoTexto">Consultando estado…</strong><br>
+                    El link para Classroom no abre el contenido hasta que lo activás acá abajo. "Vista previa (docente)" sí lo muestra siempre, sin activarlo para el curso — no es una segunda contraseña, es solo para que puedas revisar el contenido con tranquilidad.
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <a href="taller_deshidratacion_online.html?preview=1" target="_blank" rel="noopener"
+                       style="display: inline-block; padding: 11px 20px; border-radius: 9px; background: #fff; color: #075985; border: 2px solid #bae6fd; font-weight: 700; text-decoration: none; font-size: 0.95rem;">
+                        👁️ Vista previa (docente) ↗
+                    </a>
+                    <button class="reveal-btn" id="deshidratacionToggleBtn" onclick="refrescarEstadoTallerDeshidratacion()">Consultando…</button>
+                    <button class="reveal-btn" onclick="copiarLinkTallerGenerico('taller_deshidratacion_online.html', this)">🔗 Copiar link para Classroom</button>
+                </div>
+            </div>
+
             <div class="card" style="border-style: dashed; background: #fafafa;">
                 <h2 style="color: #94a3b8;">Próximos talleres</h2>
                 <p style="color: #94a3b8; margin: 0;">
@@ -7182,6 +7205,86 @@ Equipo Docente de Pediatría</textarea>
             btn.innerText = '¡Link copiado!';
             setTimeout(() => { btn.innerText = original; }, 2000);
         }
+
+        function copiarLinkTallerGenerico(archivo, btn) {
+            const url = new URL(archivo, window.location.href).href;
+            navigator.clipboard.writeText(url);
+            const original = btn.innerText;
+            btn.innerText = '¡Link copiado!';
+            setTimeout(() => { btn.innerText = original; }, 2000);
+        }
+
+        // ==========================================================================
+        // ACTIVACIÓN REMOTA DE TALLERES GENERALES OPCIONALES (por ahora, Deshidratación)
+        // ==========================================================================
+        // A diferencia de taller_eab_online.html (público desde que se publica, sin gate),
+        // este taller nace con un interruptor: el alumno que abre el link no ve el
+        // contenido hasta que el docente lo activa acá, ya logueado en el #access-gate de
+        // este archivo. El estado se guarda en Firebase (efuFbGet/efuFbPut, definidas más
+        // abajo) bajo 'efuRooms/talleresGenerales/deshidratacion/activo', reutilizando el
+        // nodo 'efuRooms' cuyas reglas de seguridad ya están desplegadas (.read/.write true
+        // en efuRooms/$roomId) — 'talleresGenerales' es simplemente otro valor de $roomId,
+        // así que no hace falta tocar ni redesplegar reglas. taller_deshidratacion_online.html
+        // consulta ese mismo valor al cargar: si no es true, muestra un aviso en vez del
+        // contenido. Esto agrega una dependencia de red que taller_eab_online.html evita a
+        // propósito (ver taller_eab_guia_docente.md) — es la contrapartida aceptada a cambio
+        // de poder activar/desactivar el taller de forma remota.
+        const TALLER_DESHIDRATACION_PATH = 'efuRooms/talleresGenerales/deshidratacion/activo';
+
+        function pintarEstadoTallerDeshidratacion(activo) {
+            const textoEl = document.getElementById('deshidratacionEstadoTexto');
+            const btnEl = document.getElementById('deshidratacionToggleBtn');
+            if (!textoEl || !btnEl) return;
+            textoEl.textContent = activo
+                ? '🟢 Activado: los alumnos ya pueden entrar al taller.'
+                : '🔴 Desactivado: los alumnos todavía no pueden entrar al taller.';
+            btnEl.textContent = activo ? '🔒 Desactivar para los alumnos' : '🔓 Activar para los alumnos';
+            btnEl.disabled = false;
+            btnEl.dataset.activo = activo ? '1' : '0';
+            btnEl.onclick = toggleActivacionTallerDeshidratacion;
+        }
+
+        async function refrescarEstadoTallerDeshidratacion() {
+            const textoEl = document.getElementById('deshidratacionEstadoTexto');
+            const btnEl = document.getElementById('deshidratacionToggleBtn');
+            if (!textoEl || !btnEl) return;
+            if (!efuVotingEnabled()) {
+                textoEl.textContent = 'Sin conexión a Firebase configurada: no se puede activar de forma remota.';
+                btnEl.textContent = 'No disponible';
+                btnEl.disabled = true;
+                return;
+            }
+            btnEl.disabled = true;
+            btnEl.textContent = 'Consultando…';
+            try {
+                const activo = await efuFbGet(TALLER_DESHIDRATACION_PATH);
+                pintarEstadoTallerDeshidratacion(!!activo);
+            } catch (e) {
+                textoEl.textContent = '⚠️ No se pudo consultar el estado. Revisá la conexión.';
+                btnEl.textContent = 'Reintentar';
+                btnEl.disabled = false;
+                btnEl.onclick = refrescarEstadoTallerDeshidratacion;
+            }
+        }
+
+        async function toggleActivacionTallerDeshidratacion() {
+            const btnEl = document.getElementById('deshidratacionToggleBtn');
+            if (!btnEl) return;
+            const nuevoEstado = btnEl.dataset.activo !== '1';
+            btnEl.disabled = true;
+            btnEl.textContent = 'Guardando…';
+            try {
+                await efuFbPut(TALLER_DESHIDRATACION_PATH, nuevoEstado);
+                pintarEstadoTallerDeshidratacion(nuevoEstado);
+            } catch (e) {
+                alert('No se pudo actualizar el estado del taller. Revisá la conexión e intentá de nuevo.');
+                refrescarEstadoTallerDeshidratacion();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            refrescarEstadoTallerDeshidratacion();
+        });
 
         function copiar(id, btn) {
             var copyText = document.getElementById(id);
