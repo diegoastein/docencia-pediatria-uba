@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller: Cetoacidosis Diabética en Pediatría</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0; padding: 0 14px 60px;
+        background: #f8f9fa; color: #202124;
+        line-height: 1.55;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; }
+
+    /* ---------- Encabezado y progreso ---------- */
+    header { padding: 26px 0 16px; }
+    header .kicker { font-size: .78rem; font-weight: 800; letter-spacing: .08em;
+        text-transform: uppercase; color: #ea580c; margin: 0 0 6px; }
+    header h1 { font-size: 1.55rem; line-height: 1.25; margin: 0 0 8px; color: #7c2d12; }
+    header .meta { color: #5f6368; font-size: .92rem; margin: 0; }
+
+    #progress-bar {
+        position: sticky; top: 0; z-index: 20;
+        background: #f8f9fa; padding: 10px 0 12px; margin: 0 0 18px;
+        border-bottom: 1px solid #ffedd5;
+    }
+    #progress-track { height: 9px; background: #ffedd5; border-radius: 6px; overflow: hidden; }
+    #progress-fill { height: 100%; width: 0%; border-radius: 6px;
+        background: linear-gradient(90deg, #ea580c, #9a3412); transition: width .35s ease; }
+    #progress-text { font-size: .8rem; color: #5f6368; margin: 6px 0 0; font-weight: 600; }
+
+    /* ---------- Bloques ---------- */
+    .box { background: #fff; border: 1px solid #dadce0; border-radius: 14px;
+        padding: 20px; margin-bottom: 18px; }
+    .box.intro { border-left: 5px solid #ea580c; }
+    .box.aviso { background: #fffbeb; border-color: #fde68a; }
+
+    h2 { font-size: 1.18rem; color: #7c2d12; margin: 34px 0 14px;
+        padding-bottom: 8px; border-bottom: 2px solid #ffedd5; }
+    h3 { font-size: 1.02rem; margin: 0 0 10px; color: #7c2d12; }
+    p { margin: 0 0 12px; }
+    ul, ol { margin: 0 0 12px; padding-left: 22px; }
+    li { margin-bottom: 6px; }
+
+    .badge { display: inline-block; background: #fff7ed; color: #9a3412;
+        padding: 4px 11px; border-radius: 12px; font-size: .76rem; font-weight: 800;
+        margin-bottom: 10px; letter-spacing: .02em; }
+    .badge.gris { background: #f1f3f4; color: #5f6368; }
+    .badge.rojo { background: #fee2e2; color: #b91c1c; }
+
+    /* ---------- Viñeta clínica y laboratorio ---------- */
+    .vineta { background: #fff7ed; border: 1px solid #ffedd5; border-radius: 10px;
+        padding: 14px 16px; margin-bottom: 14px; font-size: .95rem; }
+    .lab { border-collapse: collapse; width: 100%; margin: 0 0 14px; font-size: .9rem; }
+    .lab caption { text-align: left; font-weight: 800; font-size: .82rem; color: #9a3412;
+        padding-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
+    .lab td { border-bottom: 1px solid #eceff1; padding: 7px 8px; }
+    .lab td:first-child { color: #5f6368; width: 46%; }
+    .lab td:last-child { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .lab .alterado td:last-child { color: #b91c1c; }
+    .lab .ref { color: #9aa0a6; font-weight: 400; font-size: .85em; }
+
+    /* ---------- Preguntas ---------- */
+    .q { margin: 20px 0 0; padding-top: 18px; border-top: 1px dashed #dadce0; }
+    .q:first-of-type { border-top: none; padding-top: 0; }
+    .q-text { font-weight: 700; margin: 0 0 4px; }
+    .q-hint { font-size: .84rem; color: #5f6368; margin: 0 0 12px; }
+    .opts { list-style: none; padding: 0; margin: 0 0 14px;
+        display: flex; flex-direction: column; gap: 9px; }
+    .opt { display: flex; gap: 11px; align-items: flex-start;
+        padding: 12px 14px; border: 2px solid #dadce0; border-radius: 10px;
+        cursor: pointer; background: #fff; transition: border-color .15s, background .15s; }
+    .opt:hover { border-color: #fdba74; }
+    .opt input { margin: 3px 0 0; flex-shrink: 0; width: 18px; height: 18px; accent-color: #9a3412; }
+    .opt .letra { font-weight: 800; color: #9a3412; flex-shrink: 0; }
+    .opt.sel { border-color: #ea580c; background: #fff7ed; }
+    .opt.ok { border-color: #16a34a; background: #f0fdf4; }
+    .opt.mal { border-color: #dc2626; background: #fef2f2; }
+    .opt.perdida { border-color: #16a34a; background: #fff; border-style: dashed; }
+    .fb { font-size: .88rem; margin: 8px 0 0 29px; padding-left: 12px;
+        border-left: 3px solid #dadce0; color: #3c4043; }
+    .fb.ok { border-color: #16a34a; }
+    .fb.mal { border-color: #dc2626; }
+
+    button.check { padding: 11px 22px; font-size: .95rem; font-weight: 700;
+        border: none; border-radius: 9px; cursor: pointer;
+        background: linear-gradient(135deg, #ea580c, #9a3412); color: #fff; }
+    button.check:disabled { opacity: .4; cursor: not-allowed; }
+    button.sec { background: #fff; color: #9a3412; border: 2px solid #fed7aa; }
+
+    .veredicto { margin: 12px 0 0; padding: 11px 14px; border-radius: 9px;
+        font-weight: 700; font-size: .92rem; display: none; }
+    .veredicto.ok { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+    .veredicto.parcial { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+    .veredicto.mal { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+    details { margin-top: 14px; background: #f8f9fa; border: 1px solid #e0e0e0;
+        border-radius: 9px; padding: 0; }
+    details summary { cursor: pointer; padding: 12px 14px; font-weight: 700;
+        font-size: .92rem; color: #9a3412; list-style-position: inside; }
+    details[open] summary { border-bottom: 1px solid #e0e0e0; }
+    details .cuerpo { padding: 14px; font-size: .92rem; }
+
+    /* ---------- Tablas de referencia ---------- */
+    .tabla-ref { width: 100%; border-collapse: collapse; font-size: .87rem; margin-bottom: 14px; }
+    .tabla-ref th { background: #fff7ed; color: #7c2d12; text-align: left;
+        padding: 9px 10px; border: 1px solid #fed7aa; font-size: .82rem; }
+    .tabla-ref td { padding: 9px 10px; border: 1px solid #eceff1; vertical-align: top; }
+    .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    .paso { display: flex; gap: 13px; margin-bottom: 15px; }
+    .paso .n { flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%;
+        background: #9a3412; color: #fff; font-weight: 800; font-size: .92rem;
+        display: flex; align-items: center; justify-content: center; }
+    .paso .cont { flex: 1; }
+    .paso .cont strong { display: block; margin-bottom: 2px; }
+    .paso .cont span { font-size: .91rem; color: #3c4043; }
+
+    code { background: #f1f3f4; padding: 2px 6px; border-radius: 4px;
+        font-size: .89em; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+    /* ---------- Entrega ---------- */
+    textarea { width: 100%; min-height: 110px; padding: 12px; font-size: .95rem;
+        font-family: inherit; border: 2px solid #dadce0; border-radius: 10px;
+        margin-bottom: 14px; resize: vertical; }
+    #resumen { width: 100%; min-height: 220px; font-family: ui-monospace, Menlo, Consolas, monospace;
+        font-size: .82rem; background: #f8f9fa; }
+    .puntaje-final { text-align: center; padding: 22px; }
+    .puntaje-final .num { font-size: 2.8rem; font-weight: 800; color: #9a3412; line-height: 1; }
+    .puntaje-final .de { color: #5f6368; font-size: .95rem; }
+
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    footer { text-align: center; padding: 26px 0 10px; margin-top: 10px;
+        border-top: 1px solid #ffedd5; color: #5f6368; font-size: .86rem; }
+    footer .autor { font-weight: 700; color: #9a3412; }
+
+    @media print {
+        body { background: #fff; }
+        .no-print, #progress-bar, button { display: none !important; }
+        .box { break-inside: avoid; border: 1px solid #999; }
+        details { display: none; }
+    }
+    @media (max-width: 520px) {
+        header h1 { font-size: 1.3rem; }
+        .box { padding: 16px; }
+    }
+</style>
+</head>
+<body>
+
+<!-- ============ GATE DE ACTIVACIÓN REMOTA ============
+     Mismo mecanismo que taller_deshidratacion_online.html: nace apagado, y el docente lo
+     prende desde index.html (pestaña Talleres → Talleres generales). Ver la nota junto a
+     TALLER_ACTIVO_PATH más abajo. -->
+<div class="wrap" id="gate-loading">
+    <div class="box" style="text-align:center; margin-top:60px">
+        <p style="margin:0; color:#5f6368">Comprobando si el taller ya está habilitado…</p>
+    </div>
+</div>
+
+<div class="wrap" id="gate-blocked" style="display:none">
+    <div class="box aviso" style="margin-top:60px">
+        <h3>⏳ Este taller todavía no está habilitado</h3>
+        <p class="gate-msg" style="margin-bottom:14px">Tu docente todavía no activó este taller. Volvé a intentarlo más tarde, o esperá el aviso en Classroom.</p>
+        <button class="check" onclick="location.reload()">Reintentar</button>
+    </div>
+</div>
+
+<div class="wrap" id="app-content" style="display:none">
+
+<header>
+    <h1>Cetoacidosis Diabética en Pediatría</h1>
+    <p class="meta">Taller autoguiado · Modalidad asincrónica · Duración estimada: 35–45 minutos</p>
+</header>
+
+<div id="progress-bar" class="no-print">
+    <div id="progress-track"><div id="progress-fill"></div></div>
+    <p id="progress-text">0 de 16 consignas resueltas</p>
+</div>
+
+<div class="box intro">
+    <h3>Cómo funciona este taller</h3>
+    <ul>
+        <li>Se resuelve <strong>solo, a tu ritmo y desde cualquier dispositivo</strong>. No hay encuentro sincrónico.</li>
+        <li>Cada consigna se responde y se comprueba <strong>en el momento</strong>: vas a ver por qué cada opción es correcta o incorrecta, incluso las que no elegiste.</li>
+        <li><strong>Contestá antes de comprobar, aunque no estés seguro.</strong> El error es la parte que enseña; el puntaje no incide en la nota de la cursada.</li>
+        <li>Tu avance se guarda solo en este dispositivo. Podés cerrar y retomar después.</li>
+        <li>Al final, el taller genera un <strong>resumen de entrega</strong> que tenés que copiar y pegar en la tarea de Google Classroom.</li>
+    </ul>
+</div>
+
+<div class="box aviso">
+    <h3>⚠️ Antes de arrancar</h3>
+    <p style="margin-bottom:0">Este taller <strong>no</strong> tiene el formato del Examen Final Unificado. Las viñetas son de elaboración propia, construidas para que cada patrón aparezca de forma clara. La ejercitación con preguntas verbatim de EFU es un espacio aparte, el de los viernes.</p>
+</div>
+
+<!-- ============ MÓDULO 0 ============ -->
+<h2>Módulo 0 · Qué sabés antes de empezar</h2>
+<div class="box">
+    <p style="font-size:.92rem;color:#5f6368">Dos preguntas de sondeo. No suman puntaje: sirven para que compares tu punto de partida con lo que pensás al terminar.</p>
+    <div id="m0"></div>
+</div>
+
+<!-- ============ MÓDULO 1 ============ -->
+<h2>Módulo 1 · Cómo se reconoce y se trata</h2>
+
+<div class="box">
+    <h3>Qué es y cómo se clasifica</h3>
+    <p>La cetoacidosis diabética (CAD) es la descompensación aguda más grave de la diabetes en la infancia, y muchas veces su forma de debut. Se define con tres datos, los tres necesarios: <strong>hiperglucemia</strong> (glucemia &gt; 200 mg/dL), <strong>acidosis</strong> (pH &lt; 7,3 o HCO₃ &lt; 15 mEq/L) y <strong>cetonemia o cetonuria positiva</strong>.</p>
+    <p>La gravedad se clasifica por el pH y el HCO₃, no por cómo luce el paciente:</p>
+    <div class="scroll-x">
+    <table class="tabla-ref">
+        <tr><th></th><th>Leve</th><th>Moderada</th><th>Grave</th></tr>
+        <tr><td><strong>pH</strong></td><td>7,2 – 7,3</td><td>7,1 – &lt;7,2</td><td>&lt;7,1</td></tr>
+        <tr><td><strong>HCO₃</strong></td><td>10 – 15 mEq/L</td><td>5 – &lt;10 mEq/L</td><td>&lt;5 mEq/L</td></tr>
+    </table>
+    </div>
+    <p style="margin-bottom:0">La glucemia alta explica los síntomas iniciales (poliuria, polidipsia, baja de peso), pero es la acidosis la que define la gravedad y la urgencia del tratamiento.</p>
+</div>
+
+<div class="box">
+    <h3>Los tres pilares del tratamiento</h3>
+    <div class="paso"><div class="n">1</div><div class="cont">
+        <strong>Volumen</strong>
+        <span>Solución fisiológica 10 mL/kg en la primera hora, incluso con signos de shock: en la CAD el volumen inicial se maneja con más cautela que en otros shocks, por el riesgo de edema cerebral asociado al exceso de líquido. El resto del déficit se repone en forma gradual, a lo largo de 24 a 48 horas.</span>
+    </div></div>
+    <div class="paso"><div class="n">2</div><div class="cont">
+        <strong>Insulina</strong>
+        <span>En infusión continua, 0,05 a 0,1 U/kg/hora, iniciada recién después de la primera hora de hidratación. Nunca en bolo: no acelera la recuperación y sube el riesgo de edema cerebral.</span>
+    </div></div>
+    <div class="paso"><div class="n">3</div><div class="cont">
+        <strong>Potasio</strong>
+        <span>La acidemia desplaza potasio del interior de la célula hacia el plasma, así que un valor "normal" o incluso alto puede esconder un déficit corporal grande. La insulina lo hace volver a entrar a la célula de golpe. Si el potasio de entrada ya está bajo (menor a 3,3 mEq/L), se repone antes o junto con el inicio de la insulina, no después.</span>
+    </div></div>
+    <p style="margin-bottom:0">Cuando el paciente tolera la vía oral y la acidosis mejoró (pH &gt; 7,3, HCO₃ &gt; 15), se pasa a insulina subcutánea, superponiendo la primera dosis con la infusión continua durante 1 a 2 horas para evitar una cetoacidosis de rebote.</p>
+</div>
+
+<div class="box aviso">
+    <h3>⚠️ Tres conductas que hay que evitar</h3>
+    <ul style="margin-bottom:0">
+        <li><strong>Bicarbonato de rutina.</strong> No corrige más rápido, empeora la hipopotasemia y se asocia a mayor riesgo de edema cerebral. Se reserva para la acidemia extrema con compromiso hemodinámico, y aun ahí es discutido.</li>
+        <li><strong>Insulina en bolo.</strong> Baja la glucemia y la osmolaridad demasiado rápido, sin ningún beneficio adicional sobre la infusión continua.</li>
+        <li><strong>Corrección demasiado rápida de la glucemia o del sodio.</strong> Un descenso brusco de la osmolaridad plasmática es, junto con el exceso de volumen, el principal factor de riesgo modificable de edema cerebral.</li>
+    </ul>
+</div>
+
+<div class="box">
+    <h3>Edema cerebral: la complicación que domina el pronóstico</h3>
+    <p>Es la principal causa de muerte por CAD en la infancia, y aparece casi siempre dentro de las primeras 12 a 24 horas de tratamiento — no antes de empezarlo.</p>
+    <p><strong>Señales de alarma:</strong> cefalea intensa, deterioro del sensorio, y la tríada de Cushing (bradicardia + hipertensión arterial, con respiración irregular). Son datos clínicos: el diagnóstico y el tratamiento no esperan a la tomografía.</p>
+    <p style="margin-bottom:0"><strong>Manejo inmediato:</strong> reducir el ritmo de la hidratación endovenosa e indicar solución hipertónica al 3% (5 a 10 mL/kg) o manitol, sin demorarlo por estudios de imagen.</p>
+</div>
+
+<!-- ============ MÓDULO 2 ============ -->
+<h2>Módulo 2 · Tres pacientes, tres decisiones</h2>
+<p style="font-size:.93rem;color:#5f6368;margin-bottom:18px">Recorré cada caso aplicando los tres pilares. Después de responder vas a poder desplegar el razonamiento completo.</p>
+<div id="m2"></div>
+
+<!-- ============ MÓDULO 3 ============ -->
+<h2>Módulo 3 · Caza del error</h2>
+<div class="box aviso">
+    <p style="margin-bottom:0">Los tres fragmentos que siguen son <strong>interpretaciones equivocadas</strong>, escritas tal como suelen decirse en un pase de guardia. Son tres de los errores más frecuentes con la CAD en pediatría. Encontralos.</p>
+</div>
+<div id="m3"></div>
+
+<!-- ============ MÓDULO 4 ============ -->
+<h2>Módulo 4 · Desafío final</h2>
+<div id="m4"></div>
+
+<!-- ============ CIERRE ============ -->
+<h2>Para llevarse</h2>
+<div class="box">
+    <ol>
+        <li><strong>Los tres pilares son volumen, insulina en infusión continua y potasio</strong> — el bicarbonato no es uno de ellos.</li>
+        <li><strong>La insulina nunca va en bolo:</strong> siempre en infusión continua, y recién después de haber empezado la hidratación.</li>
+        <li><strong>Si el potasio de entrada ya está bajo, se repone antes o junto con el inicio de la insulina</strong>, no después: la insulina lo va a bajar todavía más.</li>
+        <li><strong>El edema cerebral es la complicación que más pesa en el pronóstico:</strong> cefalea, deterioro del sensorio y la tríada de Cushing son señales de alarma que se tratan de inmediato, sin esperar imágenes.</li>
+        <li><strong>La prisa es el enemigo:</strong> tanto el volumen inicial como el descenso de la glucemia y del sodio deben ser graduales.</li>
+    </ol>
+</div>
+
+<div class="box">
+    <h3>🃏 Kit de bolsillo</h3>
+    <p style="font-size:.92rem;color:#5f6368">Para imprimir o guardar como captura. Contiene lo mínimo indispensable para resolver una CAD al lado de la cama.</p>
+    <div class="scroll-x">
+    <table class="tabla-ref">
+        <tr><th colspan="2">Criterios diagnósticos</th></tr>
+        <tr><td>CAD</td><td>Glucemia &gt; 200 mg/dL + (pH &lt; 7,3 o HCO₃ &lt; 15) + cetonemia/cetonuria positiva</td></tr>
+        <tr><th colspan="2">Gravedad</th></tr>
+        <tr><td>Leve</td><td>pH 7,2–7,3 / HCO₃ 10–15</td></tr>
+        <tr><td>Moderada</td><td>pH 7,1–&lt;7,2 / HCO₃ 5–&lt;10</td></tr>
+        <tr><td>Grave</td><td>pH &lt;7,1 / HCO₃ &lt;5</td></tr>
+        <tr><th colspan="2">Los tres pilares</th></tr>
+        <tr><td>Volumen inicial</td><td>SF 10 mL/kg en la 1ª hora (con cautela, no el bolo de 20 mL/kg de otros shocks)</td></tr>
+        <tr><td>Insulina</td><td>Infusión continua 0,05–0,1 U/kg/h, desde la 2ª hora, nunca en bolo</td></tr>
+        <tr><td>Potasio</td><td>Si K &lt;3,3 al inicio: reponer antes o junto con la insulina, no después</td></tr>
+        <tr><th colspan="2">Fórmulas</th></tr>
+        <tr><td>Na corregido</td><td>Na + 1,6 × [(glucemia − 100) / 100]</td></tr>
+        <tr><td>Anion gap</td><td>Na − (Cl + HCO₃); normal 8–16</td></tr>
+        <tr><th colspan="2">Edema cerebral</th></tr>
+        <tr><td>Alarma</td><td>Cefalea + deterioro del sensorio + bradicardia/hipertensión (Cushing)</td></tr>
+        <tr><td>Conducta</td><td>Hipertónica 3% o manitol de inmediato, sin esperar imagen</td></tr>
+    </table>
+    </div>
+</div>
+
+<!-- ============ ENTREGA ============ -->
+<h2>Entrega en Classroom</h2>
+<div class="box no-print">
+    <h3>Dos preguntas de cierre</h3>
+    <p style="font-size:.92rem"><strong>1.</strong> Explicá con tus palabras, como si se lo dijeras a un compañero, por qué la insulina nunca se indica en bolo en la cetoacidosis diabética.</p>
+    <textarea id="abierta1" placeholder="Tu respuesta..."></textarea>
+    <p style="font-size:.92rem"><strong>2.</strong> De los tres errores del Módulo 3, ¿cuál creés que podrías haber cometido vos? ¿Por qué?</p>
+    <textarea id="abierta2" placeholder="Tu respuesta..."></textarea>
+
+    <div class="puntaje-final">
+        <div class="num"><span id="pts">0</span></div>
+        <div class="de">de <span id="pts-max">16</span> consignas correctas</div>
+    </div>
+
+    <p style="font-size:.92rem"><strong>Último paso:</strong> completá tu nombre, generá el resumen, copialo y pegalo en la tarea de Classroom.</p>
+    <input type="text" id="alumno" placeholder="APELLIDO, Nombre"
+           style="width:100%;padding:12px 14px;font-size:1rem;border:2px solid #dadce0;border-radius:10px;margin-bottom:12px">
+    <div class="btn-row" style="margin-bottom:14px">
+        <button class="check" onclick="generarResumen()">Generar resumen de entrega</button>
+        <button class="check sec" onclick="copiarResumen()">Copiar al portapapeles</button>
+    </div>
+    <textarea id="resumen" readonly placeholder="El resumen aparece acá."></textarea>
+    <p id="copiado" style="display:none;color:#15803d;font-weight:700;font-size:.9rem">✓ Copiado. Pegalo en la tarea de Classroom.</p>
+</div>
+
+<div class="box no-print" style="text-align:center">
+    <button class="check sec" onclick="reiniciar()" style="width:auto">Borrar mis respuestas y empezar de nuevo</button>
+</div>
+
+<footer>
+    Taller desarrollado por <span class="autor">Diego Steinberg</span>
+</footer>
+
+</div>
+
+<script>
+/* =========================================================================
+   Contenido del taller. Cada consigna define sus opciones y el feedback
+   que el alumno lee al comprobar — incluido el de las opciones que no eligió.
+   ========================================================================= */
+
+const M0 = [
+  { id:'s1', puntua:false, tipo:'radio',
+    texto:'Un chico con debut de diabetes tiene un pH muy bajo por cetoacidosis. ¿Qué es lo primero que corregirías?',
+    opts:[
+      {t:'Bicarbonato, para subir el pH cuanto antes.', ok:false,
+       fb:'Es el reflejo más común, y el que este taller te va a mostrar por qué evitar.'},
+      {t:'Volumen, con solución fisiológica.', ok:true,
+       fb:'Correcto. El volumen siempre va primero; la insulina espera a la primera hora de hidratación, y el bicarbonato casi nunca hace falta.'},
+      {t:'Insulina en bolo, para bajar la glucemia de inmediato.', ok:false,
+       fb:'Vas a ver por qué la insulina en bolo no aporta nada y sube el riesgo de la complicación más temida de la CAD.'}
+    ]},
+  { id:'s2', puntua:false, tipo:'radio',
+    texto:'¿Con qué rapidez te parece que hay que bajar la glucemia en un chico con cetoacidosis diabética?',
+    opts:[
+      {t:'Lo más rápido posible, para salir cuanto antes del cuadro.', ok:false,
+       fb:'Es exactamente la idea que hay que revisar: un descenso demasiado rápido de la glucemia es uno de los principales factores de riesgo de una complicación grave.'},
+      {t:'En forma gradual, sin apurar el descenso.', ok:true,
+       fb:'Correcto. La velocidad de corrección, tanto de la glucemia como del sodio, es una de las decisiones que más pesan en el desenlace.'},
+      {t:'No importa la velocidad, mientras se llegue a valores normales.', ok:false,
+       fb:'Sí importa, y mucho: la velocidad del descenso es uno de los factores de riesgo modificables más importantes de este cuadro.'}
+    ]}
+];
+
+const M2 = [
+{
+  id:'c1', badge:'Caso 1 · Début sin shock',
+  titulo:'Camila, 9 años',
+  vineta:'Poliuria, polidipsia y baja de 3 kg en las últimas tres semanas. Hoy consulta por vómitos y dolor abdominal. <br><br><strong>Examen físico:</strong> alerta pero decaída, mucosas secas, respiración de Kussmaul (profunda y regular). Bien perfundida, relleno capilar menor a 2 segundos, sin signos de shock. FC 118/min, TA normal para la edad.',
+  lab:[['Glucemia','410 mg/dL',1],['pH','7,17',1],['pCO₂','17 mmHg',1],['HCO₃','6 mEq/L',1],
+       ['Na⁺','133 mEq/L',1],['K⁺','4,6 mEq/L',0],['Cl⁻','100 mEq/L',0],['Urea','45 mg/dL',1],['Cetonemia','positiva +++',1]],
+  qs:[
+    { id:'c1q1', tipo:'radio', texto:'Con estos datos, ¿corresponde el diagnóstico de CAD, y con qué gravedad?',
+      opts:[
+        {t:'Sí, CAD moderada: pH 7,17 y HCO₃ 6, dentro del rango de 7,1–7,2 y 5–10', ok:true, fb:'Correcto. Los tres criterios están presentes (glucemia, acidosis y cetonemia positiva), y tanto el pH como el HCO₃ ubican la gravedad en el escalón moderado.'},
+        {t:'Sí, CAD grave, porque el pH está muy bajo', ok:false, fb:'Grave es pH menor a 7,1. Camila está en 7,17, en el escalón moderado.'},
+        {t:'Sí, CAD leve, porque todavía está alerta', ok:false, fb:'La gravedad se clasifica por el pH y el HCO₃, no por el estado de alerta. Con pH 7,17 ya no entra en el rango leve (7,2–7,3).'},
+        {t:'No es CAD: solo hay hiperglucemia, sin acidosis verdadera', ok:false, fb:'Sí hay acidosis: un pH de 7,17 y un HCO₃ de 6 son claramente patológicos, y la cetonemia es positiva.'}
+      ]},
+    { id:'c1q2', tipo:'radio', texto:'Calculá el sodio corregido por la glucemia e interpretalo.',
+      hint:'Na corregido = Na + 1,6 × [(glucemia − 100) / 100]',
+      opts:[
+        {t:'≈138 mEq/L: el sodio real es prácticamente normal, el valor medido de 133 refleja el efecto dilucional de la hiperglucemia', ok:true, fb:'133 + 1,6 × [(410 − 100) / 100] = 133 + 4,96 ≈ 138. El exceso de glucosa arrastra agua al espacio extracelular y diluye el sodio medido: no es una hiponatremia verdadera.'},
+        {t:'≈128 mEq/L: hay una hiponatremia real que hay que corregir con solución hipertónica', ok:false, fb:'La fórmula corrige hacia arriba, no hacia abajo: el sodio real es más alto que el medido, no más bajo. No hace falta ninguna solución hipertónica.'},
+        {t:'No se puede corregir el sodio sin conocer la osmolaridad plasmática medida directamente', ok:false, fb:'La fórmula del sodio corregido sirve exactamente para eso: estimar el sodio real a partir de la glucemia, sin necesitar una osmolaridad medida.'},
+        {t:'El valor medido (133) ya refleja el sodio real: no hace falta corregirlo', ok:false, fb:'Con una glucemia de 410, el efecto dilucional es significativo. El valor medido subestima el sodio real.'}
+      ]},
+    { id:'c1q3', tipo:'multi', texto:'Camila está alerta y sin shock. ¿Cuáles son las conductas iniciales correctas? (elegí 2)',
+      opts:[
+        {t:'Expandir con solución fisiológica (10 a 20 mL/kg en la primera hora) para iniciar la corrección del déficit', ok:true, fb:'Correcto. El volumen va primero, incluso sin shock.'},
+        {t:'Iniciar la insulina en infusión continua recién después de la primera hora de hidratación, nunca en bolo', ok:true, fb:'Correcto. La secuencia importa: primero volumen, después insulina, siempre en infusión continua.'},
+        {t:'Indicar bicarbonato de sodio por el pH de 7,17', ok:false, fb:'No está indicado: el bicarbonato de rutina no acelera la recuperación y empeora la hipopotasemia.'},
+        {t:'Indicar la insulina en bolo endovenoso para bajar la glucemia cuanto antes', ok:false, fb:'El bolo no aporta ningún beneficio adicional sobre la infusión continua, y sube el riesgo de edema cerebral.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> cetoacidosis diabética moderada, como forma de debut de diabetes tipo 1, sin signos de shock.</p><p>Es el escenario más frecuente de debut: síntomas de varias semanas de evolución, cetoacidosis ya instalada al momento de la consulta.</p><p><strong>Lo que hay que retener:</strong> el sodio medido en un chico muy hiperglucémico casi siempre subestima el sodio real. Corregirlo evita indicar una solución hipertónica que no hace falta.</p>'
+},
+{
+  id:'c2', badge:'Caso 2 · CAD grave con shock',
+  titulo:'Iván, 6 años',
+  vineta:'Vómitos y decaimiento progresivo de cuatro días, con diabetes conocida y mala adherencia a la insulina en las últimas semanas. Ingresa hipoactivo. <br><br><strong>Examen físico:</strong> relleno capilar 4 segundos, pulsos periféricos débiles, taquicardia marcada, TA 78/40 mmHg. Respiración profunda y muy frecuente. Mucosas muy secas.',
+  lab:[['Glucemia','560 mg/dL',1],['pH','7,02',1],['pCO₂','12 mmHg',1],['HCO₃','3 mEq/L',1],
+       ['Na⁺','128 mEq/L',1],['K⁺','3,1 mEq/L',1],['Cl⁻','95 mEq/L',1],['Urea','55 mg/dL',1],['Cetonemia','positiva +++',1]],
+  qs:[
+    { id:'c2q1', tipo:'radio', texto:'Clasificá la gravedad y calculá el anion gap.',
+      hint:'AG = Na⁺ − (Cl⁻ + HCO₃⁻)',
+      opts:[
+        {t:'CAD grave (pH <7,1, HCO₃ <5), con AG ≈30, marcadamente aumentado por los cuerpos cetónicos', ok:true, fb:'128 − (95 + 3) = 30, muy por encima de lo normal (8–16): son los cuerpos cetónicos actuando como aniones no medidos. El pH y el HCO₃ ubican a Iván en el escalón grave.'},
+        {t:'CAD moderada, con AG normal', ok:false, fb:'El pH de 7,02 y el HCO₃ de 3 están por debajo de los umbrales de "grave" (pH<7,1, HCO₃<5). Y el AG (30) está lejos de ser normal.'},
+        {t:'CAD grave, pero el anion gap no se puede calcular sin conocer el lactato', ok:false, fb:'El anion gap se calcula solo con sodio, cloro y bicarbonato, que ya están en el laboratorio.'},
+        {t:'CAD leve, porque Iván está hipoactivo pero todavía responde', ok:false, fb:'La gravedad se clasifica por el pH y el HCO₃, nunca por el estado de alerta.'}
+      ]},
+    { id:'c2q2', tipo:'radio', texto:'Con estos signos de shock, ¿cuál es la conducta con el volumen inicial?',
+      opts:[
+        {t:'Solución fisiológica 10 mL/kg en la primera hora, reevaluando antes de repetir — no el bolo de 20 mL/kg habitual de otros shocks', ok:true, fb:'Correcto. En la CAD el volumen inicial se maneja con más cautela que en un shock hipovolémico común, porque el exceso de líquido es uno de los factores de riesgo reconocidos de edema cerebral.'},
+        {t:'Expandir igual que cualquier shock hipovolémico, con 20 mL/kg en bolo, repetible sin límite', ok:false, fb:'Es la conducta habitual frente a otros shocks, pero en la CAD un volumen inicial excesivo es un factor de riesgo reconocido de edema cerebral.'},
+        {t:'No expandir hasta confirmar la causa del shock con más estudios', ok:false, fb:'El shock no espera estudios: el volumen inicial se indica ya, aunque con más cautela que en otros contextos.'},
+        {t:'Expandir con solución hipotónica, para no aportar más sodio', ok:false, fb:'La fase de emergencia frente al shock es siempre con solución isotónica, sea cual sea el sodio del paciente.'}
+      ]},
+    { id:'c2q3', tipo:'radio', texto:'El potasio es 3,1 mEq/L. ¿Cuál es la conducta correcta respecto de la insulina?',
+      opts:[
+        {t:'Reponer potasio en el líquido de hidratación y recién iniciar la infusión de insulina cuando supere un umbral seguro (habitualmente 3,3 mEq/L)', ok:true, fb:'Correcto. Con un potasio ya bajo antes de tratar, iniciar la insulina lo bajaría todavía más (la insulina lo hace reingresar a la célula), con riesgo de arritmia. Acá la insulina se posterga, a diferencia de la regla general de "recién después de la diuresis" que se usa en una deshidratación sin cetoacidosis.'},
+        {t:'Iniciar la insulina de inmediato, sin esperar el potasio, porque es la prioridad para frenar la cetogénesis', ok:false, fb:'Con un potasio ya en 3,1, arrancar la insulina sin reponerlo primero expone a una hipopotasemia peligrosa.'},
+        {t:'No reponer potasio en ningún momento, porque la acidosis hace que el potasio "real" sea más alto de lo que muestra el ionograma', ok:false, fb:'Es cierto que la acidemia desplaza potasio hacia el plasma, pero acá el valor medido ya está bajo pese a ese efecto: el déficit corporal real es todavía mayor.'},
+        {t:'Indicar potasio únicamente por vía oral, una vez que tolere', ok:false, fb:'La urgencia del cuadro amerita reposición endovenosa, junto con la hidratación.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> cetoacidosis diabética grave con shock hipovolémico compensado, en un paciente con diabetes conocida y mala adherencia al tratamiento.</p><p>El caso combina los tres pilares con su mayor complejidad: volumen cauteloso pese al shock, potasio que obliga a postergar la insulina, y un anion gap muy elevado coherente con la cetogénesis.</p><p><strong>Lo que hay que retener:</strong> el umbral de potasio antes de la insulina es la excepción más importante a memorizar de todo este taller — es distinta de la regla que rige en una deshidratación sin cetoacidosis.</p>'
+},
+{
+  id:'c3', badge:'Caso 3 · Alarma durante el tratamiento',
+  titulo:'Julieta, 12 años',
+  vineta:'En tratamiento por una CAD grave desde hace 6 horas. Recibió una expansión inicial de 20 mL/kg (indicada por otro médico) y está con insulina en infusión continua. La glucemia bajó de 520 a 90 mg/dL en las últimas 4 horas. Ahora refiere cefalea intensa y está más somnolienta.',
+  lab:[['Glucemia actual','90 mg/dL',0],['pH actual','7,28',0],['HCO₃ actual','14 mEq/L',0],
+       ['K⁺ actual','3,6 mEq/L',0],['FC actual','58/min (previa 130/min)',1],['TA actual','128/80 mmHg (previa 100/60 mmHg)',1]],
+  qs:[
+    { id:'c3q1', tipo:'radio', texto:'¿Cuál es el diagnóstico más probable, y por qué no hay que esperar a una imagen para actuar?',
+      opts:[
+        {t:'Edema cerebral: la cefalea, el deterioro del sensorio y el patrón de bradicardia con hipertensión (tríada de Cushing) son señales clínicas de alarma que exigen tratamiento inmediato', ok:true, fb:'Correcto. El edema cerebral se diagnostica clínicamente, y su ventana de aparición típica —dentro de las primeras 12 a 24 horas de tratamiento— coincide exactamente con este momento.'},
+        {t:'Hipoglucemia sintomática: hay que dar glucosa endovenosa y nada más', ok:false, fb:'La glucemia de 90 mg/dL no es hipoglucemia. El cuadro clínico (cefalea + tríada de Cushing) apunta a otra causa.'},
+        {t:'Un cuadro de ansiedad por la hospitalización, sin necesidad de intervención inmediata', ok:false, fb:'La combinación de cefalea, deterioro del sensorio, bradicardia e hipertensión no es ansiedad: es la presentación clásica de una emergencia neurológica.'},
+        {t:'Meningitis asociada: hay que puncionar de inmediato', ok:false, fb:'La punción lumbar está contraindicada ante la sospecha de hipertensión endocraneana: podría precipitar una herniación.'}
+      ]},
+    { id:'c3q2', tipo:'multi', texto:'De los datos del caso, ¿cuáles son factores de riesgo reconocidos de esta complicación? (elegí 2)',
+      opts:[
+        {t:'El bolo inicial de 20 mL/kg, mayor al recomendado para la CAD', ok:true, fb:'Correcto. El exceso de volumen inicial es uno de los factores de riesgo modificables más citados.'},
+        {t:'El descenso de la glucemia más rápido que lo recomendado', ok:true, fb:'Correcto. 520 a 90 mg/dL en 4 horas es un descenso brusco de la osmolaridad plasmática, el otro factor de riesgo modificable central.'},
+        {t:'Que la insulina se haya indicado en infusión continua en vez de en bolo', ok:false, fb:'Al revés: la infusión continua es la forma correcta. El bolo es lo que aumenta el riesgo, no la infusión.'},
+        {t:'Que se haya repuesto potasio junto con la hidratación', ok:false, fb:'Reponer potasio de forma adecuada no es un factor de riesgo: es parte del tratamiento correcto.'}
+      ]},
+    { id:'c3q3', tipo:'radio', texto:'¿Cuál es la conducta inmediata?',
+      opts:[
+        {t:'Reducir el ritmo de la hidratación endovenosa e indicar solución hipertónica al 3% (o manitol) de inmediato, sin esperar la neuroimagen', ok:true, fb:'Correcto. El tratamiento no espera a la tomografía: cada minuto de demora frente a una sospecha clínica clara empeora el pronóstico neurológico.'},
+        {t:'Solicitar una tomografía de cerebro urgente y recién después decidir el tratamiento', ok:false, fb:'El diagnóstico de este cuadro es clínico. Esperar la imagen retrasa un tratamiento que no debería demorarse.'},
+        {t:'Aumentar el ritmo de la infusión de insulina para terminar de corregir la acidosis cuanto antes', ok:false, fb:'No trata la emergencia actual, y no hay ningún beneficio en acelerar la corrección de la acidosis en este momento.'},
+        {t:'Administrar un bolo adicional de solución fisiológica para sostener la tensión arterial elevada', ok:false, fb:'La hipertensión acá es parte de la tríada de Cushing, por hipertensión endocraneana, no por hipovolemia: más volumen empeoraría el edema.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> edema cerebral asociado al tratamiento de la CAD, con dos factores de riesgo identificables en el propio caso: volumen inicial excesivo y descenso demasiado rápido de la glucemia.</p><p><strong>Lo que hay que retener:</strong> la sospecha clínica alcanza para actuar. Esperar una tomografía frente a cefalea, deterioro del sensorio y tríada de Cushing en un paciente en tratamiento por CAD es exactamente el error a evitar.</p>'
+}
+];
+
+const M3 = [
+  { id:'e1', badge:'Error 1', titulo:'El bicarbonato de rutina',
+    cita:'«Paciente con CAD y pH 7,15. Indiqué bicarbonato de sodio para corregir el pH más rápido, además de la hidratación y la insulina.»',
+    q:{ id:'e1q', tipo:'radio', texto:'¿Dónde está el error?',
+      opts:[
+        {t:'El bicarbonato no está indicado de rutina en la CAD: se asocia a mayor riesgo de edema cerebral y empeora la hipopotasemia, sin acelerar la recuperación', ok:true, fb:'Correcto. El pH se corrige al tratar la causa —volumen e insulina—, no agregando álcali. El bicarbonato queda reservado para la acidemia extrema con compromiso hemodinámico, y aun ahí es discutido.'},
+        {t:'El error es haber indicado hidratación e insulina juntas', ok:false, fb:'Al revés, son dos de los tres pilares correctos del tratamiento.'},
+        {t:'El error es que el pH de 7,15 no amerita ningún tratamiento', ok:false, fb:'Sí amerita tratamiento —es una CAD moderada—, pero el bicarbonato no es la parte que corresponde agregar.'},
+        {t:'No hay error: todo pH menor a 7,20 debe corregirse con bicarbonato', ok:false, fb:'No es así. El umbral de pH no define por sí solo la indicación de bicarbonato en la CAD.'}
+      ]}},
+  { id:'e2', badge:'Error 2', titulo:'El bolo de insulina',
+    cita:'«Para bajar la glucemia lo antes posible en un debut de CAD, indiqué un bolo endovenoso de insulina corriente, antes de iniciar la infusión continua.»',
+    q:{ id:'e2q', tipo:'radio', texto:'¿Dónde está el error?',
+      opts:[
+        {t:'El bolo de insulina no aporta beneficio adicional y se asocia a mayor riesgo de edema cerebral por un descenso demasiado brusco de la osmolaridad; la insulina va siempre en infusión continua, sin bolo', ok:true, fb:'Correcto. La infusión continua alcanza para frenar la cetogénesis de forma segura, sin el descenso brusco que produce un bolo.'},
+        {t:'El error es haber usado insulina corriente en vez de insulina NPH', ok:false, fb:'La insulina corriente (de acción rápida) es justamente la que corresponde para la infusión continua endovenosa. El problema es el bolo, no el tipo de insulina.'},
+        {t:'El error es haber esperado a tener la hidratación en curso antes de la insulina', ok:false, fb:'Esperar a la hidratación es correcto; el error de este fragmento es otro: el bolo.'},
+        {t:'No hay error: el bolo acelera la corrección de forma segura', ok:false, fb:'No es seguro: sube el riesgo de edema cerebral sin ningún beneficio adicional sobre la infusión continua.'}
+      ]}},
+  { id:'e3', badge:'Error 3', titulo:'El potasio "para después"',
+    cita:'«Chico con CAD y potasio inicial de 3,0 mEq/L. Indiqué la hidratación y arranqué la infusión de insulina de inmediato, pensando en agregar potasio recién cuando confirme diuresis, como en cualquier deshidratación.»',
+    q:{ id:'e3q', tipo:'radio', texto:'¿Dónde está el error?',
+      opts:[
+        {t:'Con un potasio ya bajo (menor a 3,3) antes de tratar, la insulina se posterga —o el potasio se repone desde el inicio— porque la insulina lo va a bajar todavía más y puede producir una arritmia', ok:true, fb:'Correcto. La regla de "recién después de la diuresis" es válida en una deshidratación simple, pero en la CAD hay una excepción real: si el potasio de entrada ya está bajo, no se espera a arrancar la insulina.'},
+        {t:'El error es haber indicado hidratación antes que insulina', ok:false, fb:'Ese orden es correcto: el volumen siempre va primero.'},
+        {t:'El error es no haber esperado el resultado de un segundo ionograma antes de cualquier conducta', ok:false, fb:'No hace falta esperar un segundo ionograma: el valor de 3,0 ya alcanza para cambiar la conducta respecto de la insulina.'},
+        {t:'No hay error: la regla de "recién después de la diuresis" aplica siempre, sin excepciones', ok:false, fb:'Es la regla general en una deshidratación sin cetoacidosis, pero acá hay una excepción real por el efecto adicional de la insulina sobre el potasio.'}
+      ]}}
+];
+
+const M4 = {
+  id:'d1', badge:'Desafío', titulo:'Nicolás, 4 años',
+  vineta:'Debut de diabetes con cuatro días de evolución: poliuria, polidipsia, y en las últimas horas vómitos y decaimiento marcado. <br><br><strong>Examen físico:</strong> hipoactivo, relleno capilar 4 segundos, pulsos periféricos débiles, taquicardia marcada, TA 70/38 mmHg. Respiración profunda y muy frecuente. Mucosas muy secas.',
+  lab:[['Glucemia','610 mg/dL',1],['pH','6,92',1],['pCO₂','10 mmHg',1],['HCO₃','2 mEq/L',1],
+       ['Na⁺','125 mEq/L',1],['K⁺','2,9 mEq/L',1],['Cl⁻','90 mEq/L',1],['Urea','60 mg/dL',1],['Cetonemia','positiva +++',1]],
+  qs:[
+    { id:'d1q1', tipo:'radio', texto:'Clasificá la gravedad y calculá el anion gap.',
+      hint:'AG = Na⁺ − (Cl⁻ + HCO₃⁻)',
+      opts:[
+        {t:'CAD grave (pH <7,1, HCO₃ <5), AG ≈33, marcadamente aumentado', ok:true, fb:'125 − (90 + 2) = 33, muy por encima de lo normal. El pH de 6,92 y el HCO₃ de 2 ubican a Nicolás claramente en el escalón grave.'},
+        {t:'CAD moderada, AG normal', ok:false, fb:'Con pH 6,92 y HCO₃ 2 está en el escalón grave, y el AG (33) está muy por encima del rango normal (8–16).'},
+        {t:'CAD grave, pero no se puede calcular el anion gap sin el lactato', ok:false, fb:'El anion gap se calcula solo con sodio, cloro y bicarbonato, ya disponibles en el laboratorio.'},
+        {t:'No se puede clasificar la gravedad porque hay signos de shock', ok:false, fb:'Al revés: la gravedad se clasifica igual por el pH y el HCO₃, tenga o no shock asociado.'}
+      ]},
+    { id:'d1q2', tipo:'radio', texto:'Con estos signos de shock, ¿cuál es la conducta inicial de volumen?',
+      opts:[
+        {t:'Solución fisiológica 10 mL/kg en la primera hora, con cautela, reevaluando antes de repetir', ok:true, fb:'Correcto, igual que en el Caso 2: el volumen inicial en la CAD se maneja con más cautela que en otros shocks, por el riesgo de edema cerebral asociado al exceso de líquido.'},
+        {t:'Expandir con 20 mL/kg en bolo, repetible sin límite, como en cualquier shock', ok:false, fb:'Es la conducta habitual frente a otros shocks, pero en la CAD el volumen excesivo es un factor de riesgo reconocido de edema cerebral.'},
+        {t:'Postergar el volumen hasta reponer primero el potasio', ok:false, fb:'El volumen va primero, siempre. El potasio se repone en el líquido de hidratación, no antes de empezarla.'},
+        {t:'Expandir con solución hipertónica al 3%, dado lo grave del cuadro', ok:false, fb:'La solución hipertónica se reserva para el tratamiento del edema cerebral ya instalado, no para la expansión inicial del shock.'}
+      ]},
+    { id:'d1q3', tipo:'radio', texto:'El potasio es 2,9 mEq/L. ¿Cuál es la secuencia correcta con la insulina?',
+      opts:[
+        {t:'Reponer potasio desde el inicio de la hidratación y postergar la insulina hasta que supere un umbral seguro (habitualmente 3,3 mEq/L)', ok:true, fb:'Correcto, la misma excepción del Caso 2: con un potasio ya tan bajo, arrancar la insulina antes de reponerlo expone a una hipopotasemia peligrosa.'},
+        {t:'Iniciar la insulina de inmediato, junto con el bolo de volumen, para frenar la cetogénesis cuanto antes', ok:false, fb:'Con un potasio de 2,9, la insulina se posterga hasta reponerlo: bajarlo más todavía tiene riesgo de arritmia.'},
+        {t:'No reponer potasio: en pleno shock, el riñón todavía no filtra y podría producirse hiperpotasemia', ok:false, fb:'El potasio medido ya está bajo, no alto: el riesgo acá es la hipopotasemia al iniciar la insulina, no lo contrario.'},
+        {t:'Reponer potasio recién cuando se confirme la diuresis, igual que en cualquier deshidratación', ok:false, fb:'Es la regla general sin cetoacidosis. Acá, con un potasio de entrada ya bajo, la reposición no espera a la diuresis.'}
+      ]},
+    { id:'d1q4', tipo:'multi', texto:'A las pocas horas de tratamiento, Nicolás desarrolla cefalea y bradicardia con hipertensión. ¿Qué corresponde? (elegí 2)',
+      opts:[
+        {t:'Sospechar edema cerebral y tratarlo de inmediato con solución hipertónica al 3% o manitol, sin esperar imágenes', ok:true, fb:'Correcto, mismo cuadro que el Caso 3: la sospecha clínica alcanza para actuar ya.'},
+        {t:'Reducir el ritmo de la hidratación endovenosa', ok:true, fb:'Correcto. Es parte del manejo inmediato, junto con la solución hipertónica o el manitol.'},
+        {t:'Solicitar una tomografía antes de cualquier tratamiento', ok:false, fb:'El tratamiento no debe esperar a la imagen frente a una sospecha clínica clara.'},
+        {t:'Aumentar el ritmo de la insulina para terminar de corregir la acidosis', ok:false, fb:'No trata la emergencia actual y no aporta ningún beneficio en este momento.'}
+      ]}
+  ],
+  razonamiento:'<p><strong>Diagnóstico:</strong> cetoacidosis diabética grave con shock hipovolémico, hipopotasemia significativa, y edema cerebral en desarrollo durante el tratamiento.</p><p>El caso integra los tres módulos del taller: la clasificación por gravedad y anion gap, la excepción del potasio antes de la insulina, y el reconocimiento clínico —sin esperar imágenes— del edema cerebral.</p><p><strong>Lo que hay que retener:</strong> en la CAD, cada uno de los tres pilares tiene una razón específica para hacerse con cautela y en el orden correcto. Apurar cualquiera de los tres es lo que más se asocia a la complicación que peor pronóstico tiene.</p>'
+};
+
+/* =========================================================================
+   Motor: renderizado, corrección y persistencia
+   ========================================================================= */
+
+const ESTADO_KEY = 'tallerCetoacidosis_v1';
+let estado = {};
+try { estado = JSON.parse(localStorage.getItem(ESTADO_KEY) || '{}'); } catch (e) { estado = {}; }
+
+const LETRAS = 'ABCDEFGH';
+let TODAS = [];  // ids de consignas que puntúan
+
+function guardar() {
+    try { localStorage.setItem(ESTADO_KEY, JSON.stringify(estado)); } catch (e) {}
+}
+
+function renderPregunta(q, puntua) {
+    if (puntua !== false) TODAS.push(q.id);
+    const multi = q.tipo === 'multi';
+    let html = '<div class="q" id="q-' + q.id + '">';
+    html += '<p class="q-text">' + q.texto + '</p>';
+    if (q.hint) html += '<p class="q-hint">💡 ' + q.hint + '</p>';
+    html += '<ul class="opts">';
+    q.opts.forEach(function (o, i) {
+        html += '<li><label class="opt" data-i="' + i + '">' +
+                '<input type="' + (multi ? 'checkbox' : 'radio') + '" name="' + q.id + '" value="' + i + '">' +
+                '<span><span class="letra">' + LETRAS[i] + '.</span> ' + o.t + '</span>' +
+                '</label><div class="fb" style="display:none"></div></li>';
+    });
+    html += '</ul>';
+    html += '<button class="check" onclick="comprobar(\'' + q.id + '\')">Comprobar</button>';
+    html += '<div class="veredicto"></div>';
+    html += '</div>';
+    return html;
+}
+
+function renderLab(lab) {
+    let html = '<table class="lab"><caption>Exámenes complementarios</caption><tbody>';
+    lab.forEach(function (f) {
+        html += '<tr class="' + (f[2] ? 'alterado' : '') + '"><td>' + f[0] + '</td><td>' + f[1] + '</td></tr>';
+    });
+    return html + '</tbody></table>';
+}
+
+function renderCaso(c) {
+    let html = '<div class="box" id="box-' + c.id + '">';
+    html += '<span class="badge">' + c.badge + '</span>';
+    html += '<h3>' + c.titulo + '</h3>';
+    html += '<div class="vineta">' + c.vineta + '</div>';
+    html += renderLab(c.lab);
+    c.qs.forEach(function (q) { html += renderPregunta(q); });
+    html += '<details id="raz-' + c.id + '"><summary>Ver el razonamiento completo</summary>' +
+            '<div class="cuerpo">' + c.razonamiento + '</div></details>';
+    return html + '</div>';
+}
+
+function renderError(e) {
+    let html = '<div class="box" id="box-' + e.id + '">';
+    html += '<span class="badge rojo">' + e.badge + ' · ' + e.titulo + '</span>';
+    html += '<div class="vineta" style="background:#fef2f2;border-color:#fecaca;font-style:italic">' + e.cita + '</div>';
+    html += renderPregunta(e.q);
+    return html + '</div>';
+}
+
+// Registro global de preguntas para la corrección
+const REG = {};
+const ETIQUETA = {};   // id de consigna -> nombre legible para el docente
+function registrar(q) { REG[q.id] = q; }
+function etiquetar(qs, prefijo) {
+    qs.forEach(function (q, i) { ETIQUETA[q.id] = prefijo + ' · consigna ' + (i + 1); });
+}
+
+// --- Montaje ---
+function montar() {
+    let h0 = '';
+    M0.forEach(function (q) { registrar(q); h0 += renderPregunta(q, false); });
+    document.getElementById('m0').innerHTML = h0;
+
+    let h2 = '';
+    M2.forEach(function (c, n) {
+        c.qs.forEach(registrar);
+        etiquetar(c.qs, 'Caso ' + (n + 1) + ' (' + c.titulo + ')');
+        h2 += renderCaso(c);
+    });
+    document.getElementById('m2').innerHTML = h2;
+
+    let h3 = '';
+    M3.forEach(function (e, n) {
+        registrar(e.q);
+        ETIQUETA[e.q.id] = 'Error ' + (n + 1) + ' (' + e.titulo + ')';
+        h3 += renderError(e);
+    });
+    document.getElementById('m3').innerHTML = h3;
+
+    M4.qs.forEach(registrar);
+    etiquetar(M4.qs, 'Desafío (' + M4.titulo + ')');
+    document.getElementById('m4').innerHTML = renderCaso(M4);
+
+    document.getElementById('pts-max').textContent = TODAS.length;
+    document.getElementById('progress-text').textContent = '0 de ' + TODAS.length + ' consignas resueltas';
+
+    // Marcar selección visual
+    document.querySelectorAll('.opt input').forEach(function (inp) {
+        inp.addEventListener('change', function () {
+            const lista = inp.closest('.opts');
+            if (inp.type === 'radio') {
+                lista.querySelectorAll('.opt').forEach(function (o) { o.classList.remove('sel'); });
+            }
+            inp.closest('.opt').classList.toggle('sel', inp.checked);
+        });
+    });
+
+    // Restaurar respuestas guardadas
+    Object.keys(estado).forEach(function (qid) {
+        if (!REG[qid]) return;
+        const guardadas = estado[qid].elegidas || [];
+        guardadas.forEach(function (i) {
+            const inp = document.querySelector('#q-' + qid + ' input[value="' + i + '"]');
+            if (inp) { inp.checked = true; inp.closest('.opt').classList.add('sel'); }
+        });
+        if (estado[qid].comprobada) pintar(qid, true);
+    });
+
+    ['abierta1', 'abierta2', 'alumno'].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (estado['_' + id]) el.value = estado['_' + id];
+        el.addEventListener('input', function () { estado['_' + id] = el.value; guardar(); });
+    });
+
+    actualizarProgreso();
+}
+
+function comprobar(qid) {
+    const q = REG[qid];
+    const elegidas = [];
+    document.querySelectorAll('#q-' + qid + ' input:checked').forEach(function (i) {
+        elegidas.push(parseInt(i.value, 10));
+    });
+    if (elegidas.length === 0) {
+        alert('Elegí al menos una opción antes de comprobar. Aunque dudes: el error es la parte que enseña.');
+        return;
+    }
+    estado[qid] = { elegidas: elegidas, comprobada: true };
+    guardar();
+    pintar(qid, false);
+    actualizarProgreso();
+}
+
+function correcta(qid) {
+    const q = REG[qid], st = estado[qid];
+    if (!st) return false;
+    const correctas = [];
+    q.opts.forEach(function (o, i) { if (o.ok) correctas.push(i); });
+    if (st.elegidas.length !== correctas.length) return false;
+    return correctas.every(function (i) { return st.elegidas.indexOf(i) !== -1; });
+}
+
+function pintar(qid, restaurando) {
+    const q = REG[qid], st = estado[qid];
+    if (!st || !st.comprobada) return;
+    const cont = document.getElementById('q-' + qid);
+    const items = cont.querySelectorAll('.opts > li');
+
+    let aciertos = 0, correctasTotal = 0;
+    q.opts.forEach(function (o, i) {
+        const li = items[i];
+        const label = li.querySelector('.opt');
+        const fb = li.querySelector('.fb');
+        const elegida = st.elegidas.indexOf(i) !== -1;
+        if (o.ok) correctasTotal++;
+
+        label.classList.remove('sel', 'ok', 'mal', 'perdida');
+        if (elegida && o.ok) { label.classList.add('ok'); aciertos++; }
+        else if (elegida && !o.ok) { label.classList.add('mal'); }
+        else if (!elegida && o.ok) { label.classList.add('perdida'); }
+
+        // El feedback se muestra siempre: también el de las opciones no elegidas
+        fb.innerHTML = (o.ok ? '✔ ' : '✘ ') + o.fb;
+        fb.className = 'fb ' + (o.ok ? 'ok' : 'mal');
+        fb.style.display = 'block';
+        li.querySelector('input').disabled = true;
+    });
+
+    cont.querySelector('button.check').disabled = true;
+
+    const v = cont.querySelector('.veredicto');
+    const bien = correcta(qid);
+    const puntua = TODAS.indexOf(qid) !== -1;
+    v.style.display = 'block';
+    if (bien) {
+        v.className = 'veredicto ok';
+        v.textContent = puntua ? '✓ Correcto' : '✓ Buena lectura';
+    } else if (aciertos > 0 && aciertos < correctasTotal) {
+        v.className = 'veredicto parcial';
+        v.textContent = 'Parcialmente correcto: acertaste ' + aciertos + ' de ' + correctasTotal +
+                        '. Leé el fundamento de cada opción, incluidas las que no elegiste.';
+    } else {
+        v.className = 'veredicto mal';
+        v.textContent = puntua ? '✗ No es la respuesta correcta. La opción marcada en verde es la que corresponde.'
+                               : 'Anotá qué pensabas: al terminar el taller volvé a esta pregunta.';
+    }
+
+    // Abrir el razonamiento cuando el caso quedó completo
+    const caso = cont.closest('.box');
+    if (caso) {
+        const pendientes = caso.querySelectorAll('button.check:not(:disabled)').length;
+        const det = caso.querySelector('details');
+        if (pendientes === 0 && det && !restaurando) det.open = true;
+    }
+}
+
+function actualizarProgreso() {
+    let hechas = 0, buenas = 0;
+    TODAS.forEach(function (qid) {
+        if (estado[qid] && estado[qid].comprobada) { hechas++; if (correcta(qid)) buenas++; }
+    });
+    document.getElementById('progress-fill').style.width = (hechas / TODAS.length * 100) + '%';
+    document.getElementById('progress-text').textContent =
+        hechas + ' de ' + TODAS.length + ' consignas resueltas' +
+        (hechas ? ' · ' + buenas + (buenas === 1 ? ' correcta' : ' correctas') : '');
+    document.getElementById('pts').textContent = buenas;
+}
+
+function generarResumen() {
+    const nombre = document.getElementById('alumno').value.trim();
+    if (!nombre) { alert('Completá tu apellido y nombre antes de generar el resumen.'); return; }
+    let hechas = 0, buenas = 0;
+    const detalle = [];
+    TODAS.forEach(function (qid) {
+        const st = estado[qid];
+        if (st && st.comprobada) {
+            hechas++;
+            const bien = correcta(qid);
+            if (bien) buenas++;
+            detalle.push('  [' + (bien ? 'OK   ' : 'ERROR') + '] ' + (ETIQUETA[qid] || qid) +
+                         ' — marcó ' + st.elegidas.map(function (i) { return LETRAS[i]; }).join(', '));
+        } else {
+            detalle.push('  [  -  ] ' + (ETIQUETA[qid] || qid) + ' — sin responder');
+        }
+    });
+    const txt =
+'TALLER: CETOACIDOSIS DIABÉTICA EN PEDIATRÍA\n' +
+'Taller desarrollado por Diego Steinberg\n' +
+'=====================================================\n' +
+'Alumno/a: ' + nombre + '\n' +
+'Fecha de finalización: ' + new Date().toLocaleString('es-AR') + '\n' +
+'Consignas resueltas: ' + hechas + ' de ' + TODAS.length + '\n' +
+'Respuestas correctas: ' + buenas + ' de ' + TODAS.length + '\n\n' +
+'DETALLE POR CONSIGNA\n' + detalle.join('\n') + '\n\n' +
+'PREGUNTA 1 — Por qué la insulina nunca se indica en bolo en la CAD:\n' +
+(document.getElementById('abierta1').value.trim() || '(sin responder)') + '\n\n' +
+'PREGUNTA 2 — Cuál de los tres errores podría haber cometido:\n' +
+(document.getElementById('abierta2').value.trim() || '(sin responder)') + '\n';
+    document.getElementById('resumen').value = txt;
+    document.getElementById('resumen').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function copiarResumen() {
+    const ta = document.getElementById('resumen');
+    if (!ta.value) { alert('Primero generá el resumen.'); return; }
+    ta.select();
+    ta.setSelectionRange(0, 99999);
+    try {
+        navigator.clipboard.writeText(ta.value);
+    } catch (e) {
+        document.execCommand('copy');
+    }
+    const av = document.getElementById('copiado');
+    av.style.display = 'block';
+    setTimeout(function () { av.style.display = 'none'; }, 4000);
+}
+
+function reiniciar() {
+    if (!confirm('Esto borra todas tus respuestas y el progreso guardado. ¿Confirmás?')) return;
+    localStorage.removeItem(ESTADO_KEY);
+    location.reload();
+}
+
+/* =========================================================================
+   Gate de activación remota.
+   Debe coincidir con el mismo databaseURL y la misma ruta que usa index.html
+   (TALLER_CETOACIDOSIS_PATH, junto a las funciones efuFb*). Reutiliza el nodo
+   'efuRooms' cuyas reglas de seguridad ya están desplegadas (.read/.write true en
+   efuRooms/$roomId) usando 'talleresGenerales' como $roomId — no hace falta redesplegar
+   reglas, mismo mecanismo que taller_deshidratacion_online.html.
+   El chequeo corre al final del <script>, después de que gate-loading/gate-blocked/
+   app-content ya están parseados en el DOM — nunca antes, por la misma razón que el
+   #access-gate de index.html: si corriera antes, los getElementById de acá arriba
+   devolverían null.
+   ========================================================================= */
+const EFU_FIREBASE_DB_URL = 'https://pediatria-uba-efu-votos.firebaseio.com';
+const TALLER_ACTIVO_PATH = 'efuRooms/talleresGenerales/cetoacidosis/activo';
+
+function mostrarBloqueado(mensaje) {
+    document.getElementById('gate-loading').style.display = 'none';
+    const bloqueado = document.getElementById('gate-blocked');
+    if (mensaje) bloqueado.querySelector('.gate-msg').textContent = mensaje;
+    bloqueado.style.display = 'block';
+}
+
+function mostrarTaller() {
+    document.getElementById('gate-loading').style.display = 'none';
+    document.getElementById('gate-blocked').style.display = 'none';
+    document.getElementById('app-content').style.display = 'block';
+    montar();
+}
+
+(function chequearActivacion() {
+    // Bypass para el docente: no es una segunda contraseña, es solo para poder revisar
+    // el contenido sin activarlo para el curso (ver el botón "Vista previa" en index.html).
+    if (new URLSearchParams(window.location.search).get('preview') === '1') {
+        mostrarTaller();
+        return;
+    }
+    fetch(EFU_FIREBASE_DB_URL + '/' + TALLER_ACTIVO_PATH + '.json')
+        .then(function (res) {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.json();
+        })
+        .then(function (activo) {
+            if (activo === true) mostrarTaller();
+            else mostrarBloqueado();
+        })
+        .catch(function () {
+            mostrarBloqueado('No se pudo comprobar el estado del taller — revisá tu conexión a internet e intentá de nuevo en un momento.');
+        });
+})();
+</script>
+</body>
+</html>

@@ -46,6 +46,12 @@ Este archivo configura las reglas de comportamiento y contexto de proyecto para 
   como el de Estado Ácido-Base).
 - `taller_eab_online.html`: Taller autoguiado y asincrónico de Trastornos del Estado Ácido-Base,
   publicado como página aparte y enlazado desde Classroom (ver sección propia más abajo).
+- `taller_deshidratacion_online.html`: Taller autoguiado de Deshidratación y Rehidratación,
+  mismo motor que el de EAB pero con activación remota desde `index.html` (interruptor
+  guardado en Firebase, ver la sección del taller de Cetoacidosis más abajo — comparten el
+  mismo mecanismo, documentado ahí para no duplicarlo).
+- `taller_cetoacidosis_online.html`: Taller autoguiado de Cetoacidosis Diabética, mismo motor
+  y mismo mecanismo de activación remota (ver sección propia más abajo).
 - `crear_formulario_classroom.gs`: Script de Apps Script que genera el cuestionario del taller
   en Google Forms extrayendo las preguntas del propio HTML. **No se usa** en la configuración
   actual; queda por si el taller alguna vez tiene que llevar nota.
@@ -341,6 +347,51 @@ condicionan el código.
 - **Sin firma institucional:** el material es desarrollo propio del docente y lleva su nombre en
   el pie de la página y en el resumen de entrega. No agregar menciones a la cátedra, la Facultad
   ni el hospital en el material que se genere.
+
+---
+
+## 🩸 Taller Autoguiado de Cetoacidosis Diabética (agregado 28/08/2026)
+
+Tercer taller de la familia de talleres autoguiados (`taller_eab_online.html` →
+`taller_deshidratacion_online.html` → `taller_cetoacidosis_online.html`), mismo motor de
+renderizado/corrección/persistencia que los dos anteriores (`taller_deshidratacion_online.html`
+es la referencia más directa: comparte estructura de módulos, formato de casos con
+`vineta`/`lab`/`qs`/`razonamiento`, y el mecanismo de activación remota descripto abajo).
+
+- **Deliberadamente más corto que los otros dos** (pedido explícito del docente): 3 casos en vez
+  de 5, 3 errores en vez de 4, 16 consignas puntuables en vez de 26 (más las 2 de sondeo del
+  Módulo 0, que no puntúan). Duración estimada 35–45 minutos.
+- **Activación remota igual que Deshidratación, no público como EAB.** Nace apagado detrás de un
+  interruptor que el docente prende/apaga desde `index.html` (pestaña Talleres → Talleres
+  generales), guardado en Firebase bajo `efuRooms/talleresGenerales/cetoacidosis/activo` —
+  mismo nodo `efuRooms` ya habilitado por las reglas desplegadas (ver sección de Votación en
+  Vivo), sin redesplegarlas. `?preview=1` en la URL deja al docente revisar el contenido sin
+  activarlo para el curso. El patrón (`TALLER_CETOACIDOSIS_PATH`, `pintarEstadoTaller...`,
+  `refrescarEstadoTaller...`, `toggleActivacionTaller...` en `index.html`, y el bloque
+  "Gate de activación remota" al final del `<script>` del propio taller) está copiado literal
+  del de Deshidratación — si se agrega un cuarto taller con el mismo mecanismo, repetir el
+  mismo patrón con un nuevo valor de `$roomId` en vez de inventar uno nuevo.
+- **Las viñetas son de elaboración propia, no son casos EFU**, igual que los dos talleres
+  anteriores. Los tríos pH/pCO₂/HCO₃ de cada caso están verificados con la ecuación de
+  Henderson-Hasselbalch (`pH = 6,1 + log₁₀[HCO₃ / (0,03 × pCO₂)]`) y, donde aplica, con la
+  fórmula de Winter de compensación — mismo estándar de consistencia interna que EAB y
+  Deshidratación.
+- **Decisión clínica central del taller, la que más se repite entre los tres casos y el
+  desafío final:** si el potasio ya está bajo (`<3,3 mEq/L`) antes de empezar el tratamiento,
+  se repone potasio antes o junto con el inicio de la insulina, y la insulina se posterga —
+  a diferencia de la regla general de "recién después de confirmar diuresis" que rige en una
+  deshidratación sin cetoacidosis (`taller_deshidratacion_online.html`). Es una excepción real,
+  no una simplificación pedagógica: la insulina hace reingresar potasio a la célula y puede
+  precipitar una hipopotasemia peligrosa si ya estaba bajo.
+- El taller también retoma el anion gap y la fórmula de Winter del taller de EAB, y la
+  cautela con el volumen inicial frente al shock del taller de Deshidratación (10 mL/kg y no
+  el bolo de 20 mL/kg habitual, por el riesgo de edema cerebral) — el Módulo 4 (desafío final)
+  integra explícitamente los tres talleres en un solo caso, mismo patrón que usan los desafíos
+  finales de los dos talleres anteriores.
+- **Pendiente, no resuelto:** a diferencia de EAB, ni `taller_deshidratacion_online.html` ni
+  este taller tienen todavía una guía docente dedicada (`taller_eab_guia_docente.md` es, por
+  ahora, la única). Si se necesita documentar el proceso de publicación o la constancia en
+  Classroom con el mismo nivel de detalle, sería el próximo paso para los dos.
 
 ---
 

@@ -7024,6 +7024,29 @@ Equipo Docente de Pediatría</textarea>
                 </div>
             </div>
 
+            <div class="card">
+                <span class="badge" style="background: #fff7ed; color: #9a3412;">Taller autoguiado — Asincrónico</span>
+                <h2>Cetoacidosis Diabética en Pediatría</h2>
+                <p style="color: #475569; margin-bottom: 16px;">
+                    Cuatro módulos y 16 consignas con corrección instantánea: los tres pilares del tratamiento (volumen, insulina, potasio), tres pacientes con distinta gravedad, caza del error y un desafío final que combina shock, hipopotasemia y edema cerebral.
+                </p>
+                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 12px;">
+                    ⏱️ 35 a 45 minutos · 👤 Individual · 📄 Entrega: el alumno pega el resumen en la tarea de Classroom
+                </p>
+                <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:9px; padding:10px 14px; margin-bottom:16px; font-size:0.88rem; color:#92400e;">
+                    <strong id="cetoacidosisEstadoTexto">Consultando estado…</strong><br>
+                    El link para Classroom no abre el contenido hasta que lo activás acá abajo. "Vista previa (docente)" sí lo muestra siempre, sin activarlo para el curso — no es una segunda contraseña, es solo para que puedas revisar el contenido con tranquilidad.
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <a href="taller_cetoacidosis_online.html?preview=1" target="_blank" rel="noopener"
+                       style="display: inline-block; padding: 11px 20px; border-radius: 9px; background: #fff; color: #9a3412; border: 2px solid #fed7aa; font-weight: 700; text-decoration: none; font-size: 0.95rem;">
+                        👁️ Vista previa (docente) ↗
+                    </a>
+                    <button class="reveal-btn" id="cetoacidosisToggleBtn" onclick="refrescarEstadoTallerCetoacidosis()">Consultando…</button>
+                    <button class="reveal-btn" onclick="copiarLinkTallerGenerico('taller_cetoacidosis_online.html', this)">🔗 Copiar link para Classroom</button>
+                </div>
+            </div>
+
             <div class="card" style="border-style: dashed; background: #fafafa;">
                 <h2 style="color: #94a3b8;">Próximos talleres</h2>
                 <p style="color: #94a3b8; margin: 0;">
@@ -7284,7 +7307,64 @@ Equipo Docente de Pediatría</textarea>
 
         document.addEventListener('DOMContentLoaded', function () {
             refrescarEstadoTallerDeshidratacion();
+            refrescarEstadoTallerCetoacidosis();
         });
+
+        // Mismo mecanismo que TALLER_DESHIDRATACION_PATH de arriba, para
+        // taller_cetoacidosis_online.html — otro valor de $roomId bajo el mismo nodo
+        // 'efuRooms', sin necesidad de tocar reglas.
+        const TALLER_CETOACIDOSIS_PATH = 'efuRooms/talleresGenerales/cetoacidosis/activo';
+
+        function pintarEstadoTallerCetoacidosis(activo) {
+            const textoEl = document.getElementById('cetoacidosisEstadoTexto');
+            const btnEl = document.getElementById('cetoacidosisToggleBtn');
+            if (!textoEl || !btnEl) return;
+            textoEl.textContent = activo
+                ? '🟢 Activado: los alumnos ya pueden entrar al taller.'
+                : '🔴 Desactivado: los alumnos todavía no pueden entrar al taller.';
+            btnEl.textContent = activo ? '🔒 Desactivar para los alumnos' : '🔓 Activar para los alumnos';
+            btnEl.disabled = false;
+            btnEl.dataset.activo = activo ? '1' : '0';
+            btnEl.onclick = toggleActivacionTallerCetoacidosis;
+        }
+
+        async function refrescarEstadoTallerCetoacidosis() {
+            const textoEl = document.getElementById('cetoacidosisEstadoTexto');
+            const btnEl = document.getElementById('cetoacidosisToggleBtn');
+            if (!textoEl || !btnEl) return;
+            if (!efuVotingEnabled()) {
+                textoEl.textContent = 'Sin conexión a Firebase configurada: no se puede activar de forma remota.';
+                btnEl.textContent = 'No disponible';
+                btnEl.disabled = true;
+                return;
+            }
+            btnEl.disabled = true;
+            btnEl.textContent = 'Consultando…';
+            try {
+                const activo = await efuFbGet(TALLER_CETOACIDOSIS_PATH);
+                pintarEstadoTallerCetoacidosis(!!activo);
+            } catch (e) {
+                textoEl.textContent = '⚠️ No se pudo consultar el estado. Revisá la conexión.';
+                btnEl.textContent = 'Reintentar';
+                btnEl.disabled = false;
+                btnEl.onclick = refrescarEstadoTallerCetoacidosis;
+            }
+        }
+
+        async function toggleActivacionTallerCetoacidosis() {
+            const btnEl = document.getElementById('cetoacidosisToggleBtn');
+            if (!btnEl) return;
+            const nuevoEstado = btnEl.dataset.activo !== '1';
+            btnEl.disabled = true;
+            btnEl.textContent = 'Guardando…';
+            try {
+                await efuFbPut(TALLER_CETOACIDOSIS_PATH, nuevoEstado);
+                pintarEstadoTallerCetoacidosis(nuevoEstado);
+            } catch (e) {
+                alert('No se pudo actualizar el estado del taller. Revisá la conexión e intentá de nuevo.');
+                refrescarEstadoTallerCetoacidosis();
+            }
+        }
 
         function copiar(id, btn) {
             var copyText = document.getElementById(id);
