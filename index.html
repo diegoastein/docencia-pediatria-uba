@@ -8446,7 +8446,9 @@ Equipo Docente de Pediatría</textarea>
                 <div class="pres-header">
                     <div class="pres-title-group">
                         <span class="pres-badge">${currentCase.badge}</span>
-                        <h2>${currentCase.title}</h2>
+                        <!-- Sin título del caso a propósito: muchos títulos adelantan el diagnóstico
+                             (antes o después del nombre del paciente, no siempre entre paréntesis),
+                             y esto se proyecta frente al curso. Ver CLAUDE.md. -->
                     </div>
                     <div class="pres-controls-top">
                         ${voteMode === 'equipos' && voteRoomActive ? '<button class="pres-btn-top" onclick="showRankingModal()">🏆 Ranking</button>' : ''}

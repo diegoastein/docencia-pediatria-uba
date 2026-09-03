@@ -412,7 +412,6 @@
         content.innerHTML = `
             <div class="box">
                 <span class="badge">Caso en pantalla</span>
-                <p class="case-title">${currentCase.title}</p>
                 <ul class="options-list">
                     ${currentCase.options.map(opt => `
                         <li class="option-item ${selectedLetters.includes(opt.letter) ? 'selected' : ''}" onclick="window.__toggleOpt('${opt.letter}')">
@@ -516,7 +515,6 @@
         content.innerHTML = `
             <div class="box">
                 <span class="badge">Respuestas reveladas</span>
-                <p class="case-title">${parsed.title}</p>
                 <div class="result-summary ${summaryClass}">${summaryIcon} ${summaryText}</div>
                 <ul class="options-list">
                     ${parsed.options.map(opt => {
