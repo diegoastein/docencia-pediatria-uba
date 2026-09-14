@@ -325,6 +325,13 @@ pierden los exámenes y las notas**. Exportar a Excel/PDF después de cada toma.
 
 ## 📺 Modo Presentación: ajuste automático del texto y pantalla completa (agregado 14/09/2026)
 
+**Al revelar NO se proyecta la justificación clínica** (decisión del docente): queda sólo el
+marcado de correctas sobre las opciones de la derecha. La justificación se explica hablando, y
+ocupando media pantalla obligaba a achicar el enunciado, que es lo que el curso necesita seguir
+leyendo mientras se corrige. Sigue estando entera en la tarjeta del caso de la pestaña Talleres
+EFU (`toggleAnswer`), que es de donde se sacaba. Si alguna vez hay que volver a proyectarla,
+conviene que sea detrás de un botón y no automática al revelar.
+
 Los enunciados del banco EFU van de ~300 a ~2600 caracteres (mediana 936). A los 1,75rem fijos
 que tenía el Modo Presentación, los más largos no entraban en una pantalla y el docente terminaba
 scrolleando en pleno proyector.
@@ -349,10 +356,10 @@ scrolleando en pleno proyector.
   ocultamiento de controles a los 4 segundos, el cambio de tamaño de ventana y el paso a pantalla
   completa. El ajuste inicial es **sincrónico** dentro de `renderSlide`, no en un
   `requestAnimationFrame` (con rAF no se ajusta nada si la pestaña está en segundo plano).
-- **Verificado midiendo los 167 casos × 2 fases (334 combinaciones)**: a 1920x1080 ninguno
-  requiere scroll (con o sin controles a la vista), y 258 de 334 conservan el 1,75rem original.
-  A 1366x768 con los controles ocultos tampoco; con los controles visibles queda 1 caso que no
-  entra — se resuelve solo al ocultarse los controles o con pantalla completa.
+- **Verificado midiendo los 167 casos × 2 fases (334 combinaciones)**, ya sin la justificación
+  en pantalla: a 1920x1080 ninguno requiere scroll y 308 de 334 conservan el 1,75rem original
+  (el peor caso queda en 1,43rem). A 1366x768 tampoco requiere scroll ninguno, ni siquiera con
+  los controles a la vista.
 - Por debajo de 1024px de ancho sigue vigente el `@media` que apila las columnas con scroll: ahí
   el ajuste no actúa (es la vista de emergencia en una pantalla chica, no el proyector).
 

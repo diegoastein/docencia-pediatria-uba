@@ -395,50 +395,6 @@
             color: #f1f3f4;
         }
 
-        .pres-explanation-box {
-            display: none;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: display 0.4s, opacity 0.4s ease-out, transform 0.4s ease-out;
-            transition-behavior: allow-discrete;
-            padding: calc(var(--pres-left-size) * 0.71) calc(var(--pres-left-size) * 0.86);
-            border-radius: 14px;
-            font-size: calc(var(--pres-left-size) * 0.71);
-            line-height: 1.5;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-
-        .pres-explanation-box.visible {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        @starting-style {
-            .pres-explanation-box.visible {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-        }
-
-        .projector-theme-light .pres-explanation-box {
-            background-color: var(--success-bg);
-            border: 2px solid #ceead6;
-            color: #137333;
-        }
-
-        .projector-theme-dark .pres-explanation-box {
-            background-color: #113c23;
-            border: 2px solid #34a853;
-            color: #e6f4ea;
-        }
-
-        .pres-explanation-box strong {
-            font-size: calc(var(--pres-left-size) * 0.8);
-            display: inline-block;
-            margin-bottom: 8px;
-        }
-
         .pres-right {
             display: flex;
             flex-direction: column;
@@ -7742,7 +7698,7 @@ Equipo Docente de Pediatría</textarea>
                 if (presentationActive) {
                     syncVoteMeta();
                     startVotePolling();
-                    renderSlide(false);
+                    renderSlide();
                 }
             } catch (err) {
                 console.error('Error activando sala de votación:', err);
@@ -7757,7 +7713,7 @@ Equipo Docente de Pediatría</textarea>
             voteRoomId = '';
             opinionMode = false;
             renderVoteToolbar();
-            if (presentationActive) renderSlide(false);
+            if (presentationActive) renderSlide();
         }
 
         function copyVoteLink() {
@@ -7782,7 +7738,7 @@ Equipo Docente de Pediatría</textarea>
         function toggleOpinionMode() {
             opinionMode = !opinionMode;
             syncVoteMeta();
-            renderSlide(false);
+            renderSlide();
         }
 
         function computeLiveVoteCounts(votesObj) {
@@ -8396,11 +8352,11 @@ Equipo Docente de Pediatría</textarea>
                 });
                 
                 let answerBox = card.querySelector('.answer-box');
-                let answerHtml = answerBox ? answerBox.innerHTML : '';
+
                 // caseId estable: se deriva del id único del .answer-box (ans12 → "12"), no del
                 // orden de la lista (que cambia según el filtro de semana o el buscador por tema).
                 let caseId = answerBox ? answerBox.id.replace(/^ans/, '') : String(presentationCases.length);
-                presentationCases.push({ badge, title, vignette, options, answerHtml, caseId });
+                presentationCases.push({ badge, title, vignette, options, caseId });
             });
         }
 
@@ -8437,7 +8393,7 @@ Equipo Docente de Pediatría</textarea>
             currentPhase = 1;
             presentationActive = true;
             
-            renderSlide(false);
+            renderSlide();
             resetControlsTimer();
             syncVoteMeta();
             startVotePolling();
@@ -8713,7 +8669,7 @@ Equipo Docente de Pediatría</textarea>
             presFitObserver.observe(cont);
         }
 
-        function renderSlide(animateExplanation = false) {
+        function renderSlide() {
             let overlay = document.getElementById('presentation-overlay');
             if (!overlay) return;
             
@@ -8749,11 +8705,14 @@ Equipo Docente de Pediatría</textarea>
 
                 <div class="pres-content">
                     <div class="pres-left">
+                        <!-- Al revelar NO se proyecta la justificación clínica, sólo queda marcado
+                             cuáles eran las correctas sobre las opciones de la derecha (decisión
+                             del docente): la justificación se explica hablando, y ocupando media
+                             pantalla obligaba a achicar el enunciado, que es lo que el curso
+                             necesita seguir leyendo mientras se corrige. Sigue estando, entera, en
+                             la tarjeta del caso en la pestaña Talleres EFU. -->
                         <div class="pres-vignette-box">
                             ${currentCase.vignette}
-                        </div>
-                        <div id="pres-explanation" class="pres-explanation-box">
-                            ${currentCase.answerHtml}
                         </div>
                     </div>
                     
@@ -8763,7 +8722,7 @@ Equipo Docente de Pediatría</textarea>
                                 ? ('🗳️ <strong>Fase de Votación:</strong> ' + (voteRoomActive
                                     ? 'Alumnos: escaneen el QR y voten desde el celular. Docente: A-H o clic para el marcado manual.'
                                     : 'Vota usando teclas <strong>A-H</strong> o clic.') + ' <button class="pres-inline-reveal-btn" onclick="nextStep()">Ver Respuestas Correctas ✨</button>')
-                                : '📋 <strong>Fase de Respuestas:</strong> Claves oficiales EFU y justificación clínica en pantalla.'}
+                                : '📋 <strong>Fase de Respuestas:</strong> En verde, las claves oficiales del EFU.'}
                         </div>
                         <ul class="pres-options-list" id="pres-options-list">
                             ${currentCase.options.map((opt, idx) => {
@@ -8805,23 +8764,6 @@ Equipo Docente de Pediatría</textarea>
                 renderVoteQr('presVoteQrCanvas', voteUrl);
             }
 
-            if (currentPhase === 2) {
-                const box = document.getElementById('pres-explanation');
-                if (box) {
-                    if (animateExplanation) {
-                        void box.offsetHeight; // force layout reflow
-                        setTimeout(() => {
-                            box.classList.add('visible');
-                            // La justificación pasa de display:none a block, así que suma alto
-                            // real: hay que volver a medir DESPUÉS de mostrarla, no antes.
-                            fitPresentationText();
-                        }, 50);
-                    } else {
-                        box.classList.add('visible');
-                    }
-                }
-            }
-
             observePresContent(overlay);
             // Sincrónico y no en un requestAnimationFrame: leer scrollHeight fuerza el cálculo de
             // layout que hace falta, y así el texto ya sale del tamaño correcto en el primer
@@ -8834,13 +8776,13 @@ Equipo Docente de Pediatría</textarea>
                 let closingCase = presentationCases[currentCaseIndex];
                 currentPhase = 2;
                 stopVotePolling(); // se dejó de votar: congelamos el conteo en pantalla
-                renderSlide(true);
+                renderSlide();
                 if (!opinionMode) scoreTeamsForCase(closingCase);
             } else if (currentPhase === 2) {
                 if (currentCaseIndex < presentationCases.length - 1) {
                     currentCaseIndex++;
                     currentPhase = 1;
-                    renderSlide(false);
+                    renderSlide();
                     startVotePolling();
                 } else {
                     exitPresentation();
@@ -8854,13 +8796,13 @@ Equipo Docente de Pediatría</textarea>
         function prevStep() {
             if (currentPhase === 2) {
                 currentPhase = 1;
-                renderSlide(false);
+                renderSlide();
                 startVotePolling();
             } else if (currentPhase === 1 && currentCaseIndex > 0) {
                 currentCaseIndex--;
                 currentPhase = 2;
                 stopVotePolling();
-                renderSlide(false);
+                renderSlide();
             }
             syncVoteMeta();
             resetControlsTimer();
