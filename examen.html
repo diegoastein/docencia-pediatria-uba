@@ -74,10 +74,39 @@
     .error-msg { color: #c5221f; font-size: 0.9rem; margin-top: -6px; margin-bottom: 12px; }
     .footer-note { text-align: center; font-size: 0.75rem; color: #9aa0a6; margin-top: 20px; }
 
+    /* ---- Cronómetro (sólo si el examen tiene tiempo limitado) ---- */
+    .timer-bar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin: -16px -16px 12px -16px;
+        padding: 9px 16px;
+        background: #0f766e;
+        color: white;
+        font-size: 0.82rem;
+        font-weight: 700;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    }
+    .timer-bar.visible { display: flex; }
+    .timer-bar .t {
+        font-size: 1.25rem;
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum";
+        letter-spacing: 0.02em;
+    }
+    .timer-bar.warn { background: #b45309; }
+    .timer-bar.danger { background: #c5221f; animation: latido 1s ease-in-out infinite; }
+    @keyframes latido { 0%, 100% { opacity: 1; } 50% { opacity: 0.72; } }
+    @media (prefers-reduced-motion: reduce) { .timer-bar.danger { animation: none; } }
+
     /* ---- Barra de progreso / navegación entre preguntas ---- */
     .exam-topbar {
         position: sticky;
-        top: 0;
+        top: 42px;   /* deja lugar al cronómetro, que también es sticky */
         z-index: 10;
         background: #f8f9fa;
         padding: 8px 0 10px 0;
@@ -192,6 +221,10 @@
 </head>
 <body>
 <div class="screen" id="app">
+    <div class="timer-bar" id="timerBar">
+        <span id="timerLabel">Tiempo restante</span>
+        <span class="t" id="timerValue">--:--</span>
+    </div>
     <h1>📋 Examen de Pediatría</h1>
     <p class="subtitle">Hospital Ramón Carrillo — UBA</p>
     <div id="content"></div>
@@ -222,6 +255,12 @@
     let pollTimer = null;
     let saveTimer = null;
     let pendingSaves = new Set();
+    let clockOffset = 0;     // hora del servidor − hora de este celular
+    let timerTicker = null;
+    let tiempoCumplido = false;
+
+    const AVISO_WARN = 5 * 60 * 1000;   // últimos 5 minutos
+    const AVISO_DANGER = 60 * 1000;     // último minuto
 
     const content = document.getElementById('content');
 
@@ -252,6 +291,79 @@
         });
         if (!res.ok) throw new Error('PATCH ' + path);
         return res.json();
+    }
+
+    // ==========================================================================
+    // RELOJ DEL EXAMEN
+    // ==========================================================================
+    // El tiempo restante NO se mide con el reloj del celular: se mide contra el reloj del
+    // servidor de Firebase, el mismo que usó el docente para fijar la hora de cierre. Un celular
+    // con la hora mal puesta (pasa, sobre todo si el dueño la configuró a mano) si no vería un
+    // tiempo distinto al del pizarrón, y se le cerraría el examen antes o después que al resto.
+    async function syncClock() {
+        if (!roomId) return;
+        try {
+            const t0 = Date.now();
+            await fbPut(`efuRooms/${roomId}/exam/clockPing`, { '.sv': 'timestamp' });
+            const server = await fbGet(`efuRooms/${roomId}/exam/clockPing`);
+            const t1 = Date.now();
+            if (typeof server === 'number') clockOffset = server - (t0 + t1) / 2;
+        } catch (e) { /* si falla, se usa el reloj local */ }
+    }
+
+    function ahora() { return Date.now() + clockOffset; }
+
+    function fmtTiempo(ms) {
+        if (ms < 0) ms = 0;
+        const total = Math.floor(ms / 1000);
+        const h = Math.floor(total / 3600);
+        const m = Math.floor((total % 3600) / 60);
+        const sec = total % 60;
+        const dd = (n) => String(n).padStart(2, '0');
+        return h > 0 ? `${h}:${dd(m)}:${dd(sec)}` : `${dd(m)}:${dd(sec)}`;
+    }
+
+    // El cronómetro vive fuera de #content, así que sobrevive a cada re-render de la pregunta.
+    function tickTimer() {
+        const bar = document.getElementById('timerBar');
+        if (!bar) return;
+
+        const activo = meta && meta.status === 'running' && meta.endsAt && studentName && !submitted;
+        bar.classList.toggle('visible', !!activo);
+        if (!activo) { bar.classList.remove('warn', 'danger'); return; }
+
+        const restante = meta.endsAt - ahora();
+        document.getElementById('timerValue').textContent = fmtTiempo(restante);
+        bar.classList.toggle('warn', restante <= AVISO_WARN && restante > AVISO_DANGER);
+        bar.classList.toggle('danger', restante <= AVISO_DANGER);
+
+        const label = document.getElementById('timerLabel');
+        if (restante <= AVISO_DANGER) label.textContent = '⚠️ Último minuto';
+        else if (restante <= AVISO_WARN) label.textContent = '⚠️ Quedan menos de 5 minutos';
+        else label.textContent = 'Tiempo restante';
+
+        if (restante <= 0) entregarPorTiempo();
+    }
+
+    // Al llegar a cero el examen se entrega solo, con lo que haya marcado. El docente además
+    // cierra la sala de su lado; esto cubre el caso de que se le haya cerrado la pestaña.
+    async function entregarPorTiempo() {
+        if (tiempoCumplido || submitted || !studentName) return;
+        tiempoCumplido = true;
+        stopTimer();
+        renderStatus('⏱️', 'Se acabó el tiempo', 'Estamos enviando tus respuestas. No cierres la página.');
+        await doSubmit(true);
+    }
+
+    function startTimer() {
+        stopTimer();
+        tickTimer();
+        timerTicker = setInterval(tickTimer, 1000);
+    }
+
+    function stopTimer() {
+        if (timerTicker) clearInterval(timerTicker);
+        timerTicker = null;
     }
 
     // ==========================================================================
@@ -417,10 +529,12 @@
     };
 
     function renderLobby() {
+        const dur = Number(meta && meta.durationMin) || 0;
         renderStatus(
             '⏳',
             'Ya estás anotado',
-            `Esperá a que el docente dé comienzo al examen.<br><br><strong>${escapeHtml(studentName)}</strong>`,
+            `Esperá a que el docente dé comienzo al examen.<br><br><strong>${escapeHtml(studentName)}</strong>`
+            + (dur ? `<br><br>⏱️ Vas a tener <strong>${dur} minutos</strong> desde que el docente lo largue.` : ''),
             `<button class="secondary" onclick="changeName()">No soy yo — cambiar nombre</button>`
         );
     }
@@ -562,8 +676,8 @@
         doSubmit();
     };
 
-    async function doSubmit() {
-        renderStatus('📤', 'Enviando...', 'No cierres la página.');
+    async function doSubmit(porTiempo) {
+        if (!porTiempo) renderStatus('📤', 'Enviando...', 'No cierres la página.');
         try {
             await flushSaves();
             await fbPatch(`efuRooms/${roomId}/exam/students/${sid}`, {
@@ -573,17 +687,26 @@
             submitted = true;
             localStorage.setItem(lsKey('submitted'), '1');
             stopPolling();
-            renderSubmitted();
+            stopTimer();
+            renderSubmitted(porTiempo);
         } catch (err) {
             renderStatus('⚠️', 'No se pudo enviar', 'Revisá tu conexión y probá de nuevo.',
                 `<button onclick="doSubmitRetry()">Reintentar envío</button>`);
         }
     }
 
-    window.doSubmitRetry = function () { doSubmit(); };
+    window.doSubmitRetry = function () { doSubmit(tiempoCumplido); };
 
-    function renderSubmitted() {
+    function renderSubmitted(porTiempo) {
         document.getElementById('footerNote').style.display = 'none';
+        document.getElementById('timerBar').classList.remove('visible');
+        if (porTiempo) {
+            return renderStatus(
+                '⏱️',
+                'Se acabó el tiempo',
+                `Se envió tu examen, <strong>${escapeHtml(studentName)}</strong>, con todo lo que habías marcado.<br><br>La nota la publica el docente.`
+            );
+        }
         renderStatus(
             '✅',
             'Examen enviado',
@@ -593,6 +716,8 @@
 
     function renderClosed() {
         document.getElementById('footerNote').style.display = 'none';
+        document.getElementById('timerBar').classList.remove('visible');
+        stopTimer();
         renderStatus(
             '🔒',
             'El examen se cerró',
@@ -636,7 +761,9 @@
             // Si el orden guardado no coincide con la cantidad de preguntas (ej: el docente rehízo
             // el examen con la misma sala), se recalcula desde cero.
             if (qOrder.length !== questions.length) buildOrders();
-            return renderExam();
+            renderExam();
+            if (meta.endsAt) startTimer(); else stopTimer();
+            return;
         }
 
         renderStatus('⏳', 'Esperando al docente', 'El examen todavía no comenzó.');
@@ -669,16 +796,20 @@
         ));
     }
 
-    function boot() {
+    async function boot() {
         if (!roomId) return renderRoomPrompt();
         loadLocalState();
+        await syncClock();
         refresh();
         startPolling();
+        // Resincronización periódica: si el celular estuvo con la pantalla apagada, su reloj
+        // puede haber derivado unos segundos respecto del servidor.
+        setInterval(syncClock, 5 * 60 * 1000);
     }
 
     // Aviso al intentar cerrar la pestaña con el examen en curso sin enviar.
     window.addEventListener('beforeunload', (e) => {
-        if (meta && meta.status === 'running' && !submitted && studentName) {
+        if (meta && meta.status === 'running' && !submitted && studentName && !tiempoCumplido) {
             e.preventDefault();
             e.returnValue = '';
         }

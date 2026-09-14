@@ -35,8 +35,9 @@ Este archivo configura las reglas de comportamiento y contexto de proyecto para 
 - `prompt_extraccion_antigravity.md`: Prompt listo para pegar en Antigravity que genera `banco_casos_efu.json` desde `fuentes_pdf/`.
 - `index.html`: Herramienta interactiva publicada en GitHub Pages. **Tres solapas visibles**
   (27/08/2026): **Talleres**, **Control de Prácticos** (matriz de asistencia con sincronización
-  en la nube y exportación XLSX) y **Evaluaciones** (armado y toma de parciales/prefinales, ver
-  sección propia más abajo). La solapa **Anuncios Classroom** sigue en el HTML pero está
+  en la nube y exportación XLSX) y **Evaluaciones** (armado y toma de parciales/prefinales, con
+  cronómetro, pantalla proyectable y corrección individual — ver las dos secciones propias más
+  abajo). La solapa **Anuncios Classroom** sigue en el HTML pero está
   **oculta** (`style="display:none"` en su botón) porque el docente no la usa; para reactivarla
   alcanza con sacar ese `style`, el contenido está intacto.
   La solapa **Talleres** (id `tab-efu`, se mantuvo el id para no romper los selectores
@@ -62,6 +63,8 @@ Este archivo configura las reglas de comportamiento y contexto de proyecto para 
   Sensibles" más abajo) — el script ya no trae nombres hardcodeados.
 - `inventario_clases_drive.md`: Repositorio dinámico de presentaciones en Google Drive.
 - `fuentes_pdf/`: PDFs oficiales de los exámenes EFU (fuente de verdad original para las preguntas).
+- `pantalla_examen.html`: Pantalla de sólo lectura para proyectar en el aula durante un examen
+  (cronómetro gigante, QR en el lobby, entregados en vivo). Ver sección propia más abajo.
 - `votar.html`: Página mobile-first para que los alumnos voten desde su celular durante el Modo Presentación (ver sección Votación en Vivo más abajo).
 - `examen.html`: Página mobile-first para que los alumnos rindan parciales/prefinales desde su celular (ver sección Evaluaciones más abajo). No comparte código con `votar.html` a propósito: la dinámica es distinta (navegación libre entre preguntas, entrega única, sin feedback de aciertos).
 
@@ -319,6 +322,63 @@ pierden los exámenes y las notas**. Exportar a Excel/PDF después de cada toma.
   queda sin internet después de cargar la página.
 
 ---
+
+## ⏱️ Cronómetro, Pantalla del Aula y Corrección Individual (agregado 14/09/2026)
+
+Tres agregados sobre la pestaña Evaluaciones, todos pedidos por el docente.
+
+### Duración y cierre automático
+- El examen se programa con una **duración en minutos** (`duracionMin` del examen, campo en el
+  armador; `0` = sin límite). El reloj **arranca al tocar "▶ Comenzar examen"**, no al abrir la
+  sala: se escribe `endsAt` en `efuRooms/{roomId}/exam/meta` y de ahí lo leen todos.
+- Al llegar a cero **el examen se cierra solo**: lo dispara el ticker de `index.html`
+  (`tickExamClock` → `autoFinishExam`) y, en paralelo, cada celular se autoentrega
+  (`entregarPorTiempo` en `examen.html`). La redundancia es a propósito — si al docente se le
+  cerró la pestaña, los alumnos igual quedan entregados.
+- Botón **"⏱ +5 min"** en la cabecera de la sala para dar prórroga en el momento
+  (`extendExamTime`): corre `endsAt` para todos a la vez.
+- **Todos los relojes se alinean contra el reloj del servidor de Firebase**, no contra el del
+  dispositivo. Se hace con un `PUT {".sv": "timestamp"}` a `efuRooms/{roomId}/exam/clockPing`
+  seguido de un `GET` del mismo nodo, midiendo el ida y vuelta (`syncExamClock` en `index.html`,
+  `syncClock` en `examen.html` y en `pantalla_examen.html`). Sin esto, un celular con la hora
+  puesta a mano vería un tiempo restante distinto al del pizarrón y se le cerraría el examen
+  antes que al resto. Es un nodo más dentro de `efuRooms`, así que **no hace falta tocar las
+  reglas de seguridad**.
+- En el celular del alumno, el cronómetro es una **barra fija arriba** (`#timerBar`, vive fuera
+  de `#content` para que no la destruya cada re-render de la pregunta), en ámbar con menos de 5
+  minutos y en rojo con menos de 1.
+
+### `pantalla_examen.html` (pantalla del aula)
+Página aparte, pensada para arrastrar al proyector mientras el docente sigue viendo la tabla de
+desempeño en su notebook. Se abre con el botón **"🖥 Pantalla del aula"** (`openExamScreen`,
+`window.open`) o entrando a mano con el código de sala.
+- Es de **sólo lectura**: mira `exam/meta` y `exam/students` y no escribe nada salvo el ping de
+  reloj. Proyectarla no puede alterar el examen por un clic accidental — por eso el cierre
+  automático lo dispara `index.html` y no esta página.
+- **Nunca muestra contenido del examen** (ni enunciados, ni opciones, ni respuestas): sólo
+  título, tiempo y cuántos entregaron. Se puede dejar proyectada toda la hora.
+- En **lobby** muestra el QR grande y el código; en **curso**, el cronómetro gigante con barra de
+  tiempo transcurrido; al **cerrar**, el resumen. Fondo relajante (verde azulado profundo con
+  manchas a la deriva) que vira a ámbar en los últimos 5 minutos y a rojo en el último.
+  Respeta `prefers-reduced-motion`. Tecla **F** o botón para pantalla completa; el cursor y los
+  controles se esconden solos a los 4 segundos.
+
+### Corrección individual y PDF para el alumno
+- En la tabla de desempeño, con el examen **cerrado**, el nombre de cada alumno es un link que
+  abre su **examen corregido pregunta por pregunta** (`openStudentReview`): enunciado completo y
+  cada opción marcada como **✓** correcta que marcó, **·** correcta que se le pasó, **✗**
+  incorrecta que marcó. Navegación ←/→ entre alumnos y con las flechas del teclado.
+- **Sólo con la sala cerrada**, por la misma razón que el panel de análisis: durante el examen
+  esta vista muestra la clave y proyectar la pantalla del docente la delataría.
+- **"📄 PDF para el alumno"** (uno) y **"🧾 Exámenes corregidos (PDF)"** (todos, uno por página)
+  salen por la ventana de impresión del navegador, igual que el acta. El mismo generador
+  (`examReviewQuestionHtml`) alimenta el modal y el PDF, así que no hay dos versiones del mismo
+  HTML. El PDF va **siempre con el nombre real**, aunque esté activado "🙈 Ocultar nombres" —
+  ese toggle es para proyectar.
+- **Se eligió el PDF y no publicar la corrección en `examen.html`** para no romper la regla de
+  que las respuestas correctas nunca salen de la computadora del docente: **a Firebase no se
+  agregó ningún dato nuevo**. Implicancia asumida: el PDF que recibe el alumno sí contiene los
+  enunciados, los títulos de los casos y la clave de ese examen, y circula fuera del aula.
 
 ## 🧪 Taller Autoguiado de Estado Ácido-Base (agregado 27/08/2026)
 

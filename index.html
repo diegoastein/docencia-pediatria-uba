@@ -9100,6 +9100,36 @@ Equipo Docente de Pediatría</textarea>
         let examAnonymize = false;
         let examShowDetail = true;      // columnas P1..Pn con el desempeño pregunta por pregunta
         let examAnalysisSort = 'dificultad'; // 'dificultad' | 'orden'
+        let examClockTimer = null;      // ticker de 1s del cronómetro (no re-renderiza la pestaña)
+        let examAutoClosing = false;    // evita que el auto-cierre por tiempo se dispare dos veces
+        let examClockOffset = 0;        // hora del servidor − hora de esta máquina
+
+        // ---------------------------------------------------------------- reloj compartido
+        // Todos los relojes del examen (esta pantalla, el celular de cada alumno y la pantalla
+        // proyectada) se alinean contra el reloj del servidor de Firebase. Sin esto, una máquina
+        // con la hora corrida calcularía un "endsAt" que a los alumnos les da otro tiempo
+        // restante — y a alguno se le cerraría el examen antes de tiempo.
+        async function syncExamClock(roomId) {
+            try {
+                const t0 = Date.now();
+                await efuFbPut(`efuRooms/${roomId}/exam/clockPing`, { '.sv': 'timestamp' });
+                const server = await efuFbGet(`efuRooms/${roomId}/exam/clockPing`);
+                const t1 = Date.now();
+                if (typeof server === 'number') examClockOffset = server - (t0 + t1) / 2;
+            } catch (err) { /* si falla, se sigue con el reloj local */ }
+        }
+
+        function examNow() { return Date.now() + examClockOffset; }
+
+        function examFmtClock(ms) {
+            if (ms < 0) ms = 0;
+            const total = Math.floor(ms / 1000);
+            const h = Math.floor(total / 3600);
+            const m = Math.floor((total % 3600) / 60);
+            const s = total % 60;
+            const dd = (n) => String(n).padStart(2, '0');
+            return h > 0 ? `${h}:${dd(m)}:${dd(s)}` : `${dd(m)}:${dd(s)}`;
+        }
 
         function saveExams() {
             localStorage.setItem('pediatriaExams', JSON.stringify(exams));
@@ -9251,6 +9281,7 @@ Equipo Docente de Pediatría</textarea>
                                 </h4>
                                 <div class="exam-list-meta">
                                     ${ex.caseIds.length} preguntas · ${examEscape(ex.fecha || 'sin fecha')}
+                                    · ${Number(ex.duracionMin) > 0 ? `⏱ ${Number(ex.duracionMin)} min` : '⏱ sin límite'}
                                     ${ex.shuffleQuestions ? ' · 🔀 preguntas mezcladas' : ''}
                                     ${ex.shuffleOptions ? ' · 🔀 opciones mezcladas' : ''}
                                     ${faltantes ? ` · <span class="exam-cat-warn">⚠️ ${faltantes} caso(s) ya no existen en el banco</span>` : ''}
@@ -9295,6 +9326,7 @@ Equipo Docente de Pediatría</textarea>
                 titulo: '',
                 tipo: 'parcial',
                 fecha: new Date().toISOString().slice(0, 10),
+                duracionMin: 90,
                 caseIds: [],
                 shuffleQuestions: true,
                 shuffleOptions: true,
@@ -9409,7 +9441,19 @@ Equipo Docente de Pediatría</textarea>
                             <label>Fecha</label>
                             <input type="date" id="examFecha" value="${examEscape(examDraft.fecha)}" onchange="examDraft.fecha = this.value">
                         </div>
+                        <div class="exam-field">
+                            <label>Duración (minutos)</label>
+                            <input type="number" id="examDuracion" min="0" max="600" step="5"
+                                value="${Number(examDraft.duracionMin) || 0}"
+                                oninput="examDraft.duracionMin = Math.max(0, Math.min(600, parseInt(this.value, 10) || 0))">
+                        </div>
                     </div>
+                    <p style="font-size: 0.8rem; color: #80868b; margin: -4px 0 0 0;">
+                        El reloj arranca cuando tocás <strong>"▶ Comenzar examen"</strong>, no al abrir la sala.
+                        Se proyecta en la pantalla del aula y también se ve en el celular de cada alumno.
+                        Al llegar a cero el examen <strong>se cierra solo</strong> y se corrige lo marcado hasta ese momento.
+                        Poné <strong>0</strong> para que no haya límite de tiempo.
+                    </p>
                     <div class="exam-check-row">
                         <label class="exam-check">
                             <input type="checkbox" ${examDraft.shuffleQuestions ? 'checked' : ''}
@@ -9526,6 +9570,7 @@ Equipo Docente de Pediatría</textarea>
                     tipo: exam.tipo,
                     status: 'lobby',
                     nQuestions: questions.length,
+                    durationMin: Number(exam.duracionMin) || 0,
                     shuffleQuestions: !!exam.shuffleQuestions,
                     shuffleOptions: !!exam.shuffleOptions,
                     updatedAt: Date.now()
@@ -9537,7 +9582,9 @@ Equipo Docente de Pediatría</textarea>
             exam.lastRoom = roomId;
             saveExams();
 
-            examRoom = { roomId, examId: exam.id, status: 'lobby', students: {}, answers: {} };
+            examRoom = { roomId, examId: exam.id, status: 'lobby', students: {}, answers: {}, startedAt: null, endsAt: null };
+            examAutoClosing = false;
+            syncExamClock(roomId);
             examView = 'room';
             renderExamTab();
             startExamPolling();
@@ -9567,7 +9614,17 @@ Equipo Docente de Pediatría</textarea>
                 return;
             }
 
-            examRoom = { roomId: exam.lastRoom, examId: exam.id, status: meta.status || 'lobby', students: {}, answers: {} };
+            examRoom = {
+                roomId: exam.lastRoom,
+                examId: exam.id,
+                status: meta.status || 'lobby',
+                students: {},
+                answers: {},
+                startedAt: meta.startedAt || null,
+                endsAt: meta.endsAt || null
+            };
+            examAutoClosing = false;
+            await syncExamClock(exam.lastRoom);
             examView = 'room';
             renderExamTab();
             startExamPolling();
@@ -9606,12 +9663,18 @@ Equipo Docente de Pediatría</textarea>
                         <p style="font-size: 0.82rem; color: #80868b; margin: 14px 0 0 0;">
                             Al tocar "Comenzar", a todos los celulares les aparece la primera pregunta en pocos segundos.
                             Los que lleguen tarde igual pueden entrar con el código y sumarse.
+                            Abrí <strong>"🖥 Pantalla del aula"</strong> y mandala al proyector: ahí se ve el QR grande
+                            ahora, y el cronómetro una vez que arranque.
                         </p>
                     </div>
                 `;
             } else {
                 cuerpo = renderExamLiveTable(exam);
             }
+
+            const relojHtml = (examRoom.status === 'running' && examRoom.endsAt)
+                ? `<div class="exam-countdown" id="examCountdown"><b>${examFmtClock(examRoom.endsAt - examNow())}</b><span>restante</span></div>`
+                : '';
 
             main.innerHTML = `
                 <div class="exam-room-header">
@@ -9623,9 +9686,17 @@ Equipo Docente de Pediatría</textarea>
                     </div>
                     <div style="flex: 1; min-width: 200px;">
                         <div style="font-weight: 700; font-size: 1.05rem;">${examEscape(exam.titulo)}</div>
-                        <div style="font-size: 0.85rem; opacity: 0.85;">${exam.caseIds.length} preguntas · ${exam.tipo === 'prefinal' ? 'Prefinal' : 'Parcial'}</div>
+                        <div style="font-size: 0.85rem; opacity: 0.85;">
+                            ${exam.caseIds.length} preguntas · ${exam.tipo === 'prefinal' ? 'Prefinal' : 'Parcial'}
+                            · ${Number(exam.duracionMin) > 0 ? `⏱ ${Number(exam.duracionMin)} min` : '⏱ sin límite'}
+                        </div>
+                        ${relojHtml}
                     </div>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="exam-btn secondary" onclick="openExamScreen()">🖥 Pantalla del aula</button>
+                        ${examRoom.status === 'running' && examRoom.endsAt
+                            ? `<button class="exam-btn secondary" onclick="extendExamTime(5)">⏱ +5 min</button>`
+                            : ''}
                         <button class="exam-btn secondary" onclick="showExamQrModal()">🔍 QR grande</button>
                         <button class="exam-btn secondary" onclick="copyExamLink()">🔗 Copiar link</button>
                         <button class="exam-btn secondary" onclick="leaveExamRoom()">← Salir</button>
@@ -9635,6 +9706,7 @@ Equipo Docente de Pediatría</textarea>
             `;
 
             renderVoteQr('examRoomQr', url);
+            if (examRoom.status === 'running' && examRoom.endsAt) startExamClock(); else stopExamClock();
         }
 
         // Celda del detalle pregunta por pregunta: muestra "aciertos/correctas" (con 3 correctas
@@ -9684,7 +9756,9 @@ Equipo Docente de Pediatría</textarea>
                 : filas.map((f, i) => `
                     <tr class="${f.entregado ? 'submitted' : ''}">
                         <td>${i + 1}</td>
-                        <td>${examAnonymize ? `<em>Alumno ${i + 1}</em>` : examEscape(f.nombre)}</td>
+                        <td>${examRoom.status === 'closed'
+                            ? `<button class="exam-name-link" onclick="openStudentReview('${f.sid}')" title="Ver el examen corregido de este alumno">${examAnonymize ? `<em>Alumno ${i + 1}</em>` : examEscape(f.nombre)} <span>🔍</span></button>`
+                            : (examAnonymize ? `<em>Alumno ${i + 1}</em>` : examEscape(f.nombre))}</td>
                         <td>${f.respondidas}/${f.maximo}</td>
                         <td>${f.anuladas || '—'}</td>
                         <td>${f.entregado ? '✅ Entregado' : '✏️ Rindiendo'}</td>
@@ -9698,7 +9772,8 @@ Equipo Docente de Pediatría</textarea>
             const acciones = examRoom.status === 'running'
                 ? `<button class="exam-btn danger" onclick="finishExam()">⏹ Finalizar examen</button>`
                 : `<button class="exam-btn" onclick="exportExamXLSX('${exam.id}')">📥 Exportar a Excel</button>
-                   <button class="exam-btn secondary" onclick="exportExamPDF('${exam.id}')">📄 Exportar a PDF</button>`;
+                   <button class="exam-btn secondary" onclick="exportExamPDF('${exam.id}')">📄 Acta en PDF</button>
+                   <button class="exam-btn secondary" onclick="exportAllStudentPDFs()">🧾 Exámenes corregidos (PDF)</button>`;
 
             const leyenda = examShowDetail
                 ? `<p style="font-size: 0.8rem; color: #80868b; margin: 12px 0 0 0; line-height: 1.7;">
@@ -9752,7 +9827,11 @@ Equipo Docente de Pediatría</textarea>
                              Se actualiza solo cada 5 segundos. Al finalizar, a los alumnos que no hayan
                              entregado se les cierra el examen y se corrige lo que hayan marcado hasta ese momento.
                            </p>`
-                        : ''}
+                        : `<p style="font-size: 0.82rem; color: #80868b; margin: 14px 0 0 0;">
+                             🔍 <strong>Tocá el nombre de un alumno</strong> para ver su examen corregido pregunta por
+                             pregunta, y bajarlo en PDF para compartírselo. Con "🧾 Exámenes corregidos (PDF)" salen
+                             todos juntos, uno por página.
+                           </p>`}
                 </div>
                 ${examRoom.status === 'closed' ? renderExamAnalysis(exam, filas) : ''}
             `;
@@ -10010,20 +10089,368 @@ Equipo Docente de Pediatría</textarea>
             renderExamTab();
         }
 
+        // ====================================================================
+        // REVISIÓN INDIVIDUAL DE UN EXAMEN
+        // ====================================================================
+        // Sólo con la sala cerrada, igual que el panel de análisis: durante el examen esta vista
+        // muestra la clave, y proyectar la pantalla del docente la delataría.
+        //
+        // Se arma acá, en el navegador del docente, cruzando lo que el alumno marcó (Firebase o
+        // los resultados guardados) con las tarjetas de la pestaña Talleres EFU. Las respuestas
+        // correctas siguen sin subir a ningún lado: el examen corregido llega al alumno como PDF.
+
+        function examReviewRows() {
+            const exam = currentExam();
+            if (!exam || !examRoom) return [];
+            const students = examRoom.students || {};
+            const answers = examRoom.answers || {};
+            const filas = Object.keys(students).map((sid) => {
+                const st = students[sid];
+                const r = gradeStudent(exam, answers[sid]);
+                return { sid, nombre: st.nombre, entregado: st.status === 'submitted', ...r };
+            });
+            if (examAnonymize) filas.sort((a, b) => b.puntaje - a.puntaje);
+            else filas.sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+            return filas;
+        }
+
+        function examReviewClaseQ(d) {
+            if (d.estado === 'anulada') return 'q-void';
+            if (d.estado === 'sin responder') return 'q-blank';
+            if (d.pts === 1) return 'q-full';
+            if (d.pts > 0) return 'q-partial';
+            return 'q-zero';
+        }
+
+        function examReviewEstadoQ(d) {
+            if (d.estado === 'anulada') return `✕ Anulada — marcó ${d.marcadas.length} opciones (máximo ${EXAM_MAX_MARKS})`;
+            if (d.estado === 'sin responder') return '— Sin responder';
+            if (d.estado === 'sin caso' || d.estado === 'sin grilla') return '? ' + d.estado;
+            return `${d.aciertos} de ${d.nCorrectas} correctas · ${d.pts.toFixed(2)} pts`;
+        }
+
+        // Una pregunta corregida. Se usa tal cual en el modal y en el PDF: el PDF define las
+        // mismas clases en su propio <style>, así no hay dos versiones del mismo HTML.
+        function examReviewQuestionHtml(d, opts) {
+            const caseObj = examCaseById(d.caseId);
+            const conEnunciado = !opts || opts.conEnunciado !== false;
+            const marcadas = d.marcadas || [];
+
+            const opcionesHtml = !caseObj ? '<li class="neutra">(el caso ya no está en el banco)</li>' :
+                caseObj.opciones.map((o) => {
+                    const marcada = marcadas.includes(o.letter);
+                    let cls, mk;
+                    if (o.correct && marcada) { cls = 'acierto'; mk = `✓ ${o.letter}`; }
+                    else if (o.correct)       { cls = 'perdida'; mk = `· ${o.letter}`; }
+                    else if (marcada)         { cls = 'error';   mk = `✗ ${o.letter}`; }
+                    else                      { cls = 'neutra';  mk = `&nbsp; ${o.letter}`; }
+                    return `<li class="${cls}"><span class="mk">${mk}</span><span>${o.text}</span></li>`;
+                }).join('');
+
+            return `
+                <div class="exam-review-q ${examReviewClaseQ(d)}">
+                    <div class="exam-review-qhead">
+                        <span class="n">${d.n}.</span>
+                        <span class="t">${examEscape(d.titulo)}</span>
+                        <span style="font-size: 0.82rem; font-weight: 700;">${examReviewEstadoQ(d)}</span>
+                    </div>
+                    ${conEnunciado && caseObj ? `<div class="exam-review-vign">${caseObj.enunciado}</div>` : ''}
+                    <ul class="exam-review-opts">${opcionesHtml}</ul>
+                </div>
+            `;
+        }
+
+        function openStudentReview(sid) {
+            const exam = currentExam();
+            if (!exam || !examRoom) return;
+            const filas = examReviewRows();
+            const i = filas.findIndex(f => f.sid === sid);
+            if (i < 0) return;
+            const f = filas[i];
+            const nombreEnPantalla = examAnonymize ? `Alumno ${i + 1}` : f.nombre;
+
+            closeStudentReview();
+            const backdrop = document.createElement('div');
+            backdrop.className = 'ranking-modal-backdrop';
+            backdrop.id = 'exam-review-backdrop';
+            backdrop.onclick = (e) => { if (e.target === backdrop) closeStudentReview(); };
+            backdrop.innerHTML = `
+                <div class="exam-review-box">
+                    <div class="exam-review-head">
+                        <div style="flex: 1; min-width: 220px;">
+                            <h3>${examEscape(nombreEnPantalla)}</h3>
+                            <div class="exam-review-scores">
+                                <span>Puntaje <b>${f.puntaje.toFixed(2)}</b> / ${f.maximo}</span>
+                                <span>Porcentaje <b>${f.pct.toFixed(0)}%</b></span>
+                                <span>Nota <b>${f.nota.toFixed(2)}</b></span>
+                                <span>Nota final <b>${f.notaEntera}</b></span>
+                                <span><b>${f.pct >= 60 ? '✅ Aprobado' : '❌ Desaprobado'}</b></span>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.82rem; opacity: 0.85; text-align: right;">
+                            ${examEscape(exam.titulo)}<br>
+                            ${examEscape(exam.fecha || '')} · ${f.entregado ? 'entregado' : 'sin entregar (se corrigió lo marcado)'}
+                        </div>
+                    </div>
+                    <div class="exam-review-body">
+                        <p style="margin: 0 0 14px 0; font-size: 0.82rem; color: #5f6368; line-height: 1.6;">
+                            <strong>✓</strong> correcta que marcó ·
+                            <strong>·</strong> correcta que se le pasó ·
+                            <strong>✗</strong> incorrecta que marcó.
+                        </p>
+                        ${f.detalle.map(d => examReviewQuestionHtml(d)).join('')}
+                    </div>
+                    <div class="exam-review-foot">
+                        <div style="display: flex; gap: 8px;">
+                            <button class="exam-btn secondary" onclick="navStudentReview(-1)" ${i === 0 ? 'disabled' : ''}>← Anterior</button>
+                            <span style="font-size: 0.82rem; color: #5f6368; align-self: center;">${i + 1} de ${filas.length}</span>
+                            <button class="exam-btn secondary" onclick="navStudentReview(1)" ${i === filas.length - 1 ? 'disabled' : ''}>Siguiente →</button>
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="exam-btn" onclick="exportStudentPDF('${f.sid}')">📄 PDF para el alumno</button>
+                            <button class="exam-btn secondary" onclick="closeStudentReview()">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(backdrop);
+            backdrop.dataset.sid = sid;
+            document.addEventListener('keydown', examReviewKeys);
+        }
+
+        function navStudentReview(delta) {
+            const backdrop = document.getElementById('exam-review-backdrop');
+            if (!backdrop) return;
+            const filas = examReviewRows();
+            const i = filas.findIndex(f => f.sid === backdrop.dataset.sid);
+            const j = i + delta;
+            if (j < 0 || j >= filas.length) return;
+            openStudentReview(filas[j].sid);
+        }
+
+        function examReviewKeys(e) {
+            if (e.key === 'Escape') return closeStudentReview();
+            if (e.key === 'ArrowLeft') return navStudentReview(-1);
+            if (e.key === 'ArrowRight') return navStudentReview(1);
+        }
+
+        function closeStudentReview() {
+            const backdrop = document.getElementById('exam-review-backdrop');
+            if (backdrop) backdrop.remove();
+            document.removeEventListener('keydown', examReviewKeys);
+        }
+
+        // ------------------------------------------------- PDF del examen corregido del alumno
+        // Es lo que se le comparte al alumno (Classroom, mail o impreso). Va con el nombre real
+        // aunque esté activado "🙈 Ocultar nombres": ese toggle es para proyectar, no para esto.
+        // Sale por la ventana de impresión del navegador, igual que el acta del curso.
+        function examStudentPdfBody(exam, f) {
+            return `
+                <div class="alumno">
+                    <h1>${examEscape(exam.titulo)}</h1>
+                    <div class="sub">${exam.tipo === 'prefinal' ? 'Prefinal' : 'Parcial'} · ${examEscape(exam.fecha || '')} · ${exam.caseIds.length} preguntas</div>
+                    <div class="quien">${examEscape(f.nombre)}</div>
+                    <table class="cab">
+                        <tr>
+                            <td><span>Puntaje</span><b>${f.puntaje.toFixed(2)} / ${f.maximo}</b></td>
+                            <td><span>Porcentaje</span><b>${f.pct.toFixed(0)}%</b></td>
+                            <td><span>Nota</span><b>${f.nota.toFixed(2)}</b></td>
+                            <td><span>Nota final</span><b>${f.notaEntera}</b></td>
+                            <td><span>Condición</span><b>${f.pct >= 60 ? 'Aprobado' : 'Desaprobado'}</b></td>
+                        </tr>
+                    </table>
+                    <p class="leyenda">
+                        <strong>✓</strong> opción correcta que marcaste ·
+                        <strong>·</strong> opción correcta que se te pasó ·
+                        <strong>✗</strong> opción incorrecta que marcaste.
+                    </p>
+                    ${f.detalle.map(d => examReviewQuestionHtml(d)).join('')}
+                    <p class="criterio">
+                        <strong>Cómo se corrigió:</strong> cada pregunta vale 1 punto, repartido en forma proporcional
+                        (opciones correctas marcadas ÷ cantidad de opciones correctas), sin descontar por las incorrectas.
+                        Marcar más de ${EXAM_MAX_MARKS} opciones anula la pregunta. La nota sale del porcentaje obtenido:
+                        0% = 0, 60% = 4 (aprobado), 100% = 10.
+                    </p>
+                </div>
+            `;
+        }
+
+        function examStudentPdfCss() {
+            return `
+                body { font-family: Arial, Helvetica, sans-serif; color: #111; margin: 30px; font-size: 12px; }
+                h1 { font-size: 1.2rem; margin: 0 0 2px 0; font-family: Georgia, serif; }
+                .sub { font-size: 0.78rem; color: #555; margin-bottom: 14px; }
+                .quien { font-size: 1.05rem; font-weight: 700; margin-bottom: 12px; }
+                .alumno + .alumno { page-break-before: always; }
+                table.cab { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+                table.cab td { border: 1px solid #ccc; padding: 6px 9px; text-align: center; }
+                table.cab span { display: block; font-size: 0.66rem; text-transform: uppercase; color: #666; letter-spacing: 0.04em; }
+                table.cab b { font-size: 1rem; }
+                .leyenda { font-size: 0.72rem; color: #555; margin: 0 0 14px 0; }
+                .criterio { font-size: 0.7rem; color: #555; margin-top: 18px; line-height: 1.6; border-top: 1px solid #ddd; padding-top: 10px; }
+                .exam-review-q { border: 1px solid #ddd; border-left: 4px solid #999; border-radius: 6px; padding: 9px 12px; margin-bottom: 10px; page-break-inside: avoid; }
+                .exam-review-q.q-full    { border-left-color: #2e7d32; }
+                .exam-review-q.q-partial { border-left-color: #ef6c00; }
+                .exam-review-q.q-zero    { border-left-color: #c62828; }
+                .exam-review-q.q-blank   { border-left-color: #9e9e9e; }
+                .exam-review-q.q-void    { border-left-color: #6a1b9a; }
+                .exam-review-qhead { margin-bottom: 7px; }
+                .exam-review-qhead .n { font-weight: 800; margin-right: 5px; }
+                .exam-review-qhead .t { font-weight: 700; }
+                .exam-review-qhead span:last-child { display: block; font-size: 0.72rem; color: #555; margin-top: 2px; }
+                .exam-review-vign { font-size: 0.78rem; line-height: 1.5; background: #f5f5f5; padding: 8px 10px; border-radius: 5px; margin-bottom: 9px; }
+                .exam-review-opts { list-style: none; margin: 0; padding: 0; }
+                .exam-review-opts li { display: flex; gap: 8px; font-size: 0.78rem; line-height: 1.4; padding: 5px 8px; border-radius: 5px; margin-bottom: 3px; border: 1px solid transparent; }
+                .exam-review-opts li .mk { flex-shrink: 0; font-weight: 800; width: 2.6em; }
+                .exam-review-opts li.acierto { background: #e8f5e9; border-color: #b7dfbb; }
+                .exam-review-opts li.perdida { background: #f4f9f4; border-color: #dde9de; color: #4a624f; }
+                .exam-review-opts li.error   { background: #fdecea; border-color: #f3c4bf; }
+                .exam-review-opts li.neutra  { color: #555; }
+                @media print { body { margin: 13mm; } }
+            `;
+        }
+
+        function abrirVentanaPdf(titulo, cuerpoHtml) {
+            const win = window.open('', '_blank');
+            if (!win) return alert('El navegador bloqueó la ventana emergente. Habilitá las ventanas emergentes para exportar el PDF.');
+            win.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+                <title>${examEscape(titulo)}</title><style>${examStudentPdfCss()}</style></head>
+                <body>${cuerpoHtml}</body></html>`);
+            win.document.close();
+            win.focus();
+            setTimeout(() => win.print(), 350);
+        }
+
+        function exportStudentPDF(sid) {
+            const exam = currentExam();
+            const f = examReviewRows().find(r => r.sid === sid);
+            if (!exam || !f) return;
+            abrirVentanaPdf(`${f.nombre} — ${exam.titulo}`, examStudentPdfBody(exam, f));
+        }
+
+        // Un solo documento con el examen corregido de todo el curso, uno por página: se imprime
+        // una vez y se reparte, en vez de generar 30 PDFs a mano.
+        function exportAllStudentPDFs() {
+            const exam = currentExam();
+            if (!exam || !examRoom) return;
+            const filas = examReviewRows().slice().sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
+            if (!filas.length) return alert('No hay exámenes para exportar.');
+            if (!confirm(`Se va a generar un documento con ${filas.length} examen(es) corregido(s), uno por página.\n\nEn la ventana de impresión elegí "Guardar como PDF".`)) return;
+            abrirVentanaPdf(`${exam.titulo} — exámenes corregidos`, filas.map(f => examStudentPdfBody(exam, f)).join(''));
+        }
+
         async function beginExam() {
             if (!examRoom) return;
-            if (!confirm('¿Dar comienzo al examen? A partir de ahora los alumnos ven las preguntas y pueden responder.')) return;
+            const exam = currentExam();
+            const dur = Math.max(0, Number(exam && exam.duracionMin) || 0);
+
+            const avisoTiempo = dur > 0
+                ? `\n\n⏱ Arranca el reloj: ${dur} minutos. Al llegar a cero el examen se cierra solo.`
+                : '\n\n⏱ Este examen no tiene límite de tiempo: lo cerrás vos cuando quieras.';
+            if (!confirm(`¿Dar comienzo al examen? A partir de ahora los alumnos ven las preguntas y pueden responder.${avisoTiempo}`)) return;
+
+            // El endsAt se calcula contra el reloj del SERVIDOR, no contra el de esta máquina:
+            // es el mismo reloj que van a usar los celulares y la pantalla proyectada.
+            await syncExamClock(examRoom.roomId);
+            const inicio = examNow();
+            const fin = dur > 0 ? inicio + dur * 60000 : null;
+
             try {
                 await efuFbPatch(`efuRooms/${examRoom.roomId}/exam/meta`, {
                     status: 'running',
-                    startedAt: Date.now(),
+                    startedAt: inicio,
+                    durationMin: dur,
+                    endsAt: fin,
                     updatedAt: Date.now()
                 });
                 examRoom.status = 'running';
+                examRoom.startedAt = inicio;
+                examRoom.endsAt = fin;
+                examAutoClosing = false;
                 renderExamTab();
             } catch (err) {
                 alert('No se pudo comenzar el examen: ' + err.message);
             }
+        }
+
+        // Prórroga en el momento: el caso real es el aula que arrancó tarde o el alumno que llegó
+        // sobre la hora. Corre el endsAt para todos a la vez (celulares y pantalla proyectada lo
+        // levantan en el siguiente poll, a los pocos segundos).
+        async function extendExamTime(minutos) {
+            if (!examRoom || examRoom.status !== 'running') return;
+            if (!examRoom.endsAt) return alert('Este examen no tiene límite de tiempo, no hay nada que extender.');
+
+            const base = Math.max(examRoom.endsAt, examNow());   // si ya venció, la prórroga cuenta desde ahora
+            const nuevo = base + minutos * 60000;
+            if (!confirm(`¿Dar ${minutos} minuto(s) más?\n\nEl examen pasaría a terminar a las ${new Date(nuevo).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}.`)) return;
+
+            try {
+                await efuFbPatch(`efuRooms/${examRoom.roomId}/exam/meta`, { endsAt: nuevo, updatedAt: Date.now() });
+                examRoom.endsAt = nuevo;
+                examAutoClosing = false;
+                renderExamTab();
+            } catch (err) {
+                alert('No se pudo extender el tiempo: ' + err.message);
+            }
+        }
+
+        // Cierre automático al vencer el tiempo. Lo dispara el ticker de esta pantalla; en
+        // paralelo, cada celular se autoentrega al llegar a cero, así que si al docente se le
+        // cerró la pestaña los alumnos igual quedan entregados.
+        async function autoFinishExam() {
+            if (!examRoom || examRoom.status !== 'running' || examAutoClosing) return;
+            examAutoClosing = true;
+            try {
+                await efuFbPatch(`efuRooms/${examRoom.roomId}/exam/meta`, { status: 'closed', updatedAt: Date.now() });
+                await pollExamRoom();
+            } catch (err) {
+                examAutoClosing = false;
+                return alert('Se cumplió el tiempo pero no se pudo cerrar el examen (revisá la conexión y tocá "⏹ Finalizar examen"): ' + err.message);
+            }
+            stopExamPolling();
+            stopExamClock();
+            examRoom.status = 'closed';
+            saveExamResults();
+            const exam = currentExam();
+            if (exam) { delete exam.lastRoom; saveExams(); }
+            renderExamTab();
+            alert('⏱ Se cumplió el tiempo. El examen se cerró y ya están las notas.');
+        }
+
+        // ---------------------------------------------------------------- cronómetro en pantalla
+        // Corre aparte del polling de Firebase: toca sólo el texto del contador, para no volver a
+        // armar la tabla de desempeño una vez por segundo.
+        function startExamClock() {
+            stopExamClock();
+            tickExamClock();
+            examClockTimer = setInterval(tickExamClock, 1000);
+        }
+
+        function stopExamClock() {
+            if (examClockTimer) clearInterval(examClockTimer);
+            examClockTimer = null;
+        }
+
+        function tickExamClock() {
+            const el = document.getElementById('examCountdown');
+            if (!examRoom || !examRoom.endsAt || examRoom.status !== 'running') return;
+
+            const restante = examRoom.endsAt - examNow();
+            if (el) {
+                const val = el.querySelector('b');
+                if (val) val.textContent = examFmtClock(restante);
+                el.classList.toggle('warn', restante <= 5 * 60000 && restante > 60000);
+                el.classList.toggle('danger', restante <= 60000);
+            }
+            if (restante <= 0) autoFinishExam();
+        }
+
+        function openExamScreen() {
+            if (!examRoom) return;
+            const url = `${window.location.origin}${window.location.pathname.replace(/index\.html$/, '')}pantalla_examen.html?room=${examRoom.roomId}`;
+            const win = window.open(url, 'pantallaExamen_' + examRoom.roomId, 'width=1280,height=760');
+            if (!win) return alert('El navegador bloqueó la ventana emergente.\n\nHabilitá las ventanas emergentes para este sitio, o abrí a mano:\n\n' + url);
+            win.focus();
         }
 
         async function finishExam() {
@@ -10040,6 +10467,7 @@ Equipo Docente de Pediatría</textarea>
             }
 
             stopExamPolling();
+            stopExamClock();
             examRoom.status = 'closed';
             saveExamResults();
             // Ya no hay a qué reconectarse: de acá en más se entra por "📊 Resultados".
@@ -10091,6 +10519,7 @@ Equipo Docente de Pediatría</textarea>
                 if (!confirm('El examen está en curso. Si salís, dejás de ver el desempeño en vivo (podés volver a entrar desde la lista). ¿Salir igual?')) return;
             }
             stopExamPolling();
+            stopExamClock();
             examRoom = null;
             examView = 'list';
             renderExamTab();
@@ -10109,7 +10538,8 @@ Equipo Docente de Pediatría</textarea>
                 answers[sid] = {};
                 (al.detalle || []).forEach((d) => { answers[sid][d.n - 1] = { letters: d.marcadas }; });
             });
-            examRoom = { roomId: exam.results.roomId || '——', examId: exam.id, status: 'closed', students, answers };
+            stopExamClock();
+            examRoom = { roomId: exam.results.roomId || '——', examId: exam.id, status: 'closed', students, answers, startedAt: null, endsAt: null };
             examView = 'room';
             renderExamTab();
         }
@@ -10156,12 +10586,19 @@ Equipo Docente de Pediatría</textarea>
         async function pollExamRoom() {
             if (!examRoom) return;
             try {
-                const [students, answers] = await Promise.all([
+                const [students, answers, meta] = await Promise.all([
                     efuFbGet(`efuRooms/${examRoom.roomId}/exam/students`),
-                    efuFbGet(`efuRooms/${examRoom.roomId}/exam/answers`)
+                    efuFbGet(`efuRooms/${examRoom.roomId}/exam/answers`),
+                    efuFbGet(`efuRooms/${examRoom.roomId}/exam/meta`)
                 ]);
                 examRoom.students = students || {};
                 examRoom.answers = answers || {};
+                // El endsAt se relee en cada vuelta: así una prórroga dada desde otra pestaña
+                // (o una reconexión a mitad del examen) queda reflejada acá.
+                if (meta) {
+                    examRoom.endsAt = meta.endsAt || null;
+                    examRoom.startedAt = meta.startedAt || null;
+                }
                 if (examView === 'room') renderExamTab();
             } catch (err) {
                 console.warn('No se pudo leer el estado del examen:', err);
