@@ -9,3 +9,6 @@ clases_drive/
 # La nómina "en vivo" del sitio (index.html, pestaña Control de Prácticos) vive sólo en
 # localStorage del navegador, cargada con el botón "✏️ Editar Nómina".
 nomina_alumnos.txt
+
+# Config local de Claude Code (rutas y permisos de esta máquina, el repo es público)
+.claude/
