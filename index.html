@@ -232,6 +232,13 @@
             flex-direction: column;
             justify-content: space-between;
             overflow: hidden; /* Desactivar scroll vertical de la ventana completa */
+            /* Tamaño de letra de cada columna. Son el valor IDEAL (el más grande): si el caso
+               no entra en la pantalla, fitPresentationText() los baja lo justo y necesario.
+               Todo lo que rodea al texto (padding, gaps, círculos de las letras) se calcula a
+               partir de estas dos variables, para que el bloque encoja parejo y no quede un
+               recuadro enorme con letra chica adentro. */
+            --pres-left-size: 1.75rem;
+            --pres-right-size: 1.30rem;
         }
 
         #presentation-overlay.active {
@@ -362,16 +369,16 @@
         .pres-left {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: calc(var(--pres-left-size) * 0.71);
             height: 100%;
             overflow-y: auto; /* Scroll independiente para el caso/justificación */
             padding-right: 8px;
         }
 
         .pres-vignette-box {
-            font-size: 1.75rem; /* Más preponderante y grande para lectura en aula */
+            font-size: var(--pres-left-size); /* Grande para lectura en aula; se achica sólo si no entra */
             line-height: 1.55;
-            padding: 22px 28px;
+            padding: calc(var(--pres-left-size) * 0.79) calc(var(--pres-left-size) * 1.0);
             border-radius: 14px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             border-left: 12px solid var(--primary);
@@ -394,9 +401,9 @@
             transform: translateY(20px);
             transition: display 0.4s, opacity 0.4s ease-out, transform 0.4s ease-out;
             transition-behavior: allow-discrete;
-            padding: 20px 24px;
+            padding: calc(var(--pres-left-size) * 0.71) calc(var(--pres-left-size) * 0.86);
             border-radius: 14px;
-            font-size: 1.25rem;
+            font-size: calc(var(--pres-left-size) * 0.71);
             line-height: 1.5;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
@@ -427,7 +434,7 @@
         }
 
         .pres-explanation-box strong {
-            font-size: 1.4rem;
+            font-size: calc(var(--pres-left-size) * 0.8);
             display: inline-block;
             margin-bottom: 8px;
         }
@@ -435,7 +442,7 @@
         .pres-right {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: calc(var(--pres-right-size) * 0.96);
             height: 100%;
             overflow-y: auto; /* Scroll independiente para las opciones */
             padding-right: 8px;
@@ -487,26 +494,35 @@
             background: #aecbfa;
         }
 
+        /* Mientras se mide para el ajuste automático, las opciones no pueden estar animándose:
+           .pres-option-item transiciona "all" (incluye font-size y padding), así que su altura
+           tarda 0,25s en llegar al valor real y la medición leería un alto intermedio — el
+           resultado era que el texto se achicaba mucho más de lo necesario. */
+        .pres-fitting .pres-option-item,
+        .pres-fitting .pres-option-badge {
+            transition: none !important;
+        }
+
         .pres-options-list {
             list-style-type: none;
             padding: 0;
             margin: 0;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: calc(var(--pres-right-size) * 0.48);
         }
 
         .pres-option-item {
-            padding: 12px 18px; /* Ajustado para evitar desborde vertical */
+            padding: calc(var(--pres-right-size) * 0.58) calc(var(--pres-right-size) * 0.87);
             border-radius: 10px;
-            font-size: 1.3rem;
+            font-size: var(--pres-right-size);
             font-weight: 600;
             line-height: 1.35;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: calc(var(--pres-right-size) * 0.77);
             user-select: none;
         }
 
@@ -514,11 +530,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 32px;
-            height: 32px;
+            width: calc(var(--pres-right-size) * 1.54);
+            height: calc(var(--pres-right-size) * 1.54);
             border-radius: 50%;
             font-weight: 800;
-            font-size: 1.15rem;
+            font-size: calc(var(--pres-right-size) * 0.885);
             flex-shrink: 0;
             transition: all 0.2s ease;
         }
@@ -1966,6 +1982,134 @@
         .exam-qmark.blank   { background: #f1f3f4; color: #9aa0a6; font-weight: 600; }
         .exam-qmark.void    { background: #fde8ff; color: #8e24aa; }
         .exam-col-sep { border-left: 2px solid #dadce0; }
+
+        /* --- Cronómetro del docente (en la cabecera de la sala) --- */
+        .exam-countdown {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 8px;
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            padding: 6px 14px;
+            margin-top: 6px;
+        }
+        .exam-countdown b {
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            line-height: 1.1;
+        }
+        .exam-countdown span { font-size: 0.72rem; opacity: 0.85; letter-spacing: 0.06em; text-transform: uppercase; }
+        .exam-countdown.warn   { background: #fef7e0; border-color: #f9ab00; color: #b45309; }
+        .exam-countdown.danger { background: #fce8e6; border-color: #c5221f; color: #c5221f; }
+
+        .exam-name-link {
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            color: #0f766e;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            text-decoration: underline;
+            text-decoration-color: #b2dfdb;
+            text-underline-offset: 3px;
+        }
+        .exam-name-link:hover { text-decoration-color: #0f766e; }
+        .exam-name-link span { text-decoration: none; opacity: 0.5; }
+
+        /* --- Revisión individual de un examen (modal) --- */
+        .exam-review-box {
+            background: white;
+            color: #202124;
+            border-radius: 16px;
+            width: min(920px, 94vw);
+            max-height: 92vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+            overflow: hidden;
+        }
+        .exam-review-head {
+            padding: 18px 24px;
+            background: linear-gradient(135deg, #0f766e, #115e59);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .exam-review-head h3 { margin: 0; font-size: 1.15rem; color: white; }
+        .exam-review-scores {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            opacity: 0.92;
+        }
+        .exam-review-scores b { font-size: 1rem; }
+        .exam-review-body { padding: 20px 24px; overflow-y: auto; flex: 1; background: #f8f9fa; }
+        .exam-review-foot {
+            padding: 12px 24px;
+            border-top: 1px solid #e8eaed;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+        }
+        .exam-review-q {
+            background: white;
+            border: 1px solid #e8eaed;
+            border-left-width: 5px;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 14px;
+        }
+        .exam-review-q.q-full    { border-left-color: #34a853; }
+        .exam-review-q.q-partial { border-left-color: #f9ab00; }
+        .exam-review-q.q-zero    { border-left-color: #c5221f; }
+        .exam-review-q.q-blank   { border-left-color: #9aa0a6; }
+        .exam-review-q.q-void    { border-left-color: #8e24aa; }
+        .exam-review-qhead {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .exam-review-qhead .n { font-weight: 800; font-size: 1.02rem; }
+        .exam-review-qhead .t { font-size: 0.92rem; font-weight: 600; flex: 1; min-width: 180px; }
+        .exam-review-vign {
+            font-size: 0.87rem;
+            line-height: 1.55;
+            color: #3c4043;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+        }
+        .exam-review-opts { list-style: none; margin: 0; padding: 0; }
+        .exam-review-opts li {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            font-size: 0.87rem;
+            line-height: 1.45;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            margin-bottom: 5px;
+        }
+        .exam-review-opts li .mk { flex-shrink: 0; font-weight: 800; width: 3.1em; }
+        .exam-review-opts li.acierto  { background: #e6f4ea; border-color: #ceead6; color: #137333; }
+        .exam-review-opts li.perdida  { background: #f1f8f2; border-color: #d9e7dc; color: #5f7a66; }
+        .exam-review-opts li.error    { background: #fce8e6; border-color: #f5c9c5; color: #c5221f; }
+        .exam-review-opts li.neutra   { color: #5f6368; }
 
         /* --- Análisis por pregunta (resumen post-examen) --- */
         .exam-analysis-head {
@@ -8302,6 +8446,7 @@ Equipo Docente de Pediatría</textarea>
             window.addEventListener('keydown', handleKeyPress);
             window.addEventListener('mousemove', resetControlsTimer);
             window.addEventListener('mousedown', resetControlsTimer);
+            document.addEventListener('fullscreenchange', onPresFullscreenChange);
 
             // Try to request fullscreen for a true slideshow feel
             if (document.documentElement.requestFullscreen) {
@@ -8311,6 +8456,8 @@ Equipo Docente de Pediatría</textarea>
 
         function exitPresentation() {
             presentationActive = false;
+            if (presFitObserver) { presFitObserver.disconnect(); presFitObserver = null; }
+            clearTimeout(presFitTimer);
             clearTimeout(controlsTimeout);
             stopVotePolling();
 
@@ -8322,10 +8469,44 @@ Equipo Docente de Pediatría</textarea>
             window.removeEventListener('keydown', handleKeyPress);
             window.removeEventListener('mousemove', resetControlsTimer);
             window.removeEventListener('mousedown', resetControlsTimer);
+            document.removeEventListener('fullscreenchange', onPresFullscreenChange);
 
             if (document.fullscreenElement && document.exitFullscreen) {
                 document.exitFullscreen().catch(() => {});
             }
+        }
+
+        // ---------------------------------------------------------------- pantalla completa
+        // startPresentation ya pide pantalla completa al arrancar, pero el pedido puede fallar
+        // (el navegador lo rechaza si no lo ve como parte de un clic) y sobre todo NO había forma
+        // de volver a entrar: Esc sale de pantalla completa y deja la presentación en una ventana
+        // con la barra del navegador comiéndose el alto. De ahí el botón y el atajo.
+        function presFsLabel() {
+            return document.fullscreenElement ? '⛶ Salir de pantalla completa' : '⛶ Pantalla completa (Shift+F)';
+        }
+
+        function togglePresFullscreen() {
+            resetControlsTimer();
+            if (!document.fullscreenElement) {
+                const raiz = document.documentElement;
+                const pedir = raiz.requestFullscreen || raiz.webkitRequestFullscreen || raiz.msRequestFullscreen;
+                if (!pedir) return alert('Este navegador no permite pantalla completa desde la página. Probá con la tecla F11.');
+                Promise.resolve(pedir.call(raiz)).catch(() => {
+                    alert('El navegador no dejó pasar a pantalla completa. Probá con la tecla F11.');
+                });
+            } else {
+                const salir = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+                if (salir) Promise.resolve(salir.call(document)).catch(() => {});
+            }
+        }
+
+        // Al entrar o salir de pantalla completa cambia el alto disponible: se actualiza el rótulo
+        // del botón y se vuelve a ajustar el tamaño del texto al espacio nuevo.
+        function onPresFullscreenChange() {
+            if (!presentationActive) return;
+            const btn = document.getElementById('pres-fs-btn');
+            if (btn) btn.textContent = presFsLabel();
+            schedulePresFit(120);
         }
 
         function toggleTheme() {
@@ -8346,7 +8527,19 @@ Equipo Docente de Pediatría</textarea>
         function handleKeyPress(e) {
             resetControlsTimer();
             const key = e.key.toUpperCase();
-            if (currentPhase === 1 && key >= 'A' && key <= 'H') {
+
+            // Shift+F y no F a secas: la F sola es la opción F de la votación manual.
+            if (key === 'F' && e.shiftKey) {
+                togglePresFullscreen();
+                e.preventDefault();
+                return;
+            }
+
+            // key.length === 1 es imprescindible: sin eso, "ESCAPE", "ENTER", "ARROWLEFT" y
+            // "ARROWRIGHT" caen dentro del rango 'A'..'H' (se comparan como strings, y alcanza con
+            // que empiecen con una letra entre A y H) y terminaban votando la opción E o la A en
+            // vez de navegar. En la fase de votación, Enter y las flechas no hacían nada.
+            if (currentPhase === 1 && key.length === 1 && key >= 'A' && key <= 'H') {
                 const index = key.charCodeAt(0) - 65;
                 toggleVote(index);
                 e.preventDefault();
@@ -8367,6 +8560,10 @@ Equipo Docente de Pediatría</textarea>
                     e.preventDefault();
                     break;
                 case 'Escape':
+                    // Estando en pantalla completa, la primera Esc es para salir de ahí (la maneja
+                    // el navegador): cerrar además la presentación sería perder el caso proyectado
+                    // por querer recuperar la barra de direcciones.
+                    if (document.fullscreenElement) return;
                     exitPresentation();
                     e.preventDefault();
                     break;
@@ -8436,6 +8633,86 @@ Equipo Docente de Pediatría</textarea>
             });
         }
 
+        // ------------------------------------------------- ajuste automático del texto proyectado
+        // Los enunciados del banco EFU van de ~300 a ~2600 caracteres. A 1,75rem los más largos no
+        // entran en una pantalla y el docente terminaba scrolleando en pleno proyector. Fijar un
+        // tamaño chico para todos tampoco sirve: dejaría innecesariamente ilegibles los casos
+        // cortos, que son la mayoría (la mediana es de 936 caracteres).
+        //
+        // Por eso se mide y se achica sólo lo necesario, por columna y por caso. La altura del
+        // texto cae con el CUADRADO del tamaño de letra (menos alto de línea y más caracteres por
+        // línea al mismo tiempo), así que alcanza con reducciones chicas: el peor caso del banco
+        // entra cerca de 1,4rem, que se sigue leyendo bien desde el fondo del aula.
+        const PRES_FIT = {
+            left:  { varName: '--pres-left-size',  max: 1.75, min: 0.95 },
+            right: { varName: '--pres-right-size', max: 1.30, min: 0.80 }
+        };
+
+        // El piso se fija en proporción a la pantalla y no en píxeles fijos: un proyector de
+        // 1366x768 y uno de 1920x1080 pintan la misma pared, así que para leer desde el fondo del
+        // aula lo que importa es qué fracción del alto ocupa el texto, no cuántos píxeles mide.
+        // Los mínimos de PRES_FIT están expresados contra una pantalla de referencia de 1080px.
+        function presMinRem(cfg) {
+            const escala = Math.min(1, (window.innerHeight || 1080) / 1080);
+            return Math.max(cfg.min * escala, 0.6);
+        }
+
+        function fitPresColumn(el, cfg) {
+            if (!el) return;
+            el.style.setProperty(cfg.varName, cfg.max + 'rem');
+            // +2px de tolerancia: scrollHeight y clientHeight difieren por redondeo de subpíxeles
+            // aunque el contenido entre, y sin el margen se achicaría de gusto.
+            if (el.scrollHeight <= el.clientHeight + 2) return;
+
+            // Bisección en 7 pasos (precisión ~0,006rem). Es monótona: menos letra, menos alto.
+            let chico = presMinRem(cfg), grande = cfg.max;
+            for (let i = 0; i < 7; i++) {
+                const medio = (chico + grande) / 2;
+                el.style.setProperty(cfg.varName, medio.toFixed(3) + 'rem');
+                if (el.scrollHeight <= el.clientHeight + 2) chico = medio; else grande = medio;
+            }
+            // Si ni con el mínimo entra, queda en el mínimo y el scroll de la columna sigue ahí
+            // como red de seguridad (no se pierde contenido, sólo no se cumple el objetivo).
+            el.style.setProperty(cfg.varName, chico.toFixed(3) + 'rem');
+        }
+
+        function fitPresentationText() {
+            const overlay = document.getElementById('presentation-overlay');
+            if (!overlay || !presentationActive) return;
+            overlay.classList.add('pres-fitting');
+            try {
+                fitPresColumn(overlay.querySelector('.pres-left'), PRES_FIT.left);
+                fitPresColumn(overlay.querySelector('.pres-right'), PRES_FIT.right);
+            } finally {
+                // Un reflow con el tamaño final ya aplicado antes de devolver las transiciones,
+                // para que al reactivarlas no quede nada pendiente de animar.
+                void overlay.offsetHeight;
+                overlay.classList.remove('pres-fitting');
+            }
+        }
+
+        let presFitTimer = null;
+        let presFitObserver = null;
+
+        function schedulePresFit(delay) {
+            clearTimeout(presFitTimer);
+            presFitTimer = setTimeout(fitPresentationText, delay == null ? 250 : delay);
+        }
+
+        // Se vuelve a medir cada vez que cambia el alto disponible: cuando se ocultan los
+        // controles a los 4 segundos de inactividad (el área de contenido crece), al entrar o
+        // salir de pantalla completa, y al cambiar el tamaño de la ventana. El retardo deja que
+        // termine la transición de 0,5s en vez de re-ajustar en cada cuadro.
+        function observePresContent(overlay) {
+            if (presFitObserver) presFitObserver.disconnect();
+            presFitObserver = null;
+            if (typeof ResizeObserver === 'undefined') return;
+            const cont = overlay.querySelector('.pres-content');
+            if (!cont) return;
+            presFitObserver = new ResizeObserver(() => schedulePresFit(250));
+            presFitObserver.observe(cont);
+        }
+
         function renderSlide(animateExplanation = false) {
             let overlay = document.getElementById('presentation-overlay');
             if (!overlay) return;
@@ -8453,6 +8730,7 @@ Equipo Docente de Pediatría</textarea>
                     <div class="pres-controls-top">
                         ${voteMode === 'equipos' && voteRoomActive ? '<button class="pres-btn-top" onclick="showRankingModal()">🏆 Ranking</button>' : ''}
                         ${voteRoomActive ? `<button class="pres-btn-top" onclick="toggleOpinionMode()">${opinionMode ? '🎭 Modo Opinión: ON' : '🎭 Modo Opinión'}</button>` : ''}
+                        <button class="pres-btn-top" id="pres-fs-btn" onclick="togglePresFullscreen()">${presFsLabel()}</button>
                         <button class="pres-btn-top" onclick="toggleTheme()">🌓 Tema Claro/Oscuro</button>
                         <button class="pres-btn-top" onclick="exitPresentation()">✕ Salir (Esc)</button>
                     </div>
@@ -8534,12 +8812,21 @@ Equipo Docente de Pediatría</textarea>
                         void box.offsetHeight; // force layout reflow
                         setTimeout(() => {
                             box.classList.add('visible');
+                            // La justificación pasa de display:none a block, así que suma alto
+                            // real: hay que volver a medir DESPUÉS de mostrarla, no antes.
+                            fitPresentationText();
                         }, 50);
                     } else {
                         box.classList.add('visible');
                     }
                 }
             }
+
+            observePresContent(overlay);
+            // Sincrónico y no en un requestAnimationFrame: leer scrollHeight fuerza el cálculo de
+            // layout que hace falta, y así el texto ya sale del tamaño correcto en el primer
+            // cuadro (con rAF, además, no se ajustaría nada si la pestaña está en segundo plano).
+            fitPresentationText();
         }
 
         function nextStep() {

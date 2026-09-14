@@ -323,6 +323,51 @@ pierden los exámenes y las notas**. Exportar a Excel/PDF después de cada toma.
 
 ---
 
+## 📺 Modo Presentación: ajuste automático del texto y pantalla completa (agregado 14/09/2026)
+
+Los enunciados del banco EFU van de ~300 a ~2600 caracteres (mediana 936). A los 1,75rem fijos
+que tenía el Modo Presentación, los más largos no entraban en una pantalla y el docente terminaba
+scrolleando en pleno proyector.
+
+- **No se achicó todo el texto a un tamaño fijo** (eso dejaría innecesariamente chicos los casos
+  cortos, que son la mayoría): `fitPresentationText()` **mide y achica sólo lo necesario**, por
+  columna y por caso, con una bisección de 7 pasos entre un máximo y un mínimo
+  (`PRES_FIT`). El alto del texto cae con el **cuadrado** del tamaño de letra (menos alto de línea
+  y más caracteres por línea a la vez), así que alcanzan reducciones chicas.
+- Todo lo que rodea al texto (padding, gaps, círculos de las letras de cada opción) se calcula con
+  `calc()` a partir de dos variables CSS, `--pres-left-size` y `--pres-right-size`, para que el
+  bloque encoja parejo y no quede un recuadro enorme con letra chica adentro.
+- **El piso es proporcional a la altura de pantalla, no en píxeles fijos**: un proyector de
+  1366x768 y uno de 1920x1080 pintan la misma pared, así que para leer desde el fondo del aula lo
+  que importa es qué fracción del alto ocupa el texto (`presMinRem`, referencia 1080px).
+- **Trampa que costó encontrar:** `.pres-option-item` transiciona `all` (incluye `font-size` y
+  `padding`), así que su altura tarda 0,25s en llegar al valor real y la medición leía un alto
+  intermedio — el texto se achicaba muchísimo más de lo necesario. Por eso `fitPresentationText()`
+  pone la clase `pres-fitting` (que anula esas transiciones) mientras mide. **Si se agregan
+  transiciones a elementos que afecten el alto de las columnas, hay que sumarlos a esa regla.**
+- Se vuelve a medir con un `ResizeObserver` sobre `.pres-content` (debounce de 250 ms): cubre el
+  ocultamiento de controles a los 4 segundos, el cambio de tamaño de ventana y el paso a pantalla
+  completa. El ajuste inicial es **sincrónico** dentro de `renderSlide`, no en un
+  `requestAnimationFrame` (con rAF no se ajusta nada si la pestaña está en segundo plano).
+- **Verificado midiendo los 167 casos × 2 fases (334 combinaciones)**: a 1920x1080 ninguno
+  requiere scroll (con o sin controles a la vista), y 258 de 334 conservan el 1,75rem original.
+  A 1366x768 con los controles ocultos tampoco; con los controles visibles queda 1 caso que no
+  entra — se resuelve solo al ocultarse los controles o con pantalla completa.
+- Por debajo de 1024px de ancho sigue vigente el `@media` que apila las columnas con scroll: ahí
+  el ajuste no actúa (es la vista de emergencia en una pantalla chica, no el proyector).
+
+**Pantalla completa:** `startPresentation` ya pedía `requestFullscreen()` al arrancar, pero el
+pedido puede fallar en silencio y sobre todo **no había forma de volver a entrar** si se salía.
+Ahora hay un botón **"⛶ Pantalla completa"** en la cabecera, atajo **Shift+F** (la `F` sola no
+sirve: es la opción F de la votación manual) y, estando en pantalla completa, **Esc sale de
+pantalla completa sin cerrar la presentación** (antes, recuperar la barra del navegador costaba
+perder el caso proyectado).
+
+**Bug preexistente corregido de paso:** el chequeo de las teclas de voto era
+`key >= 'A' && key <= 'H'` sobre `e.key.toUpperCase()`, y como son strings, `"ESCAPE"`, `"ENTER"`,
+`"ARROWLEFT"` y `"ARROWRIGHT"` caen dentro de ese rango. En la fase de votación, Enter y las
+flechas no navegaban: marcaban la opción E o la A. Se agregó `key.length === 1`.
+
 ## ⏱️ Cronómetro, Pantalla del Aula y Corrección Individual (agregado 14/09/2026)
 
 Tres agregados sobre la pestaña Evaluaciones, todos pedidos por el docente.
