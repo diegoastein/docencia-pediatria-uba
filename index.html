@@ -366,6 +366,161 @@
             }
         }
 
+        /* Pista de carrera de equipos: avanza SÓLO el equipo que acierta el caso completo al
+           revelar (coincidencia exacta con la clave); el que no acierta (incluido el que no
+           votó) queda en el lugar con una animación de "avería", nunca retrocede. En flujo
+           normal (no absoluto) para que reste su alto real al de .pres-content vía la clase
+           .has-race-track del overlay — si se cambia su alto acá, hay que actualizar ese offset
+           (ver #presentation-overlay.has-race-track .pres-content más abajo). Colapsa con
+           .hide-controls igual que header/footer/vote-panel, mismo patrón de transición.
+        */
+        .pres-race-track {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 96px;
+            opacity: 1;
+            overflow: hidden;
+            margin-bottom: 14px;
+            transition: opacity 0.5s ease, transform 0.5s ease, max-height 0.5s ease, margin-bottom 0.5s ease;
+        }
+
+        .hide-controls .pres-race-track {
+            opacity: 0;
+            transform: translateY(-20px);
+            max-height: 0;
+            margin-bottom: 0;
+            pointer-events: none;
+        }
+
+        .race-track-label {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+        }
+
+        .race-track-lanes {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .race-lane {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .race-lane-name {
+            width: 130px;
+            flex-shrink: 0;
+            font-size: 0.78rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .race-lane-track {
+            position: relative;
+            flex-grow: 1;
+            height: 100%;
+            min-height: 12px;
+            background: rgba(128, 128, 128, 0.15);
+            border-radius: 8px;
+            overflow: visible;
+        }
+
+        .race-lane-track::after {
+            content: '🏁';
+            position: absolute;
+            right: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
+        }
+
+        .race-car {
+            position: absolute;
+            top: 50%;
+            left: 0%;
+            transform: translate(-50%, -50%);
+            font-size: 1.15rem;
+            line-height: 1;
+            transition: left 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+            white-space: nowrap;
+        }
+
+        .race-car.race-hit {
+            animation: raceHitPulse 0.9s ease;
+        }
+
+        .race-car.race-miss {
+            animation: raceMissShake 0.6s ease;
+        }
+
+        .race-car.race-miss::after {
+            content: '💨';
+            position: absolute;
+            left: -6px;
+            top: 2px;
+            font-size: 0.9rem;
+            opacity: 0;
+            animation: raceSmokePuff 0.8s ease;
+        }
+
+        .race-car.race-finished {
+            filter: drop-shadow(0 0 6px gold);
+        }
+
+        @keyframes raceHitPulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            40% { transform: translate(-50%, -50%) scale(1.6); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        @keyframes raceMissShake {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            20% { transform: translate(-60%, -50%) rotate(-12deg); }
+            40% { transform: translate(-40%, -50%) rotate(10deg); }
+            60% { transform: translate(-58%, -50%) rotate(-8deg); }
+            80% { transform: translate(-42%, -50%) rotate(6deg); }
+        }
+
+        @keyframes raceSmokePuff {
+            0% { opacity: 0; transform: translateY(0) scale(0.6); }
+            30% { opacity: 0.85; }
+            100% { opacity: 0; transform: translateY(-14px) scale(1.3); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .race-car, .race-car.race-hit, .race-car.race-miss, .race-car.race-miss::after {
+                animation: none !important;
+                transition: left 0.4s ease !important;
+            }
+        }
+
+        /* Alto reservado para la pista de carrera: se resta acá en vez de en .pres-content
+           directamente para que el valor sin carrera (calc(100vh - 170px), documentado y
+           verificado contra los 167 casos) quede intacto cuando no hay modo Equipos activo.
+           Sólo por encima de 1024px: por debajo, .pres-content pasa a height:auto/scroll
+           (vista de emergencia apilada) y no hay que pisar esa regla. */
+        @media (min-width: 1025px) {
+            #presentation-overlay.has-race-track .pres-content {
+                height: calc(100vh - 280px);
+            }
+
+            #presentation-overlay.has-race-track.hide-controls .pres-content {
+                height: calc(100vh - 40px);
+            }
+        }
+
         .pres-left {
             display: flex;
             flex-direction: column;
@@ -7525,6 +7680,7 @@ Equipo Docente de Pediatría</textarea>
         let liveVoteCounts = [];
         let liveVoteTotal = 0;
         let opinionMode = false; // Modo Opinión: vota igual que un caso EFU pero sin marcar correcto/incorrecto ni sumar puntaje
+        let raceTeams = []; // [{key, name, score}] — roster de la pista de carrera (modo Equipos)
 
         // Actividades Abiertas en Vivo (Nube de Palabras / Muro de Preguntas / Pulso de Cierre):
         // reutilizan la misma sala/QR de la Votación en Vivo, con su propio nodo en Firebase.
@@ -7694,6 +7850,7 @@ Equipo Docente de Pediatría</textarea>
                 });
                 voteRoomId = newRoomId;
                 voteRoomActive = true;
+                raceTeams = [];
                 renderVoteToolbar();
                 if (presentationActive) {
                     syncVoteMeta();
@@ -7712,6 +7869,7 @@ Equipo Docente de Pediatría</textarea>
             voteRoomActive = false;
             voteRoomId = '';
             opinionMode = false;
+            raceTeams = [];
             renderVoteToolbar();
             if (presentationActive) renderSlide();
         }
@@ -7768,6 +7926,96 @@ Equipo Docente de Pediatría</textarea>
             } catch (err) {
                 console.warn('Polling de votos falló:', err);
             }
+            // Roster de la pista de carrera: se refresca en cada poll (no sólo al revelar) para
+            // que un equipo que recién se suma a mitad de caso aparezca en pantalla sin esperar
+            // al próximo caso. Las posiciones no cambian acá (el puntaje sólo se toca al
+            // revelar) — sólo puede aparecer una lanera nueva.
+            if (voteMode === 'equipos') refreshRaceTeams();
+        }
+
+        // Trae el roster de equipos (nombre + puntaje acumulado) y redibuja las laneras de la
+        // pista de carrera sin rehacer el resto del overlay, para no cortar la transición CSS
+        // del auto que se está moviendo. Un equipo aparece acá desde que confirma su nombre en
+        // votar.html (se registra con puntaje 0), no recién cuando acierta el primer caso — si
+        // no, un equipo que viene perdiendo nunca se vería en la pista.
+        async function refreshRaceTeams() {
+            if (!voteRoomActive || voteMode !== 'equipos') return;
+            try {
+                const teams = await efuFbGet(`efuRooms/${voteRoomId}/teams`) || {};
+                raceTeams = Object.entries(teams).map(([key, t]) => ({
+                    key,
+                    name: (t && t.name) || key,
+                    score: (t && t.score) || 0
+                })).sort((a, b) => a.name.localeCompare(b.name));
+                renderRaceLanes();
+            } catch (err) {
+                console.warn('No se pudo refrescar el roster de la pista de carrera:', err);
+            }
+        }
+
+        function racePct(score) {
+            const total = presentationCases.length;
+            if (!total) return 0;
+            return Math.max(3, Math.min(97, (score / total) * 100));
+        }
+
+        // Busca por dataset en vez de armar un selector CSS con la clave del equipo: la clave
+        // sale de sanitizeTeamKey(), que saca los caracteres prohibidos por Firebase (.#$[]/)
+        // pero no comillas — un nombre de equipo tipo Equipo "Rayo" rompería un selector
+        // `[data-team="${key}"]` armado por interpolación.
+        function findRaceLane(lanesEl, key) {
+            return Array.from(lanesEl.children).find((el) => el.dataset.team === key) || null;
+        }
+
+        // Sólo actualiza posición/etiqueta de cada auto — nunca reemplaza el DOM de los que ya
+        // existen, porque perder y recrear el nodo cortaría en seco la transición CSS de "left"
+        // que hace que el auto se vea avanzar en vez de teletransportarse.
+        function renderRaceLanes() {
+            const lanesEl = document.getElementById('pres-race-lanes');
+            if (!lanesEl) return;
+            raceTeams.forEach((team) => {
+                let lane = findRaceLane(lanesEl, team.key);
+                if (!lane) {
+                    lane = document.createElement('div');
+                    lane.className = 'race-lane';
+                    lane.dataset.team = team.key;
+                    lane.innerHTML = `
+                        <div class="race-lane-name"></div>
+                        <div class="race-lane-track"><div class="race-car">🚗</div></div>
+                    `;
+                    lanesEl.appendChild(lane);
+                }
+                lane.querySelector('.race-lane-name').textContent =
+                    `${team.name} (${team.score}/${presentationCases.length})`;
+                const car = lane.querySelector('.race-car');
+                car.style.left = racePct(team.score) + '%';
+                car.classList.toggle('race-finished', team.score >= presentationCases.length);
+            });
+        }
+
+        // Dispara la animación dramática después de revelar: avanza (con "salto") los autos de
+        // los equipos que acertaron el caso completo y sacude + larga humo a los que no —
+        // incluye a quien no llegó a votar, porque tampoco acertó. Se llama después de que
+        // scoreTeamsForCase ya escribió los puntajes nuevos en Firebase.
+        function animateRaceResult(result) {
+            const lanesEl = document.getElementById('pres-race-lanes');
+            if (!lanesEl || !result) return;
+            (result.hitKeys || []).forEach((key) => {
+                const lane = findRaceLane(lanesEl, key);
+                const car = lane && lane.querySelector('.race-car');
+                if (!car) return;
+                car.classList.remove('race-miss');
+                car.classList.add('race-hit');
+                setTimeout(() => car.classList.remove('race-hit'), 900);
+            });
+            (result.missKeys || []).forEach((key) => {
+                const lane = findRaceLane(lanesEl, key);
+                const car = lane && lane.querySelector('.race-car');
+                if (!car) return;
+                car.classList.remove('race-hit');
+                car.classList.add('race-miss');
+                setTimeout(() => car.classList.remove('race-miss'), 700);
+            });
         }
 
         function startVotePolling() {
@@ -7784,11 +8032,13 @@ Equipo Docente de Pediatría</textarea>
             votePollInterval = null;
         }
 
+        // Devuelve { hitKeys, missKeys } (claves de equipo sanitizadas) para que nextStep()
+        // pueda disparar la animación de la pista de carrera apenas termina de puntuar. Un
+        // equipo que nunca llegó a votar este caso también entra en missKeys (tampoco acertó).
         async function scoreTeamsForCase(caseObj) {
-            if (!voteRoomActive || voteMode !== 'equipos') return;
+            if (!voteRoomActive || voteMode !== 'equipos') return { hitKeys: [], missKeys: [] };
             try {
-                const votes = await efuFbGet(`efuRooms/${voteRoomId}/votes/${caseObj.caseId}`);
-                if (!votes) return;
+                const votes = await efuFbGet(`efuRooms/${voteRoomId}/votes/${caseObj.caseId}`) || {};
 
                 const correctSet = new Set(
                     caseObj.options
@@ -7804,18 +8054,29 @@ Equipo Docente de Pediatría</textarea>
                     teamVotes[v.team] = new Set(v.options || []);
                 });
 
+                const hitKeys = [];
+                const votedKeys = new Set();
                 for (const [team, optSet] of Object.entries(teamVotes)) {
+                    const key = sanitizeTeamKey(team);
+                    votedKeys.add(key);
                     const isExactMatch = optSet.size === correctSet.size && [...optSet].every((o) => correctSet.has(o));
                     if (!isExactMatch) continue;
-                    const key = sanitizeTeamKey(team);
                     const current = await efuFbGet(`efuRooms/${voteRoomId}/teams/${key}/score`);
                     await efuFbPut(`efuRooms/${voteRoomId}/teams/${key}`, {
                         name: team,
                         score: (current || 0) + 1
                     });
+                    hitKeys.push(key);
                 }
+                // "No acertó" incluye a quien votó mal (votedKeys menos hitKeys) y a cualquier
+                // equipo ya registrado en la pista que directamente no votó este caso.
+                const knownKeys = new Set(raceTeams.map((t) => t.key));
+                votedKeys.forEach((k) => knownKeys.add(k));
+                const missKeys = [...knownKeys].filter((k) => !hitKeys.includes(k));
+                return { hitKeys, missKeys };
             } catch (err) {
                 console.warn('No se pudo calcular el puntaje de equipos:', err);
+                return { hitKeys: [], missKeys: [] };
             }
         }
 
@@ -8692,6 +8953,13 @@ Equipo Docente de Pediatría</textarea>
                     </div>
                 </div>
 
+                ${voteMode === 'equipos' && voteRoomActive ? `
+                    <div class="pres-race-track">
+                        <div class="race-track-label">🏎️ Carrera de Equipos — avanza quien acierta el caso completo</div>
+                        <div class="race-track-lanes" id="pres-race-lanes"></div>
+                    </div>
+                ` : ''}
+
                 ${voteRoomActive ? `
                     <div class="pres-vote-panel" onclick="showBigQrModal()" title="Tocar para agrandar el QR">
                         <div id="presVoteQrCanvas" class="qr-box clickable" style="width: 58px; height: 58px;"></div>
@@ -8756,8 +9024,10 @@ Equipo Docente de Pediatría</textarea>
                     </button>
                 </div>
             `;
-            
+
+            overlay.classList.toggle('has-race-track', voteMode === 'equipos' && voteRoomActive);
             renderOptionsOnly();
+            if (voteMode === 'equipos' && voteRoomActive) renderRaceLanes();
 
             if (voteRoomActive) {
                 const voteUrl = `${window.location.origin}${window.location.pathname.replace(/index\.html$/, '')}votar.html?room=${voteRoomId}`;
@@ -8777,7 +9047,16 @@ Equipo Docente de Pediatría</textarea>
                 currentPhase = 2;
                 stopVotePolling(); // se dejó de votar: congelamos el conteo en pantalla
                 renderSlide();
-                if (!opinionMode) scoreTeamsForCase(closingCase);
+                // Encadenado (no en paralelo): primero se escriben los puntajes nuevos en
+                // Firebase, recién después se relee el roster (si no, refreshRaceTeams podría
+                // llegar antes que la escritura y mostrar el puntaje viejo un instante) y por
+                // último se dispara la animación de avance/avería sobre las laneras ya puestas
+                // al día.
+                if (!opinionMode) {
+                    scoreTeamsForCase(closingCase).then((result) => {
+                        refreshRaceTeams().then(() => animateRaceResult(result));
+                    });
+                }
             } else if (currentPhase === 2) {
                 if (currentCaseIndex < presentationCases.length - 1) {
                     currentCaseIndex++;
