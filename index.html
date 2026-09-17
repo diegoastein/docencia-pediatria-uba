@@ -7668,7 +7668,13 @@ Equipo Docente de Pediatría</textarea>
         let liveVoteTotal = 0;
         let opinionMode = false; // Modo Opinión: vota igual que un caso EFU pero sin marcar correcto/incorrecto ni sumar puntaje
         let raceTeams = []; // [{key, name, score}] — roster de la pista de carrera (modo Equipos)
-        let raceScoredTeams = new Set(); // claves de equipo ya puntuadas para el caso EN CURSO — se reinicia en startVotePolling()
+        // Ambos se reinician por caso en startVotePolling(). raceWonTeams: equipos que YA
+        // acertaron este caso (votar.html les deja reintentar hasta acertar — una vez que
+        // ganan, se ignora cualquier voto posterior de ese equipo). raceSeenVoteIds: ids de
+        // Firebase (push-id) de intentos YA animados, para no volver a sacudir/humear el mismo
+        // intento equivocado en cada poll si el equipo todavía no reenvió uno nuevo.
+        let raceWonTeams = new Set();
+        let raceSeenVoteIds = new Set();
 
         // Actividades Abiertas en Vivo (Nube de Palabras / Muro de Preguntas / Pulso de Cierre):
         // reutilizan la misma sala/QR de la Votación en Vivo, con su propio nodo en Firebase.
@@ -8015,7 +8021,8 @@ Equipo Docente de Pediatría</textarea>
             if (!voteRoomActive) return;
             liveVoteCounts = [];
             liveVoteTotal = 0;
-            raceScoredTeams = new Set(); // nuevo caso: nadie puntuado todavía
+            raceWonTeams = new Set(); // nuevo caso: nadie ganó todavía
+            raceSeenVoteIds = new Set();
             pollVotes();
             votePollInterval = setInterval(pollVotes, 2000);
         }
@@ -8026,13 +8033,16 @@ Equipo Docente de Pediatría</textarea>
         }
 
         // Corazón del dinamismo pedido: NO espera a que el docente revele. Se llama en cada poll
-        // de la fase de votación (cada 2s) y compara, equipo por equipo, cada voto NUEVO que
-        // encuentra contra la clave del caso — apenas ve el voto de un equipo lo puntúa (si
-        // corresponde) y lo anima en el momento, ahí mismo. raceScoredTeams (se reinicia por
-        // caso en startVotePolling) evita procesar dos veces el mismo equipo si vuelve a
-        // aparecer en el próximo poll.
+        // de la fase de votación (cada 2s) y compara, voto por voto, cada intento NUEVO que
+        // encuentra contra la clave del caso — apenas ve un voto lo puntúa (si corresponde) y lo
+        // anima en el momento, ahí mismo.
+        // votar.html deja reintentar a un equipo que se equivoca (no marca "votado" hasta que
+        // acierta), así que acá se itera por ID de voto (push-id de Firebase, único por envío),
+        // no por equipo: raceSeenVoteIds evita re-animar el mismo intento fallido en cada poll
+        // si todavía no llegó uno nuevo, y raceWonTeams corta la evaluación para un equipo que
+        // YA ganó este caso (un reintento suyo después de ganar, si lo hubiera, se ignora).
         // `finalCall`: sólo true cuando lo llama nextStep() al cerrar la votación del caso — ahí,
-        // y sólo ahí, cualquier equipo que quedó registrado en la pista pero nunca votó también
+        // y sólo ahí, cualquier equipo que quedó registrado en la pista pero nunca ganó también
         // se marca "avería" (no puede quedar en la duda si todavía puede llegar a votar).
         async function processNewVotesForCase(caseObj, finalCall = false) {
             if (!voteRoomActive || voteMode !== 'equipos') return;
@@ -8050,16 +8060,18 @@ Equipo Docente de Pediatría</textarea>
                     .filter(Boolean)
             );
 
-            for (const vote of Object.values(votes)) {
+            for (const [voteId, vote] of Object.entries(votes)) {
                 if (!vote.team) continue;
                 const key = sanitizeTeamKey(vote.team);
-                if (raceScoredTeams.has(key)) continue;
-                raceScoredTeams.add(key);
+                if (raceWonTeams.has(key)) continue; // ya ganó este caso: ignorar reintentos de más
+                if (raceSeenVoteIds.has(voteId)) continue; // este intento puntual ya se animó
+                raceSeenVoteIds.add(voteId);
 
                 const optSet = new Set(vote.options || []);
                 const isExactMatch = optSet.size === correctSet.size && [...optSet].every((o) => correctSet.has(o));
 
                 if (isExactMatch) {
+                    raceWonTeams.add(key);
                     try {
                         const current = await efuFbGet(`efuRooms/${voteRoomId}/teams/${key}/score`);
                         const newScore = (current || 0) + 1;
@@ -8078,10 +8090,7 @@ Equipo Docente de Pediatría</textarea>
 
             if (finalCall) {
                 raceTeams.forEach((t) => {
-                    if (!raceScoredTeams.has(t.key)) {
-                        raceScoredTeams.add(t.key);
-                        animateRaceResult({ missKeys: [t.key] });
-                    }
+                    if (!raceWonTeams.has(t.key)) animateRaceResult({ missKeys: [t.key] });
                 });
             }
         }

@@ -277,6 +277,7 @@
     let lastSeenKey = ''; // evita re-renderizar/refetchear si no cambió nada desde el último poll
     let activityDraftScale = null; // puntaje 1-5 elegido en el Pulso de Cierre, antes de enviar
     let pollDraftChoice = null; // índice de opción elegido en la Encuesta de Opción Múltiple, antes de enviar
+    let raceWrongAttempt = false; // true tras un voto equivocado en modo Equipos: se puede reintentar (ver submitVote)
 
     const content = document.getElementById('content');
 
@@ -329,6 +330,18 @@
 
     function markVoted(caseId) {
         localStorage.setItem(`efuVoted_${roomId}_${caseId}`, '1');
+    }
+
+    // Distinto de hasVoted/markVoted: en modo Equipos un intento equivocado NO marca "votado"
+    // (se puede reintentar, ver submitVote), pero sí hubo participación — esto es lo que evita
+    // que renderCaseResult diga "no llegaste a votar" a un equipo que lo intentó varias veces
+    // y nunca llegó a acertar antes de que se revelara.
+    function hasAttempted(caseId) {
+        return !!localStorage.getItem(`efuAttempted_${roomId}_${caseId}`);
+    }
+
+    function markAttempted(caseId) {
+        localStorage.setItem(`efuAttempted_${roomId}_${caseId}`, '1');
     }
 
     function saveChoice(caseId, letters) {
@@ -451,6 +464,7 @@
             <div class="box">
                 <span class="badge">${showVignette ? 'Caso EFU' : 'Caso en pantalla'}</span>
                 ${showVignette ? `<div class="case-vignette">${currentCase.vignette}</div>` : ''}
+                ${raceWrongAttempt ? '<div class="result-summary result-zero">❌ No es correcto — ajustá la selección y probá de nuevo</div>' : ''}
                 <ul class="options-list">
                     ${currentCase.options.map(opt => `
                         <li class="option-item ${selectedLetters.includes(opt.letter) ? 'selected' : ''}" onclick="window.__toggleOpt('${opt.letter}')">
@@ -471,10 +485,33 @@
         if (!currentCase || selectedLetters.length === 0) return;
         const btn = document.getElementById('submitVoteBtn');
         if (btn) { btn.disabled = true; btn.innerText = 'Enviando...'; }
+        const isEquipos = roomMeta && roomMeta.mode === 'equipos';
         try {
             const body = { options: [...selectedLetters], ts: Date.now() };
-            if (roomMeta && roomMeta.mode === 'equipos') body.team = teamName;
+            if (isEquipos) body.team = teamName;
             await fbPost(`efuRooms/${roomId}/votes/${currentCase.caseId}`, body);
+
+            if (isEquipos) {
+                // Corrección local e inmediata: el caso ya trae qué opciones son correctas
+                // (mismo dato que compara el proyector), así que no hace falta esperar al
+                // servidor ni al docente para saber si el equipo acertó. Si no acertó, NO se
+                // marca votado — puede ajustar la selección y reenviar las veces que haga falta.
+                markAttempted(currentCase.caseId);
+                saveChoice(currentCase.caseId, selectedLetters); // el intento más reciente, gane o pierda
+                const correctLetters = currentCase.options.filter(o => o.correct).map(o => o.letter);
+                const isExactMatch = selectedLetters.length === correctLetters.length
+                    && selectedLetters.every(l => correctLetters.includes(l));
+                if (isExactMatch) {
+                    markVoted(currentCase.caseId);
+                    lastSeenKey = `${currentCase.caseId}_1_true`;
+                    renderStatus('🎉', '¡Correcto!', 'Mirá tu auto en la pantalla. Esperando el próximo caso...');
+                } else {
+                    raceWrongAttempt = true;
+                    renderCaseVoting();
+                }
+                return;
+            }
+
             markVoted(currentCase.caseId);
             saveChoice(currentCase.caseId, selectedLetters);
             lastSeenKey = `${currentCase.caseId}_1_true`;
@@ -824,7 +861,11 @@
                 lastSeenKey = '';
                 return;
             }
-            renderCaseResult(parsed, getSavedChoice(caseId), voted);
+            // "Participó" para el resumen: en Anónimo es lo mismo que "votó" (un solo intento);
+            // en Equipos, un intento equivocado no marca `voted` (se podía reintentar) pero sí
+            // cuenta como participación — si no, un equipo que lo intentó varias veces y nunca
+            // llegó a acertar vería "no llegaste a votar este caso", que sería falso.
+            renderCaseResult(parsed, getSavedChoice(caseId), voted || hasAttempted(caseId));
             return;
         }
 
@@ -844,6 +885,7 @@
         }
         currentCase = parsed;
         selectedLetters = [];
+        raceWrongAttempt = false;
         renderCaseVoting();
     }
 
