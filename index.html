@@ -366,59 +366,48 @@
             }
         }
 
-        /* Pista de carrera de equipos: PROTAGONISTA de la pantalla, no un detalle chico. Avanza
-           SÓLO el equipo que acierta el caso completo al revelar (coincidencia exacta con la
-           clave); el que no acierta (incluido el que no votó) queda en el lugar con una
-           animación de "avería", nunca retrocede. Visible de forma persistente durante toda la
-           ronda, no sólo al revelar.
-           --pres-race-h es la ÚNICA fuente de verdad del alto reservado: la usan tanto
-           .pres-race-track (su propio alto) como .pres-content (cuánto restarle) más abajo, así
-           que quedan sincronizados sin medir nada por JS — reactivo a resize/fullscreen por CSS
-           puro, igual que el resto del ajuste automático de esta pantalla. Si se cambia el
-           clamp() acá, no hace falta tocar nada más.
-        */
-        #presentation-overlay.has-race-track {
-            --pres-race-h: clamp(200px, 32vh, 340px);
+        /* Pantalla dedicada a la carrera de equipos: reemplaza TODO .pres-content (nada de
+           enunciado ni opciones — eso vive en el celular, ver votar.html) sólo cuando la sala
+           está activa en modo Equipos y no es un caso de Modo Opinión (ver raceFullScreen en
+           renderSlide()). Avanza SÓLO el equipo que acierta el caso completo al revelar
+           (coincidencia exacta con la clave); el que no acierta (incluido el que no votó) queda
+           en el lugar con una animación de "avería", nunca retrocede.
+           Al ser el único contenido de .pres-content (grid-template-columns:1fr vía
+           .pres-content-race, más abajo) y con height:100%, no hace falta reservar ni sincronizar
+           ningún alto extra: hereda gratis todo el ajuste de .pres-content que ya existía (incluida
+           la expansión al ocultarse los controles), sin tocar ese cálculo para el resto de los
+           modos. Los tamaños de fuente usan vh (clamp) porque acá el alto disponible es el de toda
+           la pantalla, no una franja fija — con 2 equipos las laneras son mucho más altas que con
+           5, y así se aprovechan igual. */
+        .pres-content.pres-content-race {
+            grid-template-columns: 1fr;
         }
 
         .pres-race-track {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            height: var(--pres-race-h, 260px);
-            opacity: 1;
-            overflow: hidden;
-            margin-bottom: 18px;
-            padding: 14px 22px;
-            border-radius: 18px;
+            gap: clamp(10px, 2vh, 22px);
+            height: 100%;
             box-sizing: border-box;
+            padding: clamp(16px, 3vh, 36px) clamp(20px, 4vw, 48px);
+            border-radius: 22px;
             background: linear-gradient(135deg, rgba(234,67,53,0.07), rgba(66,133,244,0.07));
             border: 2px solid rgba(128,128,128,0.2);
-            transition: opacity 0.5s ease, transform 0.5s ease, height 0.5s ease, margin-bottom 0.5s ease, padding 0.5s ease;
-        }
-
-        .hide-controls .pres-race-track {
-            opacity: 0;
-            transform: translateY(-20px);
-            height: 0;
-            margin-bottom: 0;
-            padding-top: 0;
-            padding-bottom: 0;
-            pointer-events: none;
         }
 
         .race-track-label {
-            font-size: 1.15rem;
+            font-size: clamp(1.2rem, 3vh, 2rem);
             font-weight: 800;
             letter-spacing: 0.3px;
             opacity: 0.85;
             flex-shrink: 0;
+            text-align: center;
         }
 
         .race-track-lanes {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: clamp(10px, 2vh, 26px);
             flex-grow: 1;
             min-height: 0;
         }
@@ -426,15 +415,15 @@
         .race-lane {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: clamp(14px, 2vw, 32px);
             flex: 1;
             min-height: 0;
         }
 
         .race-lane-name {
-            width: 260px;
+            width: clamp(200px, 20vw, 360px);
             flex-shrink: 0;
-            font-size: 1.5rem;
+            font-size: clamp(1.3rem, 3vh, 2.4rem);
             font-weight: 800;
             white-space: nowrap;
             overflow: hidden;
@@ -444,9 +433,9 @@
         .race-lane-track {
             position: relative;
             flex-grow: 1;
-            height: 30px;
+            height: clamp(24px, 5vh, 56px);
             background: rgba(128, 128, 128, 0.18);
-            border-radius: 15px;
+            border-radius: 999px;
             overflow: visible;
         }
 
@@ -456,7 +445,7 @@
             right: 4px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 1.6rem;
+            font-size: clamp(1.4rem, 3.5vh, 2.4rem);
         }
 
         .race-car {
@@ -464,7 +453,7 @@
             top: 50%;
             left: 0%;
             transform: translate(-50%, -50%);
-            font-size: 2.3rem;
+            font-size: clamp(2.2rem, 5.5vh, 4.2rem);
             line-height: 1;
             transition: left 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
             white-space: nowrap;
@@ -483,13 +472,13 @@
             position: absolute;
             left: -10px;
             top: 0;
-            font-size: 1.5rem;
+            font-size: clamp(1.4rem, 3.5vh, 2.6rem);
             opacity: 0;
             animation: raceSmokePuff 0.8s ease;
         }
 
         .race-car.race-finished {
-            filter: drop-shadow(0 0 8px gold);
+            filter: drop-shadow(0 0 10px gold);
         }
 
         @keyframes raceHitPulse {
@@ -517,29 +506,6 @@
                 animation: none !important;
                 transition: left 0.4s ease !important;
             }
-        }
-
-        /* Alto reservado para la pista: mismo --pres-race-h que arriba, 0px cuando no hay
-           carrera (equipos + sala activa). El +18px es el margin-bottom de .pres-race-track,
-           que no entra en su propio "height". Sólo por encima de 1024px: por debajo,
-           .pres-content pasa a height:auto/scroll (vista de emergencia apilada) y no hay que
-           pisar esa regla. Documentado: sin carrera, calc(100vh - 170px) queda intacto — ese
-           valor está verificado contra los 167 casos del banco. */
-        @media (min-width: 1025px) {
-            #presentation-overlay.has-race-track .pres-content {
-                height: calc(100vh - 170px - var(--pres-race-h, 0px) - 18px);
-            }
-
-            #presentation-overlay.has-race-track.hide-controls .pres-content {
-                height: calc(100vh - 40px);
-            }
-        }
-
-        /* Cuando se esconden las opciones (votación en vivo activa y no es Modo Opinión, ver
-           soloMode en renderSlide()), el enunciado pasa a ocupar el ancho completo — las
-           opciones viven sólo en el celular de cada equipo/alumno (ver votar.html). */
-        .pres-content.pres-content-solo {
-            grid-template-columns: 1fr;
         }
 
         .pres-left {
@@ -8956,12 +8922,17 @@ Equipo Docente de Pediatría</textarea>
             if (!overlay) return;
             
             let currentCase = presentationCases[currentCaseIndex];
-            // En Modo Opinión, el proyector es la ÚNICA pantalla que muestra la distribución del
-            // grupo (el celular sólo dice "mirá la pantalla", ver votar.html) — ahí las opciones
-            // tienen que seguir viéndose. Fuera de Modo Opinión, con votación en vivo activa, las
-            // opciones y el voto ya viven en el celular de cada uno y el proyector queda solo
-            // para el enunciado (y, en equipos, la carrera).
-            const soloMode = voteRoomActive && !opinionMode;
+            // Pantalla dedicada a la carrera: SÓLO en Equipos, y no durante Modo Opinión (ahí el
+            // proyector es la única pantalla que muestra la distribución del grupo — el celular
+            // remite a "mirá la pantalla", ver votar.html — así que necesita el enunciado y las
+            // opciones de siempre, no la carrera). Fuera de estas condiciones (Anónimo, o
+            // Equipos sin sala activa, o sin votación en vivo) el proyector queda exactamente
+            // como estaba antes de esta funcionalidad: enunciado + opciones en dos columnas.
+            const equiposActive = voteMode === 'equipos' && voteRoomActive;
+            const raceFullScreen = equiposActive && !opinionMode;
+            const racePhaseLabel = currentPhase === 1
+                ? `🗳️ Votando Caso ${currentCaseIndex + 1} de ${presentationCases.length} — las opciones están en el celular de cada equipo`
+                : '🏁 ¡Revelado! Mirá quién avanzó';
 
             overlay.innerHTML = `
                 <div class="pres-header">
@@ -8972,20 +8943,13 @@ Equipo Docente de Pediatría</textarea>
                              y esto se proyecta frente al curso. Ver CLAUDE.md. -->
                     </div>
                     <div class="pres-controls-top">
-                        ${voteMode === 'equipos' && voteRoomActive ? '<button class="pres-btn-top" onclick="showRankingModal()">🏆 Ranking</button>' : ''}
+                        ${equiposActive ? '<button class="pres-btn-top" onclick="showRankingModal()">🏆 Ranking</button>' : ''}
                         ${voteRoomActive ? `<button class="pres-btn-top" onclick="toggleOpinionMode()">${opinionMode ? '🎭 Modo Opinión: ON' : '🎭 Modo Opinión'}</button>` : ''}
                         <button class="pres-btn-top" id="pres-fs-btn" onclick="togglePresFullscreen()">${presFsLabel()}</button>
                         <button class="pres-btn-top" onclick="toggleTheme()">🌓 Tema Claro/Oscuro</button>
                         <button class="pres-btn-top" onclick="exitPresentation()">✕ Salir (Esc)</button>
                     </div>
                 </div>
-
-                ${voteMode === 'equipos' && voteRoomActive ? `
-                    <div class="pres-race-track">
-                        <div class="race-track-label">🏎️ Carrera de Equipos — avanza quien acierta el caso completo</div>
-                        <div class="race-track-lanes" id="pres-race-lanes"></div>
-                    </div>
-                ` : ''}
 
                 ${voteRoomActive ? `
                     <div class="pres-vote-panel" onclick="showBigQrModal()" title="Tocar para agrandar el QR">
@@ -8998,7 +8962,15 @@ Equipo Docente de Pediatría</textarea>
                     </div>
                 ` : ''}
 
-                <div class="pres-content ${soloMode ? 'pres-content-solo' : ''}">
+                ${raceFullScreen ? `
+                <div class="pres-content pres-content-race">
+                    <div class="pres-race-track">
+                        <div class="race-track-label">${racePhaseLabel}</div>
+                        <div class="race-track-lanes" id="pres-race-lanes"></div>
+                    </div>
+                </div>
+                ` : `
+                <div class="pres-content">
                     <div class="pres-left">
                         <!-- Al revelar NO se proyecta la justificación clínica, sólo queda marcado
                              cuáles eran las correctas sobre las opciones de la derecha (decisión
@@ -9006,19 +8978,11 @@ Equipo Docente de Pediatría</textarea>
                              pantalla obligaba a achicar el enunciado, que es lo que el curso
                              necesita seguir leyendo mientras se corrige. Sigue estando, entera, en
                              la tarjeta del caso en la pestaña Talleres EFU. -->
-                        ${soloMode ? `
-                            <div class="pres-instructions-bar">
-                                ${currentPhase === 1
-                                    ? '🗳️ <strong>Fase de Votación:</strong> las opciones y el voto están en el celular de cada ' + (voteMode === 'equipos' ? 'equipo' : 'alumno') + '.'
-                                    : '📋 <strong>Respuestas reveladas:</strong> cada celular ya muestra si acertó' + (voteMode === 'equipos' ? ' — mirá la carrera' : '') + '.'}
-                            </div>
-                        ` : ''}
                         <div class="pres-vignette-box">
                             ${currentCase.vignette}
                         </div>
                     </div>
 
-                    ${soloMode ? '' : `
                     <div class="pres-right">
                         <div class="pres-instructions-bar">
                             ${currentPhase === 1
@@ -9041,8 +9005,8 @@ Equipo Docente de Pediatría</textarea>
                             }).join('')}
                         </ul>
                     </div>
-                    `}
                 </div>
+                `}
 
                 <div class="pres-footer">
                     <button class="pres-btn-footer" onclick="prevStep()" ${currentCaseIndex === 0 && currentPhase === 1 ? 'disabled' : ''}>
@@ -9061,9 +9025,8 @@ Equipo Docente de Pediatría</textarea>
                 </div>
             `;
 
-            overlay.classList.toggle('has-race-track', voteMode === 'equipos' && voteRoomActive);
             renderOptionsOnly();
-            if (voteMode === 'equipos' && voteRoomActive) renderRaceLanes();
+            if (raceFullScreen) renderRaceLanes();
 
             if (voteRoomActive) {
                 const voteUrl = `${window.location.origin}${window.location.pathname.replace(/index\.html$/, '')}votar.html?room=${voteRoomId}`;

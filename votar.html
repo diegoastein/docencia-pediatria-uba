@@ -74,6 +74,16 @@
         font-weight: 800;
         margin: 0 0 14px 0;
     }
+    .case-vignette {
+        font-size: 0.98rem;
+        line-height: 1.5;
+        color: #3c4043;
+        background: #f8f9fa;
+        border-left: 4px solid #7c3aed;
+        border-radius: 8px;
+        padding: 12px 14px;
+        margin: 0 0 16px 0;
+    }
     .options-list {
         list-style: none;
         padding: 0;
@@ -230,6 +240,7 @@
         .option-item.selected .option-letter { background: #8ab4f8; color: #0c0d0f; }
         .badge { background: #182a4d; color: #8ab4f8; }
         .case-title { color: #f1f3f4; }
+        .case-vignette { background: #17181c; color: #d5d8dc; border-left-color: #8ab4f8; }
         .result-summary.result-perfect { background: #133220; color: #81c995; }
         .result-summary.result-close { background: #3d2e05; color: #fbbc04; }
         .result-summary.result-bad { background: #3a220f; color: #ffab6e; }
@@ -432,9 +443,14 @@
 
     function renderCaseVoting() {
         if (!currentCase) return;
+        // En modo Equipos el proyector no muestra el enunciado (queda sólo la carrera a pantalla
+        // completa) — acá es la única pantalla que lo tiene. En Anónimo el proyector lo sigue
+        // mostrando como siempre, así que acá no se duplica (sigue siendo "Caso en pantalla").
+        const showVignette = roomMeta && roomMeta.mode === 'equipos';
         content.innerHTML = `
             <div class="box">
-                <span class="badge">Caso en pantalla</span>
+                <span class="badge">${showVignette ? 'Caso EFU' : 'Caso en pantalla'}</span>
+                ${showVignette ? `<div class="case-vignette">${currentCase.vignette}</div>` : ''}
                 <ul class="options-list">
                     ${currentCase.options.map(opt => `
                         <li class="option-item ${selectedLetters.includes(opt.letter) ? 'selected' : ''}" onclick="window.__toggleOpt('${opt.letter}')">
@@ -485,6 +501,11 @@
         let title = card.querySelector('h2') ? card.querySelector('h2').innerText : '';
         title = title.replace(/\s*\(.*?\)\s*$/, ''); // sin spoilers, igual que en el proyector
 
+        // Mismo innerHTML que usa index.html para armar el Modo Presentación (initPresentationData).
+        // En modo Equipos el proyector ya no muestra el enunciado (queda sólo la carrera a pantalla
+        // completa), así que acá es la única fuente — ver renderCaseVoting().
+        const vignette = card.querySelector('.efu-vignette') ? card.querySelector('.efu-vignette').innerHTML : '';
+
         const options = [];
         card.querySelectorAll('.efu-options li').forEach((li, idx) => {
             let text = li.innerHTML.replace(/^<strong>[A-H]\.<\/strong>\s*/i, '');
@@ -492,7 +513,7 @@
             options.push({ letter: String.fromCharCode(65 + idx), text, correct });
         });
 
-        const parsed = { caseId, title, options };
+        const parsed = { caseId, title, vignette, options };
         caseCache[caseId] = parsed;
         return parsed;
     }
@@ -534,10 +555,12 @@
     function renderCaseResult(parsed, myChoice, didVote) {
         const correctLetters = parsed.options.filter(o => o.correct).map(o => o.letter);
         const { cls: summaryClass, icon: summaryIcon, text: summaryText } = buildResultSummary(myChoice, correctLetters, didVote);
+        const showVignette = roomMeta && roomMeta.mode === 'equipos';
 
         content.innerHTML = `
             <div class="box">
                 <span class="badge">Respuestas reveladas</span>
+                ${showVignette ? `<div class="case-vignette">${parsed.vignette}</div>` : ''}
                 <div class="result-summary ${summaryClass}">${summaryIcon} ${summaryText}</div>
                 <ul class="options-list">
                     ${parsed.options.map(opt => {
