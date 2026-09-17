@@ -366,45 +366,59 @@
             }
         }
 
-        /* Pista de carrera de equipos: avanza SÓLO el equipo que acierta el caso completo al
-           revelar (coincidencia exacta con la clave); el que no acierta (incluido el que no
-           votó) queda en el lugar con una animación de "avería", nunca retrocede. En flujo
-           normal (no absoluto) para que reste su alto real al de .pres-content vía la clase
-           .has-race-track del overlay — si se cambia su alto acá, hay que actualizar ese offset
-           (ver #presentation-overlay.has-race-track .pres-content más abajo). Colapsa con
-           .hide-controls igual que header/footer/vote-panel, mismo patrón de transición.
+        /* Pista de carrera de equipos: PROTAGONISTA de la pantalla, no un detalle chico. Avanza
+           SÓLO el equipo que acierta el caso completo al revelar (coincidencia exacta con la
+           clave); el que no acierta (incluido el que no votó) queda en el lugar con una
+           animación de "avería", nunca retrocede. Visible de forma persistente durante toda la
+           ronda, no sólo al revelar.
+           --pres-race-h es la ÚNICA fuente de verdad del alto reservado: la usan tanto
+           .pres-race-track (su propio alto) como .pres-content (cuánto restarle) más abajo, así
+           que quedan sincronizados sin medir nada por JS — reactivo a resize/fullscreen por CSS
+           puro, igual que el resto del ajuste automático de esta pantalla. Si se cambia el
+           clamp() acá, no hace falta tocar nada más.
         */
+        #presentation-overlay.has-race-track {
+            --pres-race-h: clamp(200px, 32vh, 340px);
+        }
+
         .pres-race-track {
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            max-height: 96px;
+            gap: 8px;
+            height: var(--pres-race-h, 260px);
             opacity: 1;
             overflow: hidden;
-            margin-bottom: 14px;
-            transition: opacity 0.5s ease, transform 0.5s ease, max-height 0.5s ease, margin-bottom 0.5s ease;
+            margin-bottom: 18px;
+            padding: 14px 22px;
+            border-radius: 18px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, rgba(234,67,53,0.07), rgba(66,133,244,0.07));
+            border: 2px solid rgba(128,128,128,0.2);
+            transition: opacity 0.5s ease, transform 0.5s ease, height 0.5s ease, margin-bottom 0.5s ease, padding 0.5s ease;
         }
 
         .hide-controls .pres-race-track {
             opacity: 0;
             transform: translateY(-20px);
-            max-height: 0;
+            height: 0;
             margin-bottom: 0;
+            padding-top: 0;
+            padding-bottom: 0;
             pointer-events: none;
         }
 
         .race-track-label {
-            font-size: 0.8rem;
+            font-size: 1.15rem;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            opacity: 0.7;
+            letter-spacing: 0.3px;
+            opacity: 0.85;
+            flex-shrink: 0;
         }
 
         .race-track-lanes {
             display: flex;
             flex-direction: column;
-            gap: 3px;
+            gap: 10px;
             flex-grow: 1;
             min-height: 0;
         }
@@ -412,16 +426,16 @@
         .race-lane {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 18px;
             flex: 1;
             min-height: 0;
         }
 
         .race-lane-name {
-            width: 130px;
+            width: 260px;
             flex-shrink: 0;
-            font-size: 0.78rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 800;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -430,20 +444,19 @@
         .race-lane-track {
             position: relative;
             flex-grow: 1;
-            height: 100%;
-            min-height: 12px;
-            background: rgba(128, 128, 128, 0.15);
-            border-radius: 8px;
+            height: 30px;
+            background: rgba(128, 128, 128, 0.18);
+            border-radius: 15px;
             overflow: visible;
         }
 
         .race-lane-track::after {
             content: '🏁';
             position: absolute;
-            right: 2px;
+            right: 4px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 0.9rem;
+            font-size: 1.6rem;
         }
 
         .race-car {
@@ -451,7 +464,7 @@
             top: 50%;
             left: 0%;
             transform: translate(-50%, -50%);
-            font-size: 1.15rem;
+            font-size: 2.3rem;
             line-height: 1;
             transition: left 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
             white-space: nowrap;
@@ -468,20 +481,20 @@
         .race-car.race-miss::after {
             content: '💨';
             position: absolute;
-            left: -6px;
-            top: 2px;
-            font-size: 0.9rem;
+            left: -10px;
+            top: 0;
+            font-size: 1.5rem;
             opacity: 0;
             animation: raceSmokePuff 0.8s ease;
         }
 
         .race-car.race-finished {
-            filter: drop-shadow(0 0 6px gold);
+            filter: drop-shadow(0 0 8px gold);
         }
 
         @keyframes raceHitPulse {
             0% { transform: translate(-50%, -50%) scale(1); }
-            40% { transform: translate(-50%, -50%) scale(1.6); }
+            40% { transform: translate(-50%, -50%) scale(1.7); }
             100% { transform: translate(-50%, -50%) scale(1); }
         }
 
@@ -496,7 +509,7 @@
         @keyframes raceSmokePuff {
             0% { opacity: 0; transform: translateY(0) scale(0.6); }
             30% { opacity: 0.85; }
-            100% { opacity: 0; transform: translateY(-14px) scale(1.3); }
+            100% { opacity: 0; transform: translateY(-20px) scale(1.4); }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -506,19 +519,27 @@
             }
         }
 
-        /* Alto reservado para la pista de carrera: se resta acá en vez de en .pres-content
-           directamente para que el valor sin carrera (calc(100vh - 170px), documentado y
-           verificado contra los 167 casos) quede intacto cuando no hay modo Equipos activo.
-           Sólo por encima de 1024px: por debajo, .pres-content pasa a height:auto/scroll
-           (vista de emergencia apilada) y no hay que pisar esa regla. */
+        /* Alto reservado para la pista: mismo --pres-race-h que arriba, 0px cuando no hay
+           carrera (equipos + sala activa). El +18px es el margin-bottom de .pres-race-track,
+           que no entra en su propio "height". Sólo por encima de 1024px: por debajo,
+           .pres-content pasa a height:auto/scroll (vista de emergencia apilada) y no hay que
+           pisar esa regla. Documentado: sin carrera, calc(100vh - 170px) queda intacto — ese
+           valor está verificado contra los 167 casos del banco. */
         @media (min-width: 1025px) {
             #presentation-overlay.has-race-track .pres-content {
-                height: calc(100vh - 280px);
+                height: calc(100vh - 170px - var(--pres-race-h, 0px) - 18px);
             }
 
             #presentation-overlay.has-race-track.hide-controls .pres-content {
                 height: calc(100vh - 40px);
             }
+        }
+
+        /* Cuando se esconden las opciones (votación en vivo activa y no es Modo Opinión, ver
+           soloMode en renderSlide()), el enunciado pasa a ocupar el ancho completo — las
+           opciones viven sólo en el celular de cada equipo/alumno (ver votar.html). */
+        .pres-content.pres-content-solo {
+            grid-template-columns: 1fr;
         }
 
         .pres-left {
@@ -8935,7 +8956,13 @@ Equipo Docente de Pediatría</textarea>
             if (!overlay) return;
             
             let currentCase = presentationCases[currentCaseIndex];
-            
+            // En Modo Opinión, el proyector es la ÚNICA pantalla que muestra la distribución del
+            // grupo (el celular sólo dice "mirá la pantalla", ver votar.html) — ahí las opciones
+            // tienen que seguir viéndose. Fuera de Modo Opinión, con votación en vivo activa, las
+            // opciones y el voto ya viven en el celular de cada uno y el proyector queda solo
+            // para el enunciado (y, en equipos, la carrera).
+            const soloMode = voteRoomActive && !opinionMode;
+
             overlay.innerHTML = `
                 <div class="pres-header">
                     <div class="pres-title-group">
@@ -8971,7 +8998,7 @@ Equipo Docente de Pediatría</textarea>
                     </div>
                 ` : ''}
 
-                <div class="pres-content">
+                <div class="pres-content ${soloMode ? 'pres-content-solo' : ''}">
                     <div class="pres-left">
                         <!-- Al revelar NO se proyecta la justificación clínica, sólo queda marcado
                              cuáles eran las correctas sobre las opciones de la derecha (decisión
@@ -8979,11 +9006,19 @@ Equipo Docente de Pediatría</textarea>
                              pantalla obligaba a achicar el enunciado, que es lo que el curso
                              necesita seguir leyendo mientras se corrige. Sigue estando, entera, en
                              la tarjeta del caso en la pestaña Talleres EFU. -->
+                        ${soloMode ? `
+                            <div class="pres-instructions-bar">
+                                ${currentPhase === 1
+                                    ? '🗳️ <strong>Fase de Votación:</strong> las opciones y el voto están en el celular de cada ' + (voteMode === 'equipos' ? 'equipo' : 'alumno') + '.'
+                                    : '📋 <strong>Respuestas reveladas:</strong> cada celular ya muestra si acertó' + (voteMode === 'equipos' ? ' — mirá la carrera' : '') + '.'}
+                            </div>
+                        ` : ''}
                         <div class="pres-vignette-box">
                             ${currentCase.vignette}
                         </div>
                     </div>
-                    
+
+                    ${soloMode ? '' : `
                     <div class="pres-right">
                         <div class="pres-instructions-bar">
                             ${currentPhase === 1
@@ -9006,8 +9041,9 @@ Equipo Docente de Pediatría</textarea>
                             }).join('')}
                         </ul>
                     </div>
+                    `}
                 </div>
-                
+
                 <div class="pres-footer">
                     <button class="pres-btn-footer" onclick="prevStep()" ${currentCaseIndex === 0 && currentPhase === 1 ? 'disabled' : ''}>
                         ← Atrás ${currentPhase === 2 ? '(Votación)' : '(Caso Anter.)'}
