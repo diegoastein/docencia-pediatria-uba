@@ -7668,6 +7668,7 @@ Equipo Docente de Pediatría</textarea>
         let liveVoteTotal = 0;
         let opinionMode = false; // Modo Opinión: vota igual que un caso EFU pero sin marcar correcto/incorrecto ni sumar puntaje
         let raceTeams = []; // [{key, name, score}] — roster de la pista de carrera (modo Equipos)
+        let raceScoredTeams = new Set(); // claves de equipo ya puntuadas para el caso EN CURSO — se reinicia en startVotePolling()
 
         // Actividades Abiertas en Vivo (Nube de Palabras / Muro de Preguntas / Pulso de Cierre):
         // reutilizan la misma sala/QR de la Votación en Vivo, con su propio nodo en Firebase.
@@ -7913,11 +7914,16 @@ Equipo Docente de Pediatría</textarea>
             } catch (err) {
                 console.warn('Polling de votos falló:', err);
             }
-            // Roster de la pista de carrera: se refresca en cada poll (no sólo al revelar) para
-            // que un equipo que recién se suma a mitad de caso aparezca en pantalla sin esperar
-            // al próximo caso. Las posiciones no cambian acá (el puntaje sólo se toca al
-            // revelar) — sólo puede aparecer una lanera nueva.
-            if (voteMode === 'equipos') refreshRaceTeams();
+            if (voteMode === 'equipos') {
+                // Roster primero: para que un equipo que recién se suma a mitad de caso tenga
+                // su lanera dibujada ANTES de que processNewVotesForCase intente animarla.
+                await refreshRaceTeams();
+                // Puntaje en vivo, caso por caso, equipo por equipo — no se espera a que el
+                // docente revele: apenas se ve el voto de un equipo en Firebase, se compara
+                // contra la clave y se anima en el momento (ver processNewVotesForCase). En
+                // Modo Opinión no hay clave "correcta", así que no corresponde.
+                if (!opinionMode) await processNewVotesForCase(currentCase);
+            }
         }
 
         // Trae el roster de equipos (nombre + puntaje acumulado) y redibuja las laneras de la
@@ -7980,10 +7986,9 @@ Equipo Docente de Pediatría</textarea>
             });
         }
 
-        // Dispara la animación dramática después de revelar: avanza (con "salto") los autos de
-        // los equipos que acertaron el caso completo y sacude + larga humo a los que no —
-        // incluye a quien no llegó a votar, porque tampoco acertó. Se llama después de que
-        // scoreTeamsForCase ya escribió los puntajes nuevos en Firebase.
+        // Anima UN equipo por llamada (hitKeys o missKeys con un solo elemento) — lo llama
+        // processNewVotesForCase() apenas procesa cada voto nuevo, no en bloque al final. Avanza
+        // (con "salto") el auto que acertó el caso completo, o lo sacude + larga humo si no.
         function animateRaceResult(result) {
             const lanesEl = document.getElementById('pres-race-lanes');
             if (!lanesEl || !result) return;
@@ -8010,6 +8015,7 @@ Equipo Docente de Pediatría</textarea>
             if (!voteRoomActive) return;
             liveVoteCounts = [];
             liveVoteTotal = 0;
+            raceScoredTeams = new Set(); // nuevo caso: nadie puntuado todavía
             pollVotes();
             votePollInterval = setInterval(pollVotes, 2000);
         }
@@ -8019,51 +8025,64 @@ Equipo Docente de Pediatría</textarea>
             votePollInterval = null;
         }
 
-        // Devuelve { hitKeys, missKeys } (claves de equipo sanitizadas) para que nextStep()
-        // pueda disparar la animación de la pista de carrera apenas termina de puntuar. Un
-        // equipo que nunca llegó a votar este caso también entra en missKeys (tampoco acertó).
-        async function scoreTeamsForCase(caseObj) {
-            if (!voteRoomActive || voteMode !== 'equipos') return { hitKeys: [], missKeys: [] };
+        // Corazón del dinamismo pedido: NO espera a que el docente revele. Se llama en cada poll
+        // de la fase de votación (cada 2s) y compara, equipo por equipo, cada voto NUEVO que
+        // encuentra contra la clave del caso — apenas ve el voto de un equipo lo puntúa (si
+        // corresponde) y lo anima en el momento, ahí mismo. raceScoredTeams (se reinicia por
+        // caso en startVotePolling) evita procesar dos veces el mismo equipo si vuelve a
+        // aparecer en el próximo poll.
+        // `finalCall`: sólo true cuando lo llama nextStep() al cerrar la votación del caso — ahí,
+        // y sólo ahí, cualquier equipo que quedó registrado en la pista pero nunca votó también
+        // se marca "avería" (no puede quedar en la duda si todavía puede llegar a votar).
+        async function processNewVotesForCase(caseObj, finalCall = false) {
+            if (!voteRoomActive || voteMode !== 'equipos') return;
+            let votes;
             try {
-                const votes = await efuFbGet(`efuRooms/${voteRoomId}/votes/${caseObj.caseId}`) || {};
-
-                const correctSet = new Set(
-                    caseObj.options
-                        .map((opt, idx) => (opt.isCorrect ? String.fromCharCode(65 + idx) : null))
-                        .filter(Boolean)
-                );
-
-                // Un voto por equipo por caso (el celular ya bloquea el reenvío con localStorage);
-                // si igualmente hubiera más de uno, nos quedamos con el último.
-                const teamVotes = {};
-                Object.values(votes).forEach((v) => {
-                    if (!v.team) return;
-                    teamVotes[v.team] = new Set(v.options || []);
-                });
-
-                const hitKeys = [];
-                const votedKeys = new Set();
-                for (const [team, optSet] of Object.entries(teamVotes)) {
-                    const key = sanitizeTeamKey(team);
-                    votedKeys.add(key);
-                    const isExactMatch = optSet.size === correctSet.size && [...optSet].every((o) => correctSet.has(o));
-                    if (!isExactMatch) continue;
-                    const current = await efuFbGet(`efuRooms/${voteRoomId}/teams/${key}/score`);
-                    await efuFbPut(`efuRooms/${voteRoomId}/teams/${key}`, {
-                        name: team,
-                        score: (current || 0) + 1
-                    });
-                    hitKeys.push(key);
-                }
-                // "No acertó" incluye a quien votó mal (votedKeys menos hitKeys) y a cualquier
-                // equipo ya registrado en la pista que directamente no votó este caso.
-                const knownKeys = new Set(raceTeams.map((t) => t.key));
-                votedKeys.forEach((k) => knownKeys.add(k));
-                const missKeys = [...knownKeys].filter((k) => !hitKeys.includes(k));
-                return { hitKeys, missKeys };
+                votes = await efuFbGet(`efuRooms/${voteRoomId}/votes/${caseObj.caseId}`) || {};
             } catch (err) {
-                console.warn('No se pudo calcular el puntaje de equipos:', err);
-                return { hitKeys: [], missKeys: [] };
+                console.warn('No se pudieron leer los votos para puntuar en vivo:', err);
+                return;
+            }
+
+            const correctSet = new Set(
+                caseObj.options
+                    .map((opt, idx) => (opt.isCorrect ? String.fromCharCode(65 + idx) : null))
+                    .filter(Boolean)
+            );
+
+            for (const vote of Object.values(votes)) {
+                if (!vote.team) continue;
+                const key = sanitizeTeamKey(vote.team);
+                if (raceScoredTeams.has(key)) continue;
+                raceScoredTeams.add(key);
+
+                const optSet = new Set(vote.options || []);
+                const isExactMatch = optSet.size === correctSet.size && [...optSet].every((o) => correctSet.has(o));
+
+                if (isExactMatch) {
+                    try {
+                        const current = await efuFbGet(`efuRooms/${voteRoomId}/teams/${key}/score`);
+                        const newScore = (current || 0) + 1;
+                        await efuFbPut(`efuRooms/${voteRoomId}/teams/${key}`, { name: vote.team, score: newScore });
+                        // Se actualiza en memoria sin esperar otro round-trip, para que
+                        // renderRaceLanes ya dibuje la posición nueva antes de animar el salto.
+                        const entry = raceTeams.find((t) => t.key === key);
+                        if (entry) entry.score = newScore; else raceTeams.push({ key, name: vote.team, score: newScore });
+                        renderRaceLanes();
+                    } catch (err) {
+                        console.warn('No se pudo puntuar en vivo al equipo', vote.team, err);
+                    }
+                }
+                animateRaceResult(isExactMatch ? { hitKeys: [key] } : { missKeys: [key] });
+            }
+
+            if (finalCall) {
+                raceTeams.forEach((t) => {
+                    if (!raceScoredTeams.has(t.key)) {
+                        raceScoredTeams.add(t.key);
+                        animateRaceResult({ missKeys: [t.key] });
+                    }
+                });
             }
         }
 
@@ -8931,8 +8950,8 @@ Equipo Docente de Pediatría</textarea>
             const equiposActive = voteMode === 'equipos' && voteRoomActive;
             const raceFullScreen = equiposActive && !opinionMode;
             const racePhaseLabel = currentPhase === 1
-                ? `🗳️ Votando Caso ${currentCaseIndex + 1} de ${presentationCases.length} — las opciones están en el celular de cada equipo`
-                : '🏁 ¡Revelado! Mirá quién avanzó';
+                ? `🗳️ Caso ${currentCaseIndex + 1} de ${presentationCases.length} — apenas un equipo responde, la carrera se actualiza sola`
+                : '🏁 Caso cerrado — pasá al siguiente cuando quieras';
 
             overlay.innerHTML = `
                 <div class="pres-header">
@@ -9046,16 +9065,12 @@ Equipo Docente de Pediatría</textarea>
                 currentPhase = 2;
                 stopVotePolling(); // se dejó de votar: congelamos el conteo en pantalla
                 renderSlide();
-                // Encadenado (no en paralelo): primero se escriben los puntajes nuevos en
-                // Firebase, recién después se relee el roster (si no, refreshRaceTeams podría
-                // llegar antes que la escritura y mostrar el puntaje viejo un instante) y por
-                // último se dispara la animación de avance/avería sobre las laneras ya puestas
-                // al día.
-                if (!opinionMode) {
-                    scoreTeamsForCase(closingCase).then((result) => {
-                        refreshRaceTeams().then(() => animateRaceResult(result));
-                    });
-                }
+                // Red de seguridad, no el disparador principal: la mayoría de los equipos ya se
+                // puntuaron y animaron solos, voto a voto, durante el polling de la fase de
+                // votación (ver processNewVotesForCase). Esta llamada final (finalCall=true)
+                // sólo atrapa un voto de último segundo que el último poll no llegó a ver, y
+                // marca "avería" a cualquier equipo que nunca votó este caso.
+                if (!opinionMode) processNewVotesForCase(closingCase, true);
             } else if (currentPhase === 2) {
                 if (currentCaseIndex < presentationCases.length - 1) {
                     currentCaseIndex++;
