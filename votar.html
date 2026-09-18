@@ -223,6 +223,76 @@
         color: #7c3aed;
         opacity: 0.7;
     }
+    /* -------------------------------------------------- carrera autónoma de equipos ------
+       Cada equipo recorre la pista por su cuenta: la barra de cronómetro vive FUERA de #content
+       (que se rehace en cada render de pregunta) para que no se destruya en cada avance. */
+    #raceTimerBar {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 50;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 16px;
+        font-weight: 800;
+        font-size: 1rem;
+        font-variant-numeric: tabular-nums;
+        background: #e8f0fe;
+        color: #1967d2;
+        border-bottom: 1px solid #c6dafc;
+    }
+    /* Imprescindible: el `display: flex` de arriba le gana al `[hidden] { display: none }` del
+       navegador, así que sin esta regla la barra queda visible con hidden=true (y encima sin el
+       padding-top del body, tapando el contenido). */
+    #raceTimerBar[hidden] { display: none; }
+    #raceTimerBar.warn { background: #fef7e0; color: #b06000; border-bottom-color: #feefc3; }
+    #raceTimerBar.danger { background: #fce8e6; color: #c5221f; border-bottom-color: #fad2cf; }
+    body.with-race-timer { padding-top: 58px; }
+
+    .race-progress {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+    .race-progress-team {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #5f6368;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .race-hint { line-height: 1.45; }
+    .race-attempt-note {
+        font-size: 0.8rem;
+        color: #5f6368;
+        margin: 0 0 10px 0;
+    }
+    .race-review-case { margin-bottom: 16px; }
+    .race-review-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+    .race-review-attempts {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #5f6368;
+        white-space: nowrap;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        #raceTimerBar { background: #182a4d; color: #8ab4f8; border-bottom-color: #3c4043; }
+        #raceTimerBar.warn { background: #3b2f0b; color: #fdd663; border-bottom-color: #5c4a10; }
+        #raceTimerBar.danger { background: #4a1512; color: #f28b82; border-bottom-color: #6b2320; }
+        .race-progress-team, .race-attempt-note, .race-review-attempts { color: #9aa0a6; }
+    }
+
     @media (prefers-color-scheme: dark) {
         .scale-btn { background: #2b2e35; color: #e8eaed; }
         .qna-student-list li { border-color: #3c4043; }
@@ -255,11 +325,12 @@
 </style>
 </head>
 <body>
+<div id="raceTimerBar" hidden></div>
 <div class="screen" id="app">
     <h1>🗳️ Votación EFU</h1>
     <p class="subtitle">Hospital Ramón Carrillo</p>
     <div id="content"></div>
-    <p class="footer-note">Un voto por caso desde este celular. Cuando el docente revele las respuestas vas a ver acá si acertaste.</p>
+    <p class="footer-note" id="footerNote">Un voto por caso desde este celular. Cuando el docente revele las respuestas vas a ver acá si acertaste.</p>
 </div>
 
 <script>
@@ -278,6 +349,20 @@
     let activityDraftScale = null; // puntaje 1-5 elegido en el Pulso de Cierre, antes de enviar
     let pollDraftChoice = null; // índice de opción elegido en la Encuesta de Opción Múltiple, antes de enviar
     let raceWrongAttempt = false; // true tras un voto equivocado en modo Equipos: se puede reintentar (ver submitVote)
+
+    // ---------------------------------------------------------------- CARRERA AUTÓNOMA
+    // Ver el bloque grande de comentarios en index.html ("CARRERA AUTÓNOMA DE EQUIPOS"). Acá está
+    // el lado que realmente corrige y avanza: este celular compara contra la clave que ya venía
+    // sacando de index.html para el feedback, y escribe su propio progreso en teams/{su clave}.
+    const RACE_HINT_AFTER = 3;   // intentos fallidos antes de soltar la ayuda (igual en index.html)
+    let raceMeta = null;         // espejo de race/meta
+    let raceTeamState = null;    // { score, current, attempts } — progreso propio del equipo
+    let raceRunId = null;        // startedAt de la carrera en curso: si cambia, se largó de nuevo
+    let raceAdopted = false;     // ya se releyó el progreso de Firebase (recupera recarga/batería)
+    let raceClockOffset = 0;     // reloj del servidor − reloj local
+    let raceAttemptFeedback = null; // { hits, total, extras, attempts } del último intento fallido
+    let raceJustSolved = false;  // para el cartel verde arriba de la pregunta siguiente
+    let raceTickTimer = null;
 
     const content = document.getElementById('content');
 
@@ -485,7 +570,9 @@
         if (!currentCase || selectedLetters.length === 0) return;
         const btn = document.getElementById('submitVoteBtn');
         if (btn) { btn.disabled = true; btn.innerText = 'Enviando...'; }
-        const isEquipos = roomMeta && roomMeta.mode === 'equipos';
+        // !opinionMode: en Modo Opinión no hay respuesta correcta, así que no corresponde
+        // corregir localmente ni hacer reintentar — es un voto único, como en Anónimo.
+        const isEquipos = roomMeta && roomMeta.mode === 'equipos' && !roomMeta.opinionMode;
         try {
             const body = { options: [...selectedLetters], ts: Date.now() };
             if (isEquipos) body.team = teamName;
@@ -524,12 +611,24 @@
 
     // El contenido de cada caso (título y opciones) se saca siempre de index.html — nunca se
     // inventa ni se duplica texto clínico. Se cachea por caseId porque no cambia en el taller.
+    // index.html pesa cerca de 850 KB: se descarga y se parsea UNA sola vez por celular, no una
+    // vez por caso. Antes daba lo mismo (un caso por taller a la vez), pero con la carrera cada
+    // equipo pasa por toda la pista y eran 10 descargas completas por teléfono.
+    let indexDocPromise = null;
+    function getIndexDoc() {
+        if (!indexDocPromise) {
+            indexDocPromise = fetch('index.html')
+                .then((res) => res.text())
+                .then((html) => new DOMParser().parseFromString(html, 'text/html'))
+                .catch((err) => { indexDocPromise = null; throw err; });
+        }
+        return indexDocPromise;
+    }
+
     async function extractCaseFromIndex(caseId) {
         if (caseCache[caseId]) return caseCache[caseId];
 
-        const res = await fetch('index.html');
-        const html = await res.text();
-        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const doc = await getIndexDoc();
         const answerBox = doc.getElementById('ans' + caseId);
         if (!answerBox) return null;
         const card = answerBox.closest('.card');
@@ -616,6 +715,404 @@
                 <p class="result-waiting">Esperando el próximo caso...</p>
             </div>
         `;
+    }
+
+    // ==========================================================================
+    // CARRERA AUTÓNOMA DE EQUIPOS
+    // ==========================================================================
+    // Mecánica (17/09/2026): este celular es el que corrige y avanza. Si el equipo contesta mal o
+    // incompleto SIGUE con la misma pregunta, conservando lo que tenía marcado; a partir del
+    // tercer intento fallido aparece una ayuda que dice cuántas acertó y cuántas le faltan (nunca
+    // cuáles). Apenas acierta, la pregunta siguiente aparece sola, sin que el docente toque nada.
+    // El progreso se escribe en teams/{clave del equipo} — cada equipo sólo su propio nodo, así
+    // que no hay condiciones de carrera — y el proyector lo lee para dibujar la pista.
+
+    function raceTeamKey() { return sanitizeTeamKey(teamName); }
+
+    // Mismo mecanismo que el cronómetro del examen: todos los relojes se alinean contra el reloj
+    // del servidor de Firebase y no contra el del dispositivo, porque un celular con la hora
+    // puesta a mano vería un tiempo restante distinto al proyectado.
+    async function syncRaceClock() {
+        try {
+            const t0 = Date.now();
+            await fbPut(`efuRooms/${roomId}/race/clockPing`, { '.sv': 'timestamp' });
+            const server = await fbGet(`efuRooms/${roomId}/race/clockPing`);
+            const t1 = Date.now();
+            if (typeof server === 'number') raceClockOffset = server - (t0 + t1) / 2;
+        } catch (err) { /* sin alineación se sigue con el reloj local */ }
+    }
+
+    function raceNow() { return Date.now() + raceClockOffset; }
+
+    function raceFmtClock(ms) {
+        if (ms < 0) ms = 0;
+        const total = Math.floor(ms / 1000);
+        return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+    }
+
+    function escHtml(v) {
+        return String(v == null ? '' : v).replace(/[&<>"']/g, (c) => (
+            { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+        ));
+    }
+
+    // Log local del recorrido (intentos y última selección por caso). Sirve para la revisión del
+    // final en este mismo celular: no se sube nada nuevo a Firebase por esto.
+    function raceLocalKey() { return `efuRace_${roomId}_${raceTeamKey()}`; }
+
+    function loadRaceLocal() {
+        try { return JSON.parse(localStorage.getItem(raceLocalKey()) || 'null') || { log: {} }; }
+        catch (e) { return { log: {} }; }
+    }
+
+    function saveRaceLocal(st) {
+        try { localStorage.setItem(raceLocalKey(), JSON.stringify(st)); } catch (e) { /* sin espacio: se pierde sólo la revisión local */ }
+    }
+
+    function logRaceAttempt(caseId, letters, solved) {
+        const st = loadRaceLocal();
+        if (!st.log) st.log = {};
+        const prev = st.log[caseId] || { attempts: 0, solved: false };
+        st.log[caseId] = {
+            attempts: prev.attempts + 1,
+            choice: letters.slice(),
+            solved: solved || prev.solved
+        };
+        st.runId = raceRunId;
+        saveRaceLocal(st);
+    }
+
+    // ---------------------------------------------------------------- barra de cronómetro
+    function updateRaceTimerBar() {
+        const bar = document.getElementById('raceTimerBar');
+        if (!bar) return;
+        if (!raceMeta || raceMeta.status !== 'running') {
+            bar.hidden = true;
+            document.body.classList.remove('with-race-timer');
+            return;
+        }
+        bar.hidden = false;
+        document.body.classList.add('with-race-timer');
+        const total = raceMeta.total || (raceMeta.caseIds || []).length;
+        const hechos = (raceTeamState && raceTeamState.score) || 0;
+        const left = raceMeta.endsAt ? Math.max(0, raceMeta.endsAt - raceNow()) : null;
+        bar.className = left === null ? '' : (left < 60000 ? 'danger' : (left < 300000 ? 'warn' : ''));
+        bar.innerHTML = `<span>🏁 ${hechos}/${total}</span><span>${left === null ? 'sin límite de tiempo' : '⏱ ' + raceFmtClock(left)}</span>`;
+    }
+
+    function hideRaceTimerBar() {
+        const bar = document.getElementById('raceTimerBar');
+        if (bar) bar.hidden = true;
+        document.body.classList.remove('with-race-timer');
+    }
+
+    function setFooterNote(text) {
+        const el = document.getElementById('footerNote');
+        if (el) el.textContent = text;
+    }
+
+    // ---------------------------------------------------------------- ayuda del 3er intento
+    // Dice CUÁNTAS acertó y cuántas le faltan, nunca cuáles. Tono coloquial y ameno, a pedido del
+    // docente: la idea es desatascar al equipo sin regalarle la respuesta.
+    function raceHintText(fb) {
+        const faltan = fb.total - fb.hits;
+        let base;
+        if (fb.hits === 0) {
+            base = `Por ahora no pegaron ninguna de las ${fb.total} que hay que marcar. No se enrosquen con el diagnóstico: vuelvan al examen físico y a los datos del laboratorio, la pista casi siempre está ahí.`;
+        } else if (faltan === 1) {
+            base = `¡Uy, están a una! Ya tienen ${fb.hits} de ${fb.total} bien marcadas: falta una sola.`;
+        } else {
+            base = `Van bien: tienen ${fb.hits} de ${fb.total} bien marcadas, les faltan ${faltan}.`;
+        }
+        if (fb.extras === 1) {
+            base += ' Ojo que además hay una marcada que no va — probá sacando alguna.';
+        } else if (fb.extras > 1) {
+            base += ` Ojo que además hay ${fb.extras} marcadas que no van — probá sacando alguna.`;
+        }
+        return base;
+    }
+
+    // ---------------------------------------------------------------- pregunta en curso
+    function renderRaceVoting(total) {
+        if (!currentCase) return;
+        const nro = (raceTeamState.current || 0) + 1;
+        const fb = raceAttemptFeedback;
+        const hint = fb && fb.attempts >= RACE_HINT_AFTER ? raceHintText(fb) : null;
+        const solvedBanner = raceJustSolved;
+        raceJustSolved = false;
+
+        content.innerHTML = `
+            <div class="box">
+                <div class="race-progress">
+                    <span class="badge">🏁 Pregunta ${nro} de ${total}</span>
+                    <span class="race-progress-team">${escHtml(teamName)}</span>
+                </div>
+                ${solvedBanner ? '<div class="result-summary result-perfect">✅ ¡Correcta! Vamos con la que viene 🚗💨</div>' : ''}
+                ${fb ? `<div class="result-summary result-zero">❌ Todavía no. Seguí con esta misma pregunta.</div>` : ''}
+                ${hint ? `<div class="result-summary result-close race-hint">💡 ${escHtml(hint)}</div>` : ''}
+                ${fb ? `<p class="race-attempt-note">Van ${fb.attempts} ${fb.attempts === 1 ? 'intento' : 'intentos'} en esta pregunta${fb.attempts < RACE_HINT_AFTER ? ` — a los ${RACE_HINT_AFTER} te damos una ayuda` : ''}.</p>` : ''}
+                <div class="case-vignette">${currentCase.vignette}</div>
+                <ul class="options-list">
+                    ${currentCase.options.map(opt => `
+                        <li class="option-item ${selectedLetters.includes(opt.letter) ? 'selected' : ''}" onclick="window.__toggleRaceOpt('${opt.letter}')">
+                            <span class="option-letter">${opt.letter}</span>
+                            <span class="option-text">${opt.text}</span>
+                        </li>
+                    `).join('')}
+                </ul>
+                <button id="submitVoteBtn" ${selectedLetters.length === 0 ? 'disabled' : ''} onclick="submitRaceAttempt()">
+                    Responder (${selectedLetters.length} seleccionada${selectedLetters.length === 1 ? '' : 's'})
+                </button>
+            </div>
+        `;
+    }
+
+    // Toggle propio de la carrera: el de la votación clásica llama a renderCaseVoting(), que no
+    // conoce el progreso ni la ayuda y borraría los carteles de la pantalla.
+    window.__toggleRaceOpt = function (letter) {
+        const idx = selectedLetters.indexOf(letter);
+        if (idx >= 0) selectedLetters.splice(idx, 1);
+        else selectedLetters.push(letter);
+        renderRaceVoting(raceMeta.total || (raceMeta.caseIds || []).length);
+    };
+
+    window.submitRaceAttempt = async function () {
+        if (!currentCase || selectedLetters.length === 0 || !raceTeamState) return;
+        if (raceMeta.status !== 'running') return;
+        const btn = document.getElementById('submitVoteBtn');
+        if (btn) { btn.disabled = true; btn.innerText = 'Enviando...'; }
+
+        const total = raceMeta.total || (raceMeta.caseIds || []).length;
+        const correctLetters = currentCase.options.filter(o => o.correct).map(o => o.letter);
+        const hits = selectedLetters.filter(l => correctLetters.includes(l)).length;
+        const extras = selectedLetters.filter(l => !correctLetters.includes(l)).length;
+        const solved = hits === correctLetters.length && extras === 0;
+
+        try {
+            // El intento queda en el mismo nodo de votos de siempre: de ahí sale la revisión del
+            // docente al final (no se agrega ningún dato nuevo a Firebase por esta mecánica).
+            await fbPost(`efuRooms/${roomId}/votes/${currentCase.caseId}`, {
+                options: selectedLetters.slice(), team: teamName, ts: Date.now()
+            });
+        } catch (err) {
+            if (btn) { btn.disabled = false; btn.innerText = 'Reintentar envío'; }
+            alert('No se pudo enviar la respuesta, revisá tu conexión e intentá de nuevo.');
+            return;
+        }
+
+        logRaceAttempt(currentCase.caseId, selectedLetters, solved);
+        saveChoice(currentCase.caseId, selectedLetters);
+        markAttempted(currentCase.caseId);
+
+        if (solved) {
+            markVoted(currentCase.caseId);
+            raceTeamState.score++;
+            raceTeamState.current++;
+            raceTeamState.attempts = 0;
+            raceAttemptFeedback = null;
+            raceJustSolved = true;
+            selectedLetters = [];
+        } else {
+            raceTeamState.attempts++;
+            raceAttemptFeedback = { hits, total: correctLetters.length, extras, attempts: raceTeamState.attempts };
+        }
+
+        const finished = total > 0 && raceTeamState.current >= total;
+        const patch = {
+            name: teamName,
+            score: raceTeamState.score,
+            current: raceTeamState.current,
+            attempts: raceTeamState.attempts,
+            lastAdvanceAt: raceNow()
+        };
+        if (finished) patch.finishedAt = raceNow();
+        // Best-effort: si falla por un corte, el equipo igual sigue jugando con su estado local y
+        // el próximo intento vuelve a mandar el progreso completo (es un PATCH idempotente).
+        fbPatch(`efuRooms/${roomId}/teams/${raceTeamKey()}`, patch)
+            .catch(() => {});
+
+        if (solved) {
+            // La pregunta siguiente aparece en el acto, sin esperar el próximo poll ni al docente.
+            lastSeenKey = '';
+            await handleRaceTick();
+        } else {
+            lastSeenKey = `race_${raceRunId}_${raceTeamState.current}_${raceTeamState.attempts}`;
+            renderRaceVoting(total); // misma pregunta, conservando lo que tenía marcado
+        }
+    };
+
+    // ---------------------------------------------------------------- revisión del final
+    // Sólo con la carrera cerrada. Muestra únicamente los casos que este equipo llegó a responder,
+    // con la clave y lo que marcó en su último intento.
+    async function renderRaceReview() {
+        const caseIds = raceMeta.caseIds || [];
+        const local = loadRaceLocal();
+        const hechos = (raceTeamState && raceTeamState.score) || 0;
+
+        content.innerHTML = `
+            <div class="box">
+                <span class="badge">🏁 Carrera terminada</span>
+                <p class="case-title">Llegaron hasta ${hechos} de ${caseIds.length}.</p>
+                <p style="margin: 0; font-size: 0.9rem; opacity: 0.8;">
+                    Acá abajo está la revisión de las preguntas que respondieron, con la clave y lo que marcaron.
+                    Mirá la pantalla para ver cómo quedó la carrera.
+                </p>
+            </div>
+            <div id="raceReviewList"><div class="box status-msg">Armando la revisión…</div></div>
+        `;
+
+        const parts = [];
+        for (let i = 0; i < caseIds.length; i++) {
+            const entry = (local.log || {})[caseIds[i]];
+            if (!entry) continue; // no llegaron a esta pregunta
+            const parsed = await extractCaseFromIndex(caseIds[i]);
+            if (!parsed) continue;
+            const choice = entry.choice || [];
+            parts.push(`
+                <div class="box race-review-case">
+                    <div class="race-review-head">
+                        <span class="badge" style="margin: 0;">Pregunta ${i + 1}</span>
+                        <span class="race-review-attempts">
+                            ${entry.solved ? '✅ resuelta' : '⏳ sin resolver'} · ${entry.attempts} ${entry.attempts === 1 ? 'intento' : 'intentos'}
+                        </span>
+                    </div>
+                    <div class="case-vignette">${parsed.vignette}</div>
+                    <ul class="options-list" style="margin-bottom: 0;">
+                        ${parsed.options.map(opt => {
+                            const picked = choice.includes(opt.letter);
+                            let cls = 'result-item';
+                            if (opt.correct) cls += ' result-correct';
+                            else if (picked) cls += ' result-wrong';
+                            return `
+                                <li class="option-item ${cls}">
+                                    <span class="option-letter">${opt.correct ? '✓' : (picked ? '✗' : opt.letter)}</span>
+                                    <span class="option-text">${opt.text}</span>
+                                </li>
+                            `;
+                        }).join('')}
+                    </ul>
+                </div>
+            `);
+        }
+
+        const listEl = document.getElementById('raceReviewList');
+        if (!listEl) return; // la pantalla cambió mientras se armaba
+        listEl.innerHTML = parts.length
+            ? parts.join('')
+            : '<div class="box status-msg">No alcanzaron a responder ninguna pregunta.</div>';
+    }
+
+    // ---------------------------------------------------------------- ciclo de la carrera
+    async function handleRaceTick() {
+        const status = raceMeta.status || 'lobby';
+        const total = raceMeta.total || (raceMeta.caseIds || []).length;
+        const runId = raceMeta.startedAt || 0;
+
+        // Se largó (o el docente largó de nuevo): se vuelve a leer el progreso de Firebase y se
+        // limpia el log local, para que la revisión del final sea de ESTA carrera.
+        if (runId !== raceRunId) {
+            raceRunId = runId;
+            raceAdopted = false;
+            raceAttemptFeedback = null;
+            if (status === 'running') saveRaceLocal({ runId, log: {} });
+        }
+
+        if (status === 'lobby') {
+            raceTeamState = null;
+            hideRaceTimerBar();
+            setFooterNote('Cada equipo corre por su cuenta desde su celular.');
+            if (lastSeenKey !== 'race_lobby') {
+                lastSeenKey = 'race_lobby';
+                currentCase = null;
+                renderStatus('🏁', `Anotados como "${teamName}"`,
+                    'Esperando la largada. En cuanto el docente largue la carrera te aparece la primera pregunta acá mismo.');
+            }
+            return;
+        }
+
+        if (status === 'closed') {
+            hideRaceTimerBar();
+            setFooterNote('Carrera terminada.');
+            if (lastSeenKey !== 'race_closed') {
+                lastSeenKey = 'race_closed';
+                currentCase = null;
+                if (!raceTeamState) {
+                    try {
+                        const mine = await fbGet(`efuRooms/${roomId}/teams/${raceTeamKey()}`) || {};
+                        raceTeamState = { score: mine.score || 0, current: mine.current || 0, attempts: mine.attempts || 0 };
+                    } catch (e) { raceTeamState = { score: 0, current: 0, attempts: 0 }; }
+                }
+                await renderRaceReview();
+            }
+            return;
+        }
+
+        // ------------------------------------------------------------------ status === 'running'
+        // Primer tick de la carrera en este celular: el progreso sale de Firebase y no del
+        // localStorage, porque el proyector tiene que coincidir con lo que ve el equipo (y así una
+        // recarga, un cambio de celular o quedarse sin batería no pierde el lugar).
+        if (!raceAdopted) {
+            raceAdopted = true;
+            try {
+                const mine = await fbGet(`efuRooms/${roomId}/teams/${raceTeamKey()}`) || {};
+                raceTeamState = { score: mine.score || 0, current: mine.current || 0, attempts: mine.attempts || 0 };
+            } catch (err) {
+                raceTeamState = raceTeamState || { score: 0, current: 0, attempts: 0 };
+            }
+            await syncRaceClock();
+        }
+        if (!raceTeamState) raceTeamState = { score: 0, current: 0, attempts: 0 };
+
+        setFooterNote('Si te equivocás seguís con la misma pregunta hasta resolverla. Cuando acertás, pasa sola a la siguiente.');
+        updateRaceTimerBar();
+
+        // Autoentrega por tiempo: el docente también cierra la carrera desde index.html, pero esto
+        // es la red de seguridad si se le cerró la pestaña (mismo criterio que el examen).
+        if (raceMeta.endsAt && raceNow() >= raceMeta.endsAt) {
+            hideRaceTimerBar();
+            if (lastSeenKey !== 'race_timeup') {
+                lastSeenKey = 'race_timeup';
+                currentCase = null;
+                renderStatus('⏰', '¡Se terminó el tiempo!',
+                    `Llegaron hasta ${raceTeamState.score} de ${total}. Mirá la pantalla para ver cómo quedó la carrera.`);
+            }
+            return;
+        }
+
+        if (total > 0 && raceTeamState.current >= total) {
+            if (lastSeenKey !== 'race_done') {
+                lastSeenKey = 'race_done';
+                currentCase = null;
+                renderStatus('🏁', '¡Completaron toda la pista!',
+                    'Resolvieron las ' + total + ' preguntas. Mirá la pantalla — falta ver si llegaron primeros.');
+            }
+            return;
+        }
+
+        const caseId = (raceMeta.caseIds || [])[raceTeamState.current];
+        if (!caseId) {
+            if (lastSeenKey !== 'race_nopista') {
+                lastSeenKey = 'race_nopista';
+                renderStatus('⏳', 'Preparando la pista...', 'El docente todavía no cargó las preguntas de la carrera.');
+            }
+            return;
+        }
+
+        const key = `race_${raceRunId}_${raceTeamState.current}_${raceTeamState.attempts}`;
+        if (key === lastSeenKey) return; // nada cambió: no re-renderizar (borraría lo marcado)
+        lastSeenKey = key;
+
+        const parsed = await extractCaseFromIndex(caseId);
+        if (!parsed) {
+            renderStatus('⚠️', 'No se pudo cargar la pregunta', 'Reintentando...');
+            currentCase = null;
+            lastSeenKey = '';
+            return;
+        }
+        currentCase = parsed;
+        selectedLetters = [];
+        raceWrongAttempt = false;
+        renderRaceVoting(total);
     }
 
     // ==========================================================================
@@ -833,6 +1330,25 @@
             return;
         }
 
+        // Carrera autónoma de equipos: tiene prioridad sobre el flujo de caso único conducido por
+        // el docente, pero NO sobre las Actividades Abiertas (chequeadas arriba) ni sobre el Modo
+        // Opinión, que sigue siendo un caso proyectado con la distribución del grupo en pantalla.
+        // Si race/meta no existe, es una sala vieja en modo Equipos y sigue el flujo de siempre.
+        if (roomMeta.mode === 'equipos' && !roomMeta.opinionMode) {
+            let rm = null;
+            try {
+                rm = await fbGet(`efuRooms/${roomId}/race/meta`);
+            } catch (err) {
+                return; // sin conexión momentánea: se reintenta en el próximo poll
+            }
+            if (rm && rm.status) {
+                raceMeta = rm;
+                await handleRaceTick();
+                return;
+            }
+        }
+        hideRaceTimerBar();
+
         const caseId = roomMeta.currentCaseId;
         if (!caseId) {
             renderStatus('⏳', 'Esperando el primer caso...', 'El docente todavía no inició la votación de ningún caso.');
@@ -898,6 +1414,12 @@
         if (pollTimer) clearInterval(pollTimer);
         checkForNewCase();
         pollTimer = setInterval(checkForNewCase, 2000);
+        // El cronómetro de la carrera se refresca cada segundo aparte del polling de 2s: la barra
+        // vive fuera de #content, así que actualizarla no interfiere con la pregunta en pantalla.
+        if (raceTickTimer) clearInterval(raceTickTimer);
+        raceTickTimer = setInterval(() => {
+            if (raceMeta && raceMeta.status === 'running') updateRaceTimerBar();
+        }, 1000);
     }
 
     if (!EFU_FIREBASE_DB_URL) {

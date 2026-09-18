@@ -65,7 +65,10 @@ Este archivo configura las reglas de comportamiento y contexto de proyecto para 
 - `fuentes_pdf/`: PDFs oficiales de los exámenes EFU (fuente de verdad original para las preguntas).
 - `pantalla_examen.html`: Pantalla de sólo lectura para proyectar en el aula durante un examen
   (cronómetro gigante, QR en el lobby, entregados en vivo). Ver sección propia más abajo.
-- `votar.html`: Página mobile-first para que los alumnos voten desde su celular durante el Modo Presentación (ver sección Votación en Vivo más abajo).
+- `votar.html`: Página mobile-first para que los alumnos voten desde su celular durante el Modo
+  Presentación (ver sección Votación en Vivo más abajo). En modo Equipos es además **el motor de la
+  Carrera Autónoma de Equipos**: es el archivo que corrige, avanza y escribe el progreso de cada
+  equipo (ver su sección propia más abajo).
 - `examen.html`: Página mobile-first para que los alumnos rindan parciales/prefinales desde su celular (ver sección Evaluaciones más abajo). No comparte código con `votar.html` a propósito: la dinámica es distinta (navegación libre entre preguntas, entrega única, sin feedback de aciertos).
 
 > Las presentaciones `.pptx` están ignoradas por git (se comparten por Google Drive).
@@ -157,6 +160,103 @@ Modelo de datos: `efuRooms/{roomId}/meta.activity` (`type`/`prompt`/`status`/`ke
 `efuRooms/{roomId}/activity/{key}/responses` (append-only) y `/upvotes` (sólo Muro de
 Preguntas) — mismo patrón anti-condición-de-carrera que los votos de casos. No requiere tocar
 las reglas de Firebase: cuelga del mismo nodo `efuRooms/$roomId` ya abierto.
+
+### 🏁 Carrera Autónoma de Equipos (reescrita el 18/09/2026)
+
+El **Modo Equipos** del Modo Presentación es una carrera en la que **cada equipo avanza por su
+cuenta**, sin que el docente conduzca caso por caso. Reemplazó a la mecánica anterior (*lockstep*:
+un `meta.currentCaseId` único para todo el curso, con el docente revelando y pasando al siguiente
+con Enter), que ya no existe.
+
+**Mecánica, tal como la pidió el docente:**
+- Si un equipo contesta **mal o incompleto**, **sigue con la misma pregunta** hasta resolverla,
+  conservando lo que tenía marcado.
+- A partir del **tercer intento fallido** aparece una **ayuda coloquial** que dice **cuántas acertó
+  y cuántas le faltan** (y si marcó alguna de más) — **nunca cuáles**. La ayuda se actualiza en cada
+  intento siguiente.
+- **Apenas acierta, la pregunta siguiente aparece sola**, en el acto, sin intervención del docente.
+- Gana **el primero que completa todas las preguntas**; si se termina el tiempo antes, **el que
+  llegó más lejos** (desempate: quién llegó antes a esa marca).
+- **La revisión de las preguntas se habilita recién con la carrera cerrada**, por la misma razón que
+  el análisis post-examen: durante la carrera, proyectar el panel del docente delataría las claves.
+
+**Tres pantallas en el proyector** (`raceScreenHtml()` en `index.html`):
+1. **Lobby:** QR grande, equipos anotándose en vivo, duración en minutos (**0 = sin límite**) y
+   botón **🏁 Largar la carrera**.
+2. **Corriendo:** cronómetro grande (ámbar a los 5 min, rojo y parpadeando al último), pista con
+   **una marca por caso** (`--race-step-pct`) y el auto de cada equipo en su propio avance.
+3. **Cerrada:** podio + **🔍 Revisar las preguntas** + **🔄 Largar de nuevo**.
+
+**Cierre:** automático al llegar a cero **o** cuando todos los equipos completaron la pista, más el
+botón **⏹ Terminar** del docente. Los celulares **también** se autocierran por tiempo — redundancia
+a propósito, igual que en el examen: si al docente se le cerró la pestaña, los equipos igual paran.
+
+**Reparto de responsabilidades (clave para no romperlo al editar):**
+- **`votar.html` es el que corrige, avanza y escribe su propio progreso.** Tiene la clave del caso
+  porque ya la sacaba de `index.html` para el feedback de siempre — no es un dato nuevo que se
+  exponga (ver la limitación ya asumida más abajo, en Evaluaciones).
+- **`index.html` no corrige nada mientras se corre:** sólo lee el progreso y lo dibuja. Las
+  animaciones de acierto/avería se disparan comparando el nodo del equipo contra lo último visto
+  (`raceLastSeen`), **no releyendo el historial de votos** — así el tablero no se pone más lento a
+  medida que se acumulan intentos.
+- Cada equipo escribe **sólo** en `teams/{su propia clave}`: no hay condiciones de carrera.
+
+**Modelo de datos** — todo cuelga de `efuRooms/{roomId}`, que las reglas ya desplegadas habilitan:
+**no hace falta tocar ni redesplegar las reglas.** (`race/meta` es un nodo aparte de `meta` por la
+misma razón que el examen usa `exam/meta`: esquiva el `.validate` de `meta`, que exige
+`mode` + `phase`.)
+
+| Nodo | Contenido |
+| --- | --- |
+| `race/meta` | `status` (`lobby`/`running`/`closed`), `caseIds` (orden de la pista), `total`, `durationMin`, `startedAt`, `endsAt`, `endedAt` |
+| `race/clockPing` | alineación con el reloj del servidor (mismo truco que el cronómetro del examen) |
+| `teams/{key}` | `name`, `score` (casos **resueltos**), `current`, `attempts`, `lastAdvanceAt`, `finishedAt` |
+| `votes/{caseId}/{id}` | **sin cambios de forma** (`{options, team, ts}`): cada intento sigue quedando registrado, y **de ahí sale la revisión del final** |
+
+A `race/meta` van **sólo los `caseId`** — ni enunciados, ni opciones, ni claves.
+
+**Detalles que costaron o que conviene no deshacer:**
+- **Los relojes se alinean contra el reloj del servidor de Firebase**, no contra el del dispositivo:
+  si no, un celular con la hora puesta a mano vería un tiempo restante distinto al proyectado.
+- **La barra de cronómetro de `votar.html` vive fuera de `#content`**, que se rehace en cada render
+  de pregunta. Y lleva una regla `#raceTimerBar[hidden] { display: none; }` explícita: el
+  `display: flex` le gana al `[hidden]` del navegador y sin eso la barra quedaba visible con
+  `hidden=true`, encima sin el `padding-top` del body, tapando el contenido.
+- **`lastSeenKey` incluye `current` y `attempts`**: sin eso, el poll de 2 s re-renderizaría la
+  pregunta y borraría lo que el equipo tenía marcado.
+- **Las laneras nunca se reordenan durante la carrera** (se conserva el orden de aparición): si
+  saltaran de lugar al cambiar el puntaje, no se entendería nada. El orden por puntaje aparece
+  recién en el podio.
+- **`index.html` se descarga y se parsea una sola vez por celular** (`getIndexDoc()`), no una vez
+  por caso. Antes daba lo mismo (un caso por taller a la vez); con la carrera cada equipo recorre
+  toda la pista y eran ~10 descargas de 850 KB por teléfono.
+- **Durante la carrera se desactivan el voto manual A-H y la navegación caso por caso** en el
+  proyector: no existe "el caso en el que está la clase". Shift+F y Esc siguen funcionando.
+- **Modo Opinión y modo Anónimo quedaron intactos** y **tienen prioridad sobre la carrera**: en
+  Modo Opinión el proyector vuelve al layout clásico con la distribución del grupo, porque ahí es
+  la única pantalla que la muestra. De paso se corrigió un bug preexistente: en Equipos + Modo
+  Opinión, un voto que no coincidía con `data-correct` hacía **reintentar**, cuando en una encuesta
+  de opinión no hay respuesta correcta.
+- **"Largar de nuevo" pone el progreso en cero y borra los intentos de los casos de la pista** (para
+  que la revisión sea de esa carrera y no una mezcla), con confirmación previa.
+- **Salir de la presentación NO cierra la carrera:** si el docente aprieta Esc sin querer, los
+  equipos tienen que poder seguir corriendo.
+- **El progreso del equipo se relee de Firebase, no del `localStorage`**, así el proyector coincide
+  siempre con lo que ve el equipo (y una recarga o quedarse sin batería no pierde el lugar). El
+  `localStorage` guarda sólo el **log del recorrido** (intentos y última selección por caso), que
+  alimenta la revisión del final en ese mismo celular.
+- **La revisión del docente se calcula en su navegador** con los intentos que ya estaban en
+  `votes/{caseId}`: **no se agregó ningún dato nuevo a Firebase** por esta mecánica. Muestra, por
+  caso, cuántos equipos lo resolvieron, intentos promedio, la clave y los distractores más
+  marcados, y permite proyectarlo con el layout clásico (`projectRaceCase`, que prende
+  `raceReviewMode`; ←/→ se mueven entre casos siempre con la clave a la vista).
+
+**Verificado de punta a punta** (18/09/2026) con dos equipos reales en una sala de Firebase
+descartable: lobby y anotación → largada → tres intentos fallidos y la ayuda al tercero → acierto y
+salto automático a la siguiente → pista completa → cierre por tiempo → podio → revisión del docente
+con estadísticas correctas → proyección de un caso para corregir → revisión en el celular del
+alumno. Más las regresiones de modo Anónimo, Modo Opinión y presentación sin sala. Las salas de
+prueba se borraron después.
 
 ### Modo Opinión (encuestas de criterio clínico, sin corrección)
 Toggle "🎭 Modo Opinión" dentro del Modo Presentación (junto al botón de Ranking, sólo con
