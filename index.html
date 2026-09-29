@@ -2186,19 +2186,35 @@
         .exam-cat-item {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
+            flex-wrap: wrap;
+            gap: 10px 12px;
             padding: 11px 12px;
             border-bottom: 1px solid #f1f3f4;
-            cursor: pointer;
         }
         .exam-cat-item:last-child { border-bottom: none; }
         .exam-cat-item:hover { background: #f8fdfb; }
         .exam-cat-item.picked { background: #ecfdf5; }
-        .exam-cat-item.blocked { opacity: 0.5; cursor: not-allowed; }
-        .exam-cat-item input { margin-top: 3px; flex-shrink: 0; }
+        .exam-cat-item.blocked { opacity: 0.5; }
+        .exam-cat-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            flex: 1;
+            min-width: 220px;
+            cursor: pointer;
+        }
+        .exam-cat-item.blocked .exam-cat-row { cursor: not-allowed; }
+        .exam-cat-row input { margin-top: 3px; flex-shrink: 0; }
         .exam-cat-title { font-size: 0.9rem; font-weight: 600; color: #202124; }
         .exam-cat-meta { font-size: 0.78rem; color: #80868b; margin-top: 3px; }
         .exam-cat-warn { color: #b45309; font-weight: 700; }
+        .exam-preview {
+            flex-basis: 100%;
+            width: 100%;
+            margin-top: 4px;
+            cursor: default;
+        }
+        .exam-preview .efu-options li { font-size: 0.88rem; }
         .exam-list-item {
             display: flex;
             align-items: center;
@@ -10472,6 +10488,7 @@ Equipo Docente de Pediatría</textarea>
         let examDraft = null;          // examen en edición
         let examCatalogQuery = '';
         let examCatalogShowAll = false;
+        let examPreviewId = null;      // caseId cuyo enunciado/opciones está expandido en el armador
         let examRoom = null;           // { roomId, examId, status, students, answers }
         let examPollTimer = null;
         let examAnonymize = false;
@@ -10554,6 +10571,27 @@ Equipo Docente de Pediatría</textarea>
 
         function examCaseById(caseId) {
             return getExamCatalog().find(c => c.caseId === caseId) || null;
+        }
+
+        // Enunciado completo + opciones con las correctas marcadas, para revisar un caso sin
+        // salir del armador de exámenes (antes había que ir a buscarlo a la pestaña Talleres EFU).
+        function examPreviewHtml(c) {
+            const opcionesHtml = c.opciones.map((o) => `
+                <li class="${o.correct ? 'correct-highlight' : ''}">
+                    <strong>${o.letter}.</strong> ${o.text}${o.correct ? ' <strong>✓ Correcta</strong>' : ''}
+                </li>
+            `).join('');
+            return `
+                <div class="exam-preview" onclick="event.stopPropagation()">
+                    <div class="efu-vignette" style="margin-bottom: 10px;">${c.enunciado}</div>
+                    <ul class="efu-options" style="margin: 0;">${opcionesHtml}</ul>
+                </div>
+            `;
+        }
+
+        function toggleExamPreview(caseId) {
+            examPreviewId = examPreviewId === caseId ? null : caseId;
+            renderExamTab();
         }
 
         // ---------------------------------------------------------------- corrección y nota
@@ -10771,18 +10809,25 @@ Equipo Docente de Pediatría</textarea>
                 : visibles.map((c) => {
                     const picked = examDraft.caseIds.includes(c.caseId);
                     const usable = c.nCorrect === EXAM_REQUIRED_CORRECT;
+                    const previewing = examPreviewId === c.caseId;
                     return `
-                        <label class="exam-cat-item ${picked ? 'picked' : ''} ${usable ? '' : 'blocked'}">
-                            <input type="checkbox" ${picked ? 'checked' : ''} ${usable ? '' : 'disabled'}
-                                onchange="toggleExamCase('${c.caseId}')">
-                            <span>
-                                <span class="exam-cat-title">${examEscape(c.titulo)}</span>
-                                <span class="exam-cat-meta">
-                                    ${examEscape(c.badge)} · ${examEscape(c.tema)} ·
-                                    <span class="${usable ? '' : 'exam-cat-warn'}">${c.nCorrect} correcta(s)${usable ? '' : ' — no usable'}</span>
+                        <div class="exam-cat-item ${picked ? 'picked' : ''} ${usable ? '' : 'blocked'}">
+                            <label class="exam-cat-row">
+                                <input type="checkbox" ${picked ? 'checked' : ''} ${usable ? '' : 'disabled'}
+                                    onchange="toggleExamCase('${c.caseId}')">
+                                <span>
+                                    <span class="exam-cat-title">${examEscape(c.titulo)}</span>
+                                    <span class="exam-cat-meta">
+                                        ${examEscape(c.badge)} · ${examEscape(c.tema)} ·
+                                        <span class="${usable ? '' : 'exam-cat-warn'}">${c.nCorrect} correcta(s)${usable ? '' : ' — no usable'}</span>
+                                    </span>
                                 </span>
-                            </span>
-                        </label>
+                            </label>
+                            <button type="button" class="exam-btn mini secondary" onclick="toggleExamPreview('${c.caseId}')">
+                                ${previewing ? '🔼 Ocultar' : '👁️ Ver caso'}
+                            </button>
+                            ${previewing ? examPreviewHtml(c) : ''}
+                        </div>
                     `;
                 }).join('');
 
@@ -10791,8 +10836,11 @@ Equipo Docente de Pediatría</textarea>
                 : `<ol style="margin: 0; padding-left: 22px; font-size: 0.88rem; line-height: 1.9;">` +
                   examDraft.caseIds.map((id) => {
                       const c = examCaseById(id);
+                      const previewing = examPreviewId === id;
                       return `<li>${c ? examEscape(c.titulo) : '<span class="exam-cat-warn">⚠️ caso no encontrado (' + examEscape(id) + ')</span>'}
-                          <button class="exam-btn danger" style="padding: 1px 8px; font-size: 0.75rem; margin-left: 6px;" onclick="toggleExamCase('${id}')">quitar</button></li>`;
+                          ${c ? `<button class="exam-btn mini secondary" style="padding: 1px 8px; font-size: 0.75rem; margin-left: 6px;" onclick="toggleExamPreview('${id}')">${previewing ? '🔼 Ocultar' : '👁️ Ver caso'}</button>` : ''}
+                          <button class="exam-btn danger" style="padding: 1px 8px; font-size: 0.75rem; margin-left: 6px;" onclick="toggleExamCase('${id}')">quitar</button>
+                          ${previewing && c ? examPreviewHtml(c) : ''}</li>`;
                   }).join('') + `</ol>`;
 
             main.innerHTML = `
