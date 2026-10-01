@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RCP Básica Pediátrica — Taller</title>
+<style>
+    /* ======================================================================
+       DIAPOSITIVAS PARA PROYECTOR — Taller de RCP Básica Pediátrica
+       ----------------------------------------------------------------------
+       Autocontenido (sin CDN), mismo criterio que el resto de los talleres
+       del repo. Tema oscuro de alto contraste pensado para leerse desde el
+       fondo de un aula con proyector, con tipografía fluida (clamp) en vez
+       de tamaños fijos. Navegación por teclado: ← → / Espacio, Inicio/Fin,
+       F para pantalla completa. Sin dependencias externas: funciona offline.
+       ====================================================================== */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: radial-gradient(circle at 50% 20%, #0f2a30 0%, #081a1f 55%, #050f12 100%);
+        color: #eaf4f2;
+        overflow: hidden;
+    }
+
+    .deck { position: fixed; inset: 0; display: flex; flex-direction: column; }
+
+    /* ---------- Barra superior ---------- */
+    .topbar {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 26px 8px; flex-shrink: 0;
+    }
+    .topbar .kicker {
+        font-size: clamp(.7rem, 1vw, .85rem); font-weight: 800; letter-spacing: .08em;
+        text-transform: uppercase; color: #5eead4; opacity: .9;
+    }
+    .topbar .controls { display: flex; gap: 8px; align-items: center; }
+    .ctrl-btn {
+        background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14);
+        color: #eaf4f2; border-radius: 8px; padding: 7px 13px; font-size: .82rem;
+        cursor: pointer; font-weight: 600;
+    }
+    .ctrl-btn:hover { background: rgba(255,255,255,.12); }
+    .counter { font-size: .82rem; color: #9fd8ce; font-variant-numeric: tabular-nums; margin-left: 4px; }
+
+    /* ---------- Contenido de la diapositiva ---------- */
+    .stage {
+        flex: 1; display: flex; align-items: center; justify-content: center;
+        padding: 0 7vw 2vh; min-height: 0;
+    }
+    .slide { width: 100%; max-width: 1180px; max-height: 100%; overflow: hidden; }
+
+    .slide .kicker-tag {
+        display: inline-block; font-size: clamp(.75rem, 1.1vw, .95rem); font-weight: 800;
+        letter-spacing: .07em; text-transform: uppercase; color: #5eead4;
+        background: rgba(94,234,212,.1); border: 1px solid rgba(94,234,212,.3);
+        padding: 4px 13px; border-radius: 20px; margin-bottom: 1.1rem;
+    }
+    .slide h1 {
+        font-size: clamp(1.7rem, 3.6vw, 3rem); line-height: 1.18; margin: 0 0 .7rem;
+        font-weight: 800; color: #fff;
+    }
+    .slide .lead {
+        font-size: clamp(1.05rem, 1.7vw, 1.4rem); color: #b7e4db; margin: 0 0 1.3rem;
+        line-height: 1.4; font-weight: 500;
+    }
+    .slide p { font-size: clamp(1rem, 1.5vw, 1.3rem); line-height: 1.5; margin: 0 0 .9rem; color: #dfeeeb; }
+    .slide ul, .slide ol { margin: 0 0 .9rem; padding-left: 1.4em; }
+    .slide li { font-size: clamp(1rem, 1.5vw, 1.3rem); line-height: 1.48; margin-bottom: .55rem; color: #dfeeeb; }
+    .slide li::marker { color: #5eead4; }
+    .slide strong { color: #fff; }
+    .slide em { color: #93e5ff; font-style: normal; font-weight: 700; }
+
+    .portada { text-align: center; }
+    .portada .emoji { font-size: clamp(2.6rem, 6vw, 4.5rem); margin-bottom: .4rem; display: block; }
+    .portada h1 { font-size: clamp(2rem, 4.6vw, 3.6rem); }
+    .portada .lead { font-size: clamp(1.05rem, 1.9vw, 1.5rem); max-width: 760px; margin-left: auto; margin-right: auto; }
+    .portada .meta { margin-top: 1.6rem; font-size: clamp(.85rem, 1.2vw, 1rem); color: #8fb8b0; }
+
+    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; margin-top: .4rem; }
+    @media (max-width: 760px) { .cols { grid-template-columns: 1fr; } }
+    .card {
+        background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.12);
+        border-radius: 14px; padding: 1.1rem 1.3rem;
+    }
+    .card.accent { border-color: rgba(94,234,212,.45); background: rgba(94,234,212,.06); }
+    .card h3 {
+        margin: 0 0 .6rem; font-size: clamp(1rem, 1.5vw, 1.25rem); color: #5eead4; font-weight: 800;
+    }
+    .card p, .card li { font-size: clamp(.92rem, 1.3vw, 1.12rem); }
+
+    .steps { display: flex; flex-direction: column; gap: .8rem; margin-top: .3rem; }
+    .step { display: flex; gap: .9rem; align-items: flex-start; }
+    .step .n {
+        flex-shrink: 0; width: clamp(28px,3vw,36px); height: clamp(28px,3vw,36px); border-radius: 50%;
+        background: linear-gradient(135deg, #14b8a6, #0f766e); color: #fff; font-weight: 800;
+        display: flex; align-items: center; justify-content: center; font-size: clamp(.85rem,1.3vw,1.05rem);
+    }
+    .step .txt strong { display: block; font-size: clamp(1rem, 1.5vw, 1.25rem); color: #fff; margin-bottom: .1rem; }
+    .step .txt span { font-size: clamp(.92rem, 1.3vw, 1.1rem); color: #cfe9e3; }
+
+    .warn, .tip, .note {
+        border-radius: 12px; padding: .85rem 1.1rem; margin: 1rem 0 0; font-size: clamp(.92rem, 1.3vw, 1.12rem);
+    }
+    .warn { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.4); color: #fde8c2; }
+    .tip { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.4); color: #cdf5da; }
+    .note { background: rgba(148,163,184,.1); border: 1px solid rgba(148,163,184,.35); color: #dbe6f0; }
+    .warn b, .tip b, .note b { color: #fff; }
+
+    .bignum { display: flex; gap: 1.6rem; flex-wrap: wrap; margin: 1rem 0; }
+    .bignum .item { text-align: center; }
+    .bignum .item .v { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; color: #5eead4; line-height: 1; }
+    .bignum .item .l { font-size: clamp(.8rem, 1.1vw, .95rem); color: #b7e4db; margin-top: .25rem; }
+
+    table.cmp { width: 100%; border-collapse: collapse; margin-top: .6rem; }
+    table.cmp th, table.cmp td {
+        text-align: left; padding: .6rem .8rem; font-size: clamp(.9rem, 1.3vw, 1.1rem);
+        border-bottom: 1px solid rgba(255,255,255,.12);
+    }
+    table.cmp th { color: #5eead4; font-size: clamp(.78rem, 1.05vw, .92rem); text-transform: uppercase; letter-spacing: .04em; }
+    table.cmp td:first-child { color: #9fd8ce; font-weight: 700; white-space: nowrap; }
+
+    .cierre { text-align: center; }
+    .cierre .emoji { font-size: clamp(2.2rem, 5vw, 3.6rem); }
+
+    /* ---------- Barra inferior de progreso ---------- */
+    .progress-track { height: 5px; background: rgba(255,255,255,.08); flex-shrink: 0; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #14b8a6, #5eead4); transition: width .25s ease; }
+
+    .nav-hint {
+        position: fixed; bottom: 14px; right: 22px; font-size: .74rem; color: #6f9790;
+        letter-spacing: .02em; pointer-events: none;
+    }
+
+    @media (max-width: 680px) {
+        .stage { padding: 0 5vw 2vh; }
+        .topbar { padding: 10px 14px 6px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="deck">
+    <div class="topbar">
+        <span class="kicker">Taller de RCP Básica Pediátrica — Cátedra de Pediatría UBA</span>
+        <div class="controls">
+            <span class="counter" id="counter">1 / 1</span>
+            <button class="ctrl-btn" onclick="goTo(current-1)">←</button>
+            <button class="ctrl-btn" onclick="goTo(current+1)">→</button>
+            <button class="ctrl-btn" onclick="toggleFullscreen()">⛶ Pantalla completa</button>
+        </div>
+    </div>
+    <div class="stage"><div class="slide" id="slide"></div></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+<div class="nav-hint">← → / espacio para avanzar · F pantalla completa</div>
+
+<script>
+const SLIDES = [
+
+{ layout: 'portada', html: `
+    <span class="emoji">🫀</span>
+    <h1>RCP Básica Pediátrica</h1>
+    <p class="lead">Reconocimiento del paro cardiorrespiratorio, reanimación en el lactante y
+        desobstrucción de la vía aérea por cuerpo extraño.</p>
+    <p class="meta">Taller presencial · Cátedra de Pediatría UBA · Hospital Ramón Carrillo</p>
+` },
+
+{ kicker: 'Agenda', title: 'Qué vamos a hacer hoy', html: `
+    <ol>
+        <li><strong>Teórica</strong> (esta parte, con diapositivas) — reconocimiento del paro,
+            secuencia de RCP, ventilación con bolsa y desobstrucción de vía aérea.</li>
+        <li><strong>Demostración en vivo</strong> sobre el muñeco de lactante.</li>
+        <li><strong>Práctica en grupos</strong>, rotando entre dos postas: RCP completa sobre el
+            muñeco, y una posta de trabajo con guía escrita (OVACE + caso clínico).</li>
+        <li><strong>Cierre</strong> y dudas.</li>
+    </ol>
+    <div class="tip"><b>Objetivo del día:</b> que cada uno salga pudiendo ejecutar, de memoria y
+        con buena técnica, la secuencia completa de RCP básica en un lactante.</div>
+` },
+
+{ kicker: 'Por qué importa', title: 'El paro pediátrico no es un paro de adulto en chiquito', html: `
+    <div class="cols">
+        <div class="card">
+            <h3>En el adulto</h3>
+            <p>El paro suele ser <strong>primariamente cardíaco</strong> (arritmia súbita), sobre
+                un corazón previamente enfermo.</p>
+        </div>
+        <div class="card accent">
+            <h3>En el niño y el lactante</h3>
+            <p>El paro casi siempre es <strong>secundario</strong>: hipoxia progresiva por falla
+                respiratoria o shock que termina en bradicardia y paro.</p>
+        </div>
+    </div>
+    <div class="tip"><b>Consecuencia práctica:</b> en pediatría, la vía aérea y la ventilación son
+        protagonistas desde el minuto uno — no es "solo apretar fuerte y rápido".</div>
+` },
+
+{ kicker: 'Marco general', title: 'Cadena de supervivencia pediátrica', html: `
+    <div class="steps">
+        <div class="step"><div class="n">1</div><div class="txt"><strong>Prevención</strong><span>y reconocimiento precoz del deterioro</span></div></div>
+        <div class="step"><div class="n">2</div><div class="txt"><strong>Activación</strong><span>pedir ayuda / activar la respuesta de emergencia (en sala: carro de paro)</span></div></div>
+        <div class="step"><div class="n">3</div><div class="txt"><strong>RCP de alta calidad</strong><span>temprana, con mínimas interrupciones</span></div></div>
+        <div class="step"><div class="n">4</div><div class="txt"><strong>Desfibrilación</strong><span>rápida, si el ritmo lo indica</span></div></div>
+        <div class="step"><div class="n">5</div><div class="txt"><strong>Cuidados post-paro</strong><span>estabilización y traslado</span></div></div>
+        <div class="step"><div class="n">6</div><div class="txt"><strong>Recuperación</strong><span>seguimiento del paciente y la familia</span></div></div>
+    </div>
+` },
+
+{ kicker: 'Primer paso', title: 'Reconocer el paro: tres preguntas en menos de 10 segundos', html: `
+    <div class="steps">
+        <div class="step"><div class="n">1</div><div class="txt"><strong>¿Responde?</strong><span>Estimularlo firmemente — hablarle y tocarlo</span></div></div>
+        <div class="step"><div class="n">2</div><div class="txt"><strong>¿Respira con normalidad?</strong><span>Mirar el tórax. El "boqueo" o gasping <em>no</em> es respiración eficaz</span></div></div>
+        <div class="step"><div class="n">3</div><div class="txt"><strong>¿Tiene pulso?</strong><span>En el lactante: pulso <em>braquial</em> (cara interna del brazo, entre codo y axila)</span></div></div>
+    </div>
+    <div class="warn"><b>Se evalúan respiración y pulso a la vez</b>, no una después de la otra —
+        por eso el límite es 10 segundos en total.</div>
+` },
+
+{ kicker: 'Decisión inicial', title: '¿Inicio RCP o pido ayuda primero?', html: `
+    <p>No hay pulso, o el pulso es <strong>menor a 60/min con mala perfusión</strong>: se inicia RCP.</p>
+    <div class="cols">
+        <div class="card">
+            <h3>Estás solo</h3>
+            <p>Si no viste el colapso o sospechás causa respiratoria (lo más frecuente en
+                pediatría): dar <strong>2 minutos de RCP</strong> antes de ir a pedir ayuda.</p>
+        </div>
+        <div class="card accent">
+            <h3>Hay alguien más</h3>
+            <p>Uno inicia RCP de inmediato mientras el otro <strong>activa la respuesta de
+                emergencia</strong> (en el hospital: avisa / trae el carro de paro).</p>
+        </div>
+    </div>
+` },
+
+{ kicker: 'Secuencia', title: 'C – A – B: compresiones primero', html: `
+    <div class="bignum">
+        <div class="item"><div class="v">C</div><div class="l">Circulación — compresiones torácicas</div></div>
+        <div class="item"><div class="v">A</div><div class="l">Vía Aérea — abrir</div></div>
+        <div class="item"><div class="v">B</div><div class="l">Buena ventilación</div></div>
+    </div>
+    <p>Se empieza por las compresiones para minimizar el tiempo sin flujo sanguíneo al cerebro y
+        al corazón. La excepción es el paro claramente respiratorio puro (ej. ahogamiento), donde
+        se dan primero unas ventilaciones de rescate.</p>
+` },
+
+{ kicker: 'Compresiones', title: 'Técnica con un solo reanimador: dos dedos', html: `
+    <div class="steps">
+        <div class="step"><div class="n">1</div><div class="txt"><strong>Ubicación</strong><span>Centro del tórax, inmediatamente por debajo de la línea intermamilar, sobre el esternón</span></div></div>
+        <div class="step"><div class="n">2</div><div class="txt"><strong>Técnica</strong><span>Dos dedos (índice-medio o medio-anular), perpendiculares al tórax</span></div></div>
+        <div class="step"><div class="n">3</div><div class="txt"><strong>Profundidad</strong><span>Al menos 1/3 del diámetro antero-posterior del tórax (≈ 4 cm)</span></div></div>
+        <div class="step"><div class="n">4</div><div class="txt"><strong>Reexpansión completa</strong><span>Dejar que el tórax vuelva a su posición entre compresión y compresión</span></div></div>
+    </div>
+` },
+
+{ kicker: 'Compresiones', title: 'Técnica con dos reanimadores: pulgares que rodean el tórax', html: `
+    <p>Con dos reanimadores de salud disponibles, la técnica de <strong>pulgares
+        circundantes</strong> ("thumb-encircling") es más eficaz: genera mayor presión de
+        perfusión coronaria que la técnica de dos dedos.</p>
+    <div class="steps">
+        <div class="step"><div class="n">1</div><div class="txt"><strong>Manos</strong><span>Ambas manos rodean el tórax del lactante, dedos sosteniendo la espalda</span></div></div>
+        <div class="step"><div class="n">2</div><div class="txt"><strong>Pulgares</strong><span>Juntos o superpuestos, sobre el mismo punto que la técnica de dos dedos</span></div></div>
+        <div class="step"><div class="n">3</div><div class="txt"><strong>Ventaja extra</strong><span>Permite coordinar mejor la compresión torácica simultánea con la ventilación</span></div></div>
+    </div>
+` },
+
+{ kicker: 'Calidad', title: 'Lo que hace que una compresión sea "de alta calidad"', html: `
+    <div class="bignum">
+        <div class="item"><div class="v">100–120</div><div class="l">compresiones por minuto</div></div>
+        <div class="item"><div class="v">≥ 1/3</div><div class="l">del diámetro torácico (≈4 cm)</div></div>
+    </div>
+    <ul>
+        <li>Permitir la <strong>reexpansión completa</strong> del tórax en cada ciclo — no apoyarse encima</li>
+        <li><strong>Minimizar las interrupciones</strong>: idealmente menos de 10 segundos cada vez</li>
+        <li>Rotar al reanimador que comprime cada 2 minutos — el cansancio empeora la técnica sin que se note</li>
+    </ul>
+` },
+
+{ kicker: 'Vía aérea', title: 'Abrir la vía aérea', html: `
+    <div class="cols">
+        <div class="card accent">
+            <h3>Sin sospecha de trauma</h3>
+            <p><strong>Maniobra frente-mentón:</strong> una mano en la frente inclina suavemente
+                la cabeza hacia atrás, los dedos de la otra elevan el mentón. En el lactante, evitar
+                la hiperextensión — alinear en posición neutra u "olfateo".</p>
+        </div>
+        <div class="card">
+            <h3>Con sospecha de trauma cervical</h3>
+            <p><strong>Tracción mandibular</strong> sin extender el cuello, para no agravar una
+                eventual lesión de columna.</p>
+        </div>
+    </div>
+` },
+
+{ kicker: 'Ventilación', title: 'Ventilación con bolsa-máscara', html: `
+    <div class="steps">
+        <div class="step"><div class="n">1</div><div class="txt"><strong>Máscara del tamaño correcto</strong><span>Cubre nariz y boca, sin apoyarse sobre los ojos</span></div></div>
+        <div class="step"><div class="n">2</div><div class="txt"><strong>Sello hermético</strong><span>Técnica "C-E": pulgar e índice en "C" sobre la máscara, el resto de los dedos en "E" traccionan la mandíbula hacia la máscara (no la máscara hacia abajo)</span></div></div>
+        <div class="step"><div class="n">3</div><div class="txt"><strong>Volumen</strong><span>El necesario para ver que el tórax se eleva — ni más, ni menos</span></div></div>
+        <div class="step"><div class="n">4</div><div class="txt"><strong>Tiempo</strong><span>Cada ventilación dura aproximadamente 1 segundo</span></div></div>
+    </div>
+    <div class="warn"><b>Error más frecuente:</b> ventilar demasiado rápido o con demasiado volumen.
+        La hiperventilación aumenta la presión intratorácica, reduce el retorno venoso y empeora el
+        gasto cardíaco durante la RCP.</div>
+` },
+
+{ kicker: 'El ciclo', title: 'Relación compresión : ventilación', html: `
+    <table class="cmp">
+        <tr><th>Situación</th><th>Relación</th></tr>
+        <tr><td>1 reanimador</td><td>30 compresiones : 2 ventilaciones</td></tr>
+        <tr><td>2 reanimadores de salud</td><td>15 compresiones : 2 ventilaciones</td></tr>
+    </table>
+    <div class="note">Si hubiera una vía aérea avanzada colocada (tubo endotraqueal), las
+        compresiones serían continuas (100–120/min) con una ventilación cada 2–3 segundos, sin
+        pausar para ventilar. <strong>Hoy no vamos a practicar esto</strong>: el muñeco disponible
+        no permite intubación — nos quedamos en bolsa-máscara con relación fija.</div>
+` },
+
+{ kicker: 'Un dato más', title: 'El desfibrilador (DEA) en pediatría', html: `
+    <p>No vamos a usar un DEA hoy, pero conviene tenerlo presente como parte del algoritmo
+        completo:</p>
+    <ul>
+        <li>Se coloca apenas está disponible, sin interrumpir las compresiones más de lo necesario</li>
+        <li>Usar <strong>parches/atenuador pediátrico</strong> si el paciente tiene menos de 8 años
+            o pesa menos de 25 kg</li>
+        <li>Si no hay parches pediátricos disponibles: <strong>usar los de adulto</strong> antes
+            que no desfibrilar</li>
+    </ul>
+` },
+
+{ kicker: 'Segundo escenario', title: 'Obstrucción de la vía aérea por cuerpo extraño (OVACE)', html: `
+    <p>Pensarlo ante un lactante con <strong>inicio súbito de dificultad respiratoria</strong>,
+        típicamente durante la alimentación o el juego con objetos pequeños.</p>
+    <div class="cols">
+        <div class="card accent">
+            <h3>Tos o llanto eficaz</h3>
+            <p>Dejarlo toser. <strong>No intervenir</strong> — la tos es el mecanismo más
+                eficaz para expulsar el objeto.</p>
+        </div>
+        <div class="card">
+            <h3>Tos inefectiva / no puede llorar</h3>
+            <p>Obstrucción grave: <strong>actuar de inmediato</strong> con la maniobra específica
+                del lactante.</p>
+        </div>
+    </div>
+` },
+
+{ kicker: 'OVACE', title: 'Maniobra en el lactante consciente', html: `
+    <div class="steps">
+        <div class="step"><div class="n">1</div><div class="txt"><strong>5 golpes interescapulares</strong><span>Boca abajo sobre el antebrazo, cabeza más baja que el tronco, sosteniendo la mandíbula — golpes firmes con el talón de la mano entre las escápulas</span></div></div>
+        <div class="step"><div class="n">2</div><div class="txt"><strong>5 compresiones torácicas</strong><span>Girarlo boca arriba sobre el otro antebrazo; mismo punto que las compresiones de RCP, pero más fuertes y más lentas</span></div></div>
+        <div class="step"><div class="n">3</div><div class="txt"><strong>Repetir el ciclo</strong><span>Alternar 5 y 5 hasta que expulse el objeto o quede inconsciente</span></div></div>
+    </div>
+    <div class="warn"><b>En el lactante NUNCA se hacen compresiones abdominales (maniobra de
+        Heimlich)</b>: el riesgo de lesión hepática o esplénica es alto y el abdomen es
+        proporcionalmente muy chico.</div>
+` },
+
+{ kicker: 'OVACE', title: 'Si el lactante queda inconsciente', html: `
+    <div class="steps">
+        <div class="step"><div class="n">1</div><div class="txt"><strong>Apoyarlo sobre una superficie firme</strong><span>e iniciar RCP, empezando por compresiones</span></div></div>
+        <div class="step"><div class="n">2</div><div class="txt"><strong>Antes de cada ventilación</strong><span>mirar dentro de la boca; si se ve el objeto, retirarlo con un dedo</span></div></div>
+        <div class="step"><div class="n">3</div><div class="txt"><strong>No hacer barrido digital a ciegas</strong><span>puede empujar el objeto más profundo</span></div></div>
+    </div>
+    <div class="tip">A partir de acá, la secuencia es la misma RCP que ya vimos: 30:2 (un
+        reanimador) o 15:2 (dos reanimadores), reevaluando.</div>
+` },
+
+{ kicker: 'Para no repetir', title: 'Errores frecuentes', html: `
+    <ul>
+        <li>Comprimir <strong>muy superficial</strong> por miedo a lastimar — el riesgo real está
+            en comprimir poco, no en comprimir con la profundidad correcta</li>
+        <li>No dejar que el tórax <strong>reexpanda por completo</strong> entre compresiones</li>
+        <li>Interrupciones largas para "revisar" al paciente o cambiar de reanimador</li>
+        <li><strong>Hiperventilar</strong>: ventilar demasiado rápido o con demasiado volumen</li>
+        <li>Mal sellado de la máscara: se pierde todo el volumen que se intenta dar</li>
+        <li>En OVACE del lactante: usar compresiones abdominales (contraindicado)</li>
+    </ul>
+` },
+
+{ kicker: 'Resumen', title: 'El algoritmo, de un vistazo', html: `
+    <div class="steps">
+        <div class="step"><div class="n">1</div><div class="txt"><strong>Evaluar</strong><span>responde / respira / pulso — ≤10 seg</span></div></div>
+        <div class="step"><div class="n">2</div><div class="txt"><strong>Pedir ayuda</strong><span>según estés solo o acompañado</span></div></div>
+        <div class="step"><div class="n">3</div><div class="txt"><strong>RCP</strong><span>C–A–B, 30:2 ó 15:2, 100–120/min, ≥4 cm, reexpansión completa</span></div></div>
+        <div class="step"><div class="n">4</div><div class="txt"><strong>DEA</strong><span>apenas esté disponible</span></div></div>
+        <div class="step"><div class="n">5</div><div class="txt"><strong>Reevaluar</strong><span>cada 2 minutos, mínima interrupción</span></div></div>
+    </div>
+` },
+
+{ kicker: 'Último punto teórico', title: '¿Cuándo se detiene la RCP?', html: `
+    <ul>
+        <li>El paciente recupera circulación espontánea</li>
+        <li>Llega personal que releva con un nivel de capacitación mayor</li>
+        <li>El reanimador está físicamente agotado y no hay reemplazo</li>
+        <li>Hay una orden médica expresa de suspender</li>
+        <li>Se reconocen signos evidentes de muerte</li>
+    </ul>
+` },
+
+{ layout: 'portada', html: `
+    <span class="emoji">👐</span>
+    <h1>Ahora, a practicar</h1>
+    <p class="lead">Demostración en vivo sobre el muñeco y después división en grupos:
+        posta de RCP completa + posta de OVACE y caso clínico con guía escrita.</p>
+` },
+
+{ layout: 'cierre', html: `
+    <span class="emoji">📚</span>
+    <h1>Fuente</h1>
+    <p class="lead">Contenidos basados en las guías vigentes de reanimación cardiopulmonar
+        básica pediátrica (AHA / ERC). Material de elaboración propia para uso docente —
+        Cátedra de Pediatría UBA.</p>
+` },
+
+];
+
+let current = 0;
+
+function renderSlide() {
+    const s = SLIDES[current];
+    const el = document.getElementById('slide');
+    const extraClass = s.layout ? ' ' + s.layout : '';
+    let header = '';
+    if (s.kicker) header = `<span class="kicker-tag">${s.kicker}</span><h1>${s.title}</h1>`;
+    el.className = 'slide' + extraClass;
+    el.innerHTML = header + s.html;
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + SLIDES.length;
+    document.getElementById('progressFill').style.width = ((current + 1) / SLIDES.length * 100) + '%';
+}
+
+function goTo(n) {
+    if (n < 0 || n >= SLIDES.length) return;
+    current = n;
+    renderSlide();
+}
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+        document.exitFullscreen().catch(() => {});
+    }
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goTo(current + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+    else if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+    else if (e.key === 'End') { e.preventDefault(); goTo(SLIDES.length - 1); }
+    else if (e.key.toLowerCase() === 'f') { e.preventDefault(); toggleFullscreen(); }
+});
+
+renderSlide();
+</script>
+</body>
+</html>
