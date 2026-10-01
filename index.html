@@ -9261,6 +9261,77 @@ Equipo Docente de Pediatría</textarea>
         }
 
         // ==========================================================================
+        // EXPORTAR / COMPARTIR CASOS (botón del buscador por tema, codigo_buscador.js)
+        // ==========================================================================
+        // Exporta exactamente los casos que getEfuCards() está mostrando en ese momento:
+        // si hay una búsqueda por tema activa, esos resultados; si no, los de la semana
+        // filtrada. Mismo patrón de "ventana de impresión -> Guardar como PDF" que ya se usa
+        // en Evaluaciones (abrirVentanaPdfConCss, definida más abajo junto a abrirVentanaPdf).
+        function efuExportCss() {
+            return `
+                body { font-family: Arial, Helvetica, sans-serif; color: #111; margin: 24px; font-size: 13px; line-height: 1.55; }
+                h1 { font-size: 1.3rem; margin: 0 0 4px 0; font-family: Georgia, serif; }
+                .sub { font-size: 0.8rem; color: #555; margin-bottom: 20px; }
+                .efu-export-card { border: 1px solid #ccc; border-radius: 8px; padding: 14px 18px; margin-bottom: 16px; page-break-inside: avoid; }
+                .efu-export-card .badge { display: inline-block; font-size: 0.7rem; color: #1967d2; background: #e8f0fe; border-radius: 999px; padding: 2px 10px; margin-bottom: 8px; }
+                .efu-export-card h2 { font-size: 1.05rem; margin: 4px 0 10px 0; }
+                .efu-export-vign { font-size: 0.88rem; margin-bottom: 10px; }
+                .efu-export-opts { list-style: none; margin: 0; padding: 0; }
+                .efu-export-opts li { padding: 5px 9px; border-radius: 5px; margin-bottom: 3px; font-size: 0.88rem; }
+                .efu-export-opts li.correcta { background: #e8f5e9; font-weight: 600; }
+                .efu-export-just { margin-top: 10px; font-size: 0.82rem; color: #444; background: #f7f7f7; padding: 9px 11px; border-radius: 6px; }
+                @media print { body { margin: 13mm; } }
+            `;
+        }
+
+        function efuExportCardHtml(card, withAnswers) {
+            const badge = card.querySelector('.badge') ? card.querySelector('.badge').innerText : '';
+            const titulo = card.querySelector('h2') ? card.querySelector('h2').innerText : '';
+            const vignHtml = card.querySelector('.efu-vignette') ? card.querySelector('.efu-vignette').innerHTML : '';
+            const opciones = Array.from(card.querySelectorAll('.efu-options li')).map((li) => {
+                const correcta = withAnswers && li.dataset.correct === 'true';
+                return `<li class="${correcta ? 'correcta' : ''}">${li.innerHTML}</li>`;
+            }).join('');
+            let claveHtml = '';
+            if (withAnswers) {
+                const box = card.querySelector('.answer-box');
+                if (box) claveHtml = `<div class="efu-export-just">${box.innerHTML}</div>`;
+            }
+            return `
+                <div class="efu-export-card">
+                    <span class="badge">${examEscape(badge)}</span>
+                    <h2>${examEscape(titulo)}</h2>
+                    <div class="efu-export-vign">${vignHtml}</div>
+                    <ul class="efu-export-opts">${opciones}</ul>
+                    ${claveHtml}
+                </div>
+            `;
+        }
+
+        function exportEfuCasosPDF() {
+            const cards = getEfuCards();
+            if (!cards.length) return alert('No hay casos para exportar con el filtro o la búsqueda actual.');
+
+            const withAnswers = confirm(
+                `Se van a exportar ${cards.length} caso(s).\n\n` +
+                '¿Incluir las respuestas correctas y la justificación clínica?\n\n' +
+                'Aceptar = con respuestas · Cancelar = sólo enunciado y opciones.'
+            );
+
+            const titulo = efuSearchQuery
+                ? `Casos EFU — búsqueda "${efuSearchQuery}"`
+                : `Casos EFU — ${efuWeekFilter === 'all' ? 'todas las semanas' : 'Semana ' + efuWeekFilter}`;
+
+            const cuerpo = `
+                <h1>${examEscape(titulo)}</h1>
+                <p class="sub">${cards.length} caso(s) · exportado el ${new Date().toLocaleDateString('es-AR')}${withAnswers ? '' : ' · sin respuestas correctas'}</p>
+                ${cards.map(c => efuExportCardHtml(c, withAnswers)).join('')}
+            `;
+
+            abrirVentanaPdfConCss(titulo, cuerpo, efuExportCss());
+        }
+
+        // ==========================================================================
         // SELECCIÓN DE CASOS "A MEDIDA" (combinar resultados de distintas búsquedas)
         // ==========================================================================
         // Permite buscar "ictericia", marcar los casos que sirven, buscar "bronquiolitis",
@@ -11735,15 +11806,19 @@ Equipo Docente de Pediatría</textarea>
             `;
         }
 
-        function abrirVentanaPdf(titulo, cuerpoHtml) {
+        function abrirVentanaPdfConCss(titulo, cuerpoHtml, css) {
             const win = window.open('', '_blank');
             if (!win) return alert('El navegador bloqueó la ventana emergente. Habilitá las ventanas emergentes para exportar el PDF.');
             win.document.write(`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-                <title>${examEscape(titulo)}</title><style>${examStudentPdfCss()}</style></head>
+                <title>${examEscape(titulo)}</title><style>${css}</style></head>
                 <body>${cuerpoHtml}</body></html>`);
             win.document.close();
             win.focus();
             setTimeout(() => win.print(), 350);
+        }
+
+        function abrirVentanaPdf(titulo, cuerpoHtml) {
+            abrirVentanaPdfConCss(titulo, cuerpoHtml, examStudentPdfCss());
         }
 
         function exportStudentPDF(sid) {

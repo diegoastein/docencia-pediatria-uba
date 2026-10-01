@@ -36,6 +36,14 @@ function initThemeSearcher() {
                     >
                         Limpiar
                     </button>
+                    <button
+                        onclick="exportEfuCasosPDF()"
+                        style="background: #1565c0; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s;"
+                        onmouseover="this.style.background='#0d47a1'"
+                        onmouseout="this.style.background='#1565c0'"
+                    >
+                        📄 Exportar / Compartir
+                    </button>
                 </div>
                 <div id="theme-search-results" style="margin-top: 12px; font-size: 14px; color: #424242;"></div>
             </div>
