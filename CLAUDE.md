@@ -53,6 +53,9 @@ Este archivo configura las reglas de comportamiento y contexto de proyecto para 
   mismo mecanismo, documentado ahí para no duplicarlo).
 - `taller_cetoacidosis_online.html`: Taller autoguiado de Cetoacidosis Diabética, mismo motor
   y mismo mecanismo de activación remota (ver sección propia más abajo).
+- `taller_rcp_pediatrica_diapositivas.html` + `taller_rcp_pediatrica_guia_docente.md` +
+  `taller_rcp_pediatrica_posta_b.html`: Taller **presencial** (no autoguiado) de RCP Básica
+  Pediátrica, distinto de los tres de arriba — ver sección propia más abajo.
 - `crear_formulario_classroom.gs`: Script de Apps Script que genera el cuestionario del taller
   en Google Forms extrayendo las preguntas del propio HTML. **No se usa** en la configuración
   actual; queda por si el taller alguna vez tiene que llevar nota.
@@ -604,6 +607,60 @@ es la referencia más directa: comparte estructura de módulos, formato de casos
   este taller tienen todavía una guía docente dedicada (`taller_eab_guia_docente.md` es, por
   ahora, la única). Si se necesita documentar el proceso de publicación o la constancia en
   Classroom con el mismo nivel de detalle, sería el próximo paso para los dos.
+
+---
+
+## 🫀 Taller Presencial de RCP Básica Pediátrica (agregado 01/10/2026, corregido 01/10/2026)
+
+Distinto de los tres talleres autoguiados de arriba: **este lo dicta el docente en vivo**, no lo
+resuelve el alumno solo. Tres archivos:
+
+- `taller_rcp_pediatrica_diapositivas.html`: deck para proyector (reconocimiento del paro,
+  C-A-B, técnica de compresión, ventilación con bolsa, OVACE). Autocontenido salvo **una** diapositiva
+  (el QR de la Posta B, ver abajo), que depende del CDN `qrcodejs` — si no hay internet, esa
+  diapositiva cae a un aviso de texto en vez de romper el resto del deck, que sigue funcionando
+  offline igual que antes.
+- `taller_rcp_pediatrica_guia_docente.md`: timeline de 2hs y las dos postas de práctica rotativa
+  para 20 alumnos con un solo muñeco y un solo docente.
+- `taller_rcp_pediatrica_posta_b.html`: página pública y autocontenida (sin login, sin backend,
+  mismo criterio que los talleres autoguiados) con el material de la Posta B (maniobra de OVACE
+  + caso clínico guiado, con respuestas para autocorregirse). **El alumno accede escaneando el
+  QR de la anteúltima diapositiva del deck desde su propio celular** — ya no se imprime (la
+  copia impresa de esa misma página queda sólo como respaldo si el aula se queda sin señal). La
+  URL del QR se arma en runtime a partir de `window.location` (mismo patrón que usan
+  `votar.html`/`examen.html` para sus propios links), no está hardcodeada.
+
+**Fuente clínica:** guías 2025 de RCP básica pediátrica de la American Heart Association y la
+American Academy of Pediatrics (AHA/AAP) —
+[ahajournals.org/doi/10.1161/CIR.0000000000001370](https://www.ahajournals.org/doi/10.1161/CIR.0000000000001370),
+resumen navegable en
+[cpr.heart.org/.../pediatric-basic-life-support](https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-life-support)
+— primera actualización completa desde 2020. La Sociedad Argentina de Pediatría **no tiene un
+protocolo propio que difiera de esto** para RCP básica: su programa ERA certifica los cursos
+PALS junto con la AHA desde el año 2000 (doble certificación SAP-AHA), así que no hay una
+segunda fuente en pugna que reconciliar — adopta la misma guía.
+
+**Corrección clínica aplicada al comparar contra la guía 2025 (01/10/2026):** la guía 2020, que
+es la que efectivamente se usó para la primera versión de este taller, enseñaba **dos dedos**
+como técnica de compresión para el reanimador solo. La guía 2025 **eliminó esa técnica** (no
+lograba profundidad suficiente de forma confiable) y la reemplazó por **talón de una mano**
+(reanimador solo) o **dos pulgares circundantes** (dos reanimadores, o uno solo si llega a
+rodear el tórax). Ya corregido en las tres diapositivas que lo mencionaban y en el guion de la
+Posta A de la guía docente. El resto del contenido (frecuencia 100–120/min, profundidad ≈4 cm,
+relación 30:2 / 15:2, maniobra de OVACE con 5+5 sin compresiones abdominales en el lactante) no
+cambió entre 2020 y 2025, así que no requirió corrección.
+
+**Sin atribución institucional**, igual que los talleres autoguiados (ver [[sin-atribucion-institucional]]):
+se sacaron las menciones a "Cátedra de Pediatría UBA" del deck (barra superior, portada y
+diapositiva de fuentes). Quedó "Hospital Ramón Carrillo" en la portada como dato de sede, que no
+es una atribución de autoría.
+
+**La secuencia de activación de emergencias contempla los dos escenarios**, dentro y fuera del
+hospital (pedido explícito del docente, antes el material sólo mencionaba "avisar / traer el
+carro de paro"): en la diapositiva de cadena de supervivencia y en la de "¿Inicio RCP o pido
+ayuda primero?", ahora cada rama dice explícitamente qué corresponde en una sala (avisar y traer
+el carro de paro) y qué corresponde fuera del hospital (llamar al sistema de emergencias, SAME u
+otro servicio local).
 
 ---
 

@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RCP Básica Pediátrica — Taller</title>
+<!-- QRCode CDN: mismo que usa index.html para el QR de Votación en Vivo. Única dependencia
+     externa del deck — si no hay internet, el bloque de abajo cae a un aviso de texto en vez
+     de romper el resto de la presentación (que sigue funcionando offline). -->
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
     /* ======================================================================
        DIAPOSITIVAS PARA PROYECTOR — Taller de RCP Básica Pediátrica
@@ -12,7 +16,9 @@
        del repo. Tema oscuro de alto contraste pensado para leerse desde el
        fondo de un aula con proyector, con tipografía fluida (clamp) en vez
        de tamaños fijos. Navegación por teclado: ← → / Espacio, Inicio/Fin,
-       F para pantalla completa. Sin dependencias externas: funciona offline.
+       F para pantalla completa. Funciona offline salvo la diapositiva del QR de la Posta B
+       (único <script> externo del archivo, ver <head>) — sin internet esa diapositiva muestra
+       un aviso de texto en vez del código, el resto del deck no se ve afectado.
        ====================================================================== */
     * { box-sizing: border-box; }
     html, body { height: 100%; }
@@ -143,7 +149,7 @@
 
 <div class="deck">
     <div class="topbar">
-        <span class="kicker">Taller de RCP Básica Pediátrica — Cátedra de Pediatría UBA</span>
+        <span class="kicker">Taller de RCP Básica Pediátrica</span>
         <div class="controls">
             <span class="counter" id="counter">1 / 1</span>
             <button class="ctrl-btn" onclick="goTo(current-1)">←</button>
@@ -164,7 +170,7 @@ const SLIDES = [
     <h1>RCP Básica Pediátrica</h1>
     <p class="lead">Reconocimiento del paro cardiorrespiratorio, reanimación en el lactante y
         desobstrucción de la vía aérea por cuerpo extraño.</p>
-    <p class="meta">Taller presencial · Cátedra de Pediatría UBA · Hospital Ramón Carrillo</p>
+    <p class="meta">Taller presencial · Hospital Ramón Carrillo</p>
 ` },
 
 { kicker: 'Agenda', title: 'Qué vamos a hacer hoy', html: `
@@ -200,7 +206,7 @@ const SLIDES = [
 { kicker: 'Marco general', title: 'Cadena de supervivencia pediátrica', html: `
     <div class="steps">
         <div class="step"><div class="n">1</div><div class="txt"><strong>Prevención</strong><span>y reconocimiento precoz del deterioro</span></div></div>
-        <div class="step"><div class="n">2</div><div class="txt"><strong>Activación</strong><span>pedir ayuda / activar la respuesta de emergencia (en sala: carro de paro)</span></div></div>
+        <div class="step"><div class="n">2</div><div class="txt"><strong>Activación</strong><span>pedir ayuda / activar la respuesta de emergencia — en una sala: avisar y traer el carro de paro; fuera del hospital: llamar al sistema de emergencias (SAME u otro servicio local)</span></div></div>
         <div class="step"><div class="n">3</div><div class="txt"><strong>RCP de alta calidad</strong><span>temprana, con mínimas interrupciones</span></div></div>
         <div class="step"><div class="n">4</div><div class="txt"><strong>Desfibrilación</strong><span>rápida, si el ritmo lo indica</span></div></div>
         <div class="step"><div class="n">5</div><div class="txt"><strong>Cuidados post-paro</strong><span>estabilización y traslado</span></div></div>
@@ -224,12 +230,15 @@ const SLIDES = [
         <div class="card">
             <h3>Estás solo</h3>
             <p>Si no viste el colapso o sospechás causa respiratoria (lo más frecuente en
-                pediatría): dar <strong>2 minutos de RCP</strong> antes de ir a pedir ayuda.</p>
+                pediatría): dar <strong>2 minutos de RCP</strong> antes de ir a pedir ayuda —
+                en una sala, activando el carro de paro; fuera del hospital, llamando al
+                sistema de emergencias.</p>
         </div>
         <div class="card accent">
             <h3>Hay alguien más</h3>
             <p>Uno inicia RCP de inmediato mientras el otro <strong>activa la respuesta de
-                emergencia</strong> (en el hospital: avisa / trae el carro de paro).</p>
+                emergencia</strong>: en el hospital, avisa y trae el carro de paro; fuera del
+                hospital, llama al sistema de emergencias (SAME u otro servicio local).</p>
         </div>
     </div>
 ` },
@@ -245,24 +254,30 @@ const SLIDES = [
         se dan primero unas ventilaciones de rescate.</p>
 ` },
 
-{ kicker: 'Compresiones', title: 'Técnica con un solo reanimador: dos dedos', html: `
+{ kicker: 'Compresiones', title: 'Técnica con un solo reanimador: talón de una mano', html: `
     <div class="steps">
         <div class="step"><div class="n">1</div><div class="txt"><strong>Ubicación</strong><span>Centro del tórax, inmediatamente por debajo de la línea intermamilar, sobre el esternón</span></div></div>
-        <div class="step"><div class="n">2</div><div class="txt"><strong>Técnica</strong><span>Dos dedos (índice-medio o medio-anular), perpendiculares al tórax</span></div></div>
+        <div class="step"><div class="n">2</div><div class="txt"><strong>Técnica</strong><span>Talón de una mano, perpendicular al tórax — la otra mano queda libre para sostener la vía aérea</span></div></div>
         <div class="step"><div class="n">3</div><div class="txt"><strong>Profundidad</strong><span>Al menos 1/3 del diámetro antero-posterior del tórax (≈ 4 cm)</span></div></div>
         <div class="step"><div class="n">4</div><div class="txt"><strong>Reexpansión completa</strong><span>Dejar que el tórax vuelva a su posición entre compresión y compresión</span></div></div>
     </div>
+    <div class="note"><b>Guía 2025 (AHA/AAP):</b> la técnica de <strong>dos dedos</strong> que se
+        enseñaba antes se eliminó — no lograba profundidad suficiente de forma confiable. El
+        talón de una mano la reemplaza para el reanimador solo.</div>
 ` },
 
-{ kicker: 'Compresiones', title: 'Técnica con dos reanimadores: pulgares que rodean el tórax', html: `
-    <p>Con dos reanimadores de salud disponibles, la técnica de <strong>pulgares
-        circundantes</strong> ("thumb-encircling") es más eficaz: genera mayor presión de
-        perfusión coronaria que la técnica de dos dedos.</p>
+{ kicker: 'Compresiones', title: 'Técnica con dos pulgares que rodean el tórax', html: `
+    <p>Cuando se puede <strong>rodear el tórax con las dos manos</strong> — con dos reanimadores
+        disponibles, o un solo reanimador si el lactante es chico — la técnica de <strong>pulgares
+        circundantes</strong> ("thumb-encircling") es la preferida: genera mayor presión de
+        perfusión coronaria.</p>
     <div class="steps">
         <div class="step"><div class="n">1</div><div class="txt"><strong>Manos</strong><span>Ambas manos rodean el tórax del lactante, dedos sosteniendo la espalda</span></div></div>
-        <div class="step"><div class="n">2</div><div class="txt"><strong>Pulgares</strong><span>Juntos o superpuestos, sobre el mismo punto que la técnica de dos dedos</span></div></div>
+        <div class="step"><div class="n">2</div><div class="txt"><strong>Pulgares</strong><span>Juntos o superpuestos, sobre el mismo punto que la técnica de una mano</span></div></div>
         <div class="step"><div class="n">3</div><div class="txt"><strong>Ventaja extra</strong><span>Permite coordinar mejor la compresión torácica simultánea con la ventilación</span></div></div>
     </div>
+    <div class="note">Si el reanimador no logra rodear el tórax (manos chicas, lactante grande),
+        se usa el talón de una mano en su lugar.</div>
 ` },
 
 { kicker: 'Calidad', title: 'Lo que hace que una compresión sea "de alta calidad"', html: `
@@ -406,12 +421,26 @@ const SLIDES = [
         posta de RCP completa + posta de OVACE y caso clínico con guía escrita.</p>
 ` },
 
+{ kicker: 'Posta B', title: 'Material de la Posta B, desde tu celular', html: `
+    <p class="lead">Escaneá el código para abrir la guía de OVACE y el caso clínico guiado —
+        con las respuestas para autocorregirte al final de cada parte.</p>
+    <div style="display:flex; justify-content:center; margin: 1.2rem 0;">
+        <div id="rcpQrBox" style="background:#fff; padding:14px; border-radius:14px; line-height:0;"></div>
+    </div>
+    <p id="rcpQrFallback" class="note" style="display:none; text-align:center;">No se pudo
+        generar el código (sin conexión). Pedí la URL de <code>taller_rcp_pediatrica_posta_b.html</code>
+        al docente, o usá las copias impresas si las hay.</p>
+` },
+
 { layout: 'cierre', html: `
     <span class="emoji">📚</span>
     <h1>Fuente</h1>
-    <p class="lead">Contenidos basados en las guías vigentes de reanimación cardiopulmonar
-        básica pediátrica (AHA / ERC). Material de elaboración propia para uso docente —
-        Cátedra de Pediatría UBA.</p>
+    <p class="lead">Contenidos basados en las guías 2025 de reanimación cardiopulmonar básica
+        pediátrica de la American Heart Association y la American Academy of Pediatrics
+        (AHA/AAP), primera actualización completa desde 2020. La Sociedad Argentina de
+        Pediatría no publica un protocolo propio distinto para RCP básica: su programa ERA
+        certifica estos mismos cursos (PALS) junto con la AHA desde el año 2000. Material de
+        elaboración propia para uso docente.</p>
 ` },
 
 ];
@@ -428,6 +457,20 @@ function renderSlide() {
     el.innerHTML = header + s.html;
     document.getElementById('counter').textContent = (current + 1) + ' / ' + SLIDES.length;
     document.getElementById('progressFill').style.width = ((current + 1) / SLIDES.length * 100) + '%';
+    if (document.getElementById('rcpQrBox')) renderPostaBQr();
+}
+
+function renderPostaBQr() {
+    const box = document.getElementById('rcpQrBox');
+    const fallback = document.getElementById('rcpQrFallback');
+    const url = `${window.location.origin}${window.location.pathname.replace(/taller_rcp_pediatrica_diapositivas\.html$/, '')}taller_rcp_pediatrica_posta_b.html`;
+    if (typeof QRCode === 'undefined') {
+        box.style.display = 'none';
+        fallback.style.display = 'block';
+        return;
+    }
+    box.innerHTML = '';
+    new QRCode(box, { text: url, width: 220, height: 220, correctLevel: QRCode.CorrectLevel.M });
 }
 
 function goTo(n) {

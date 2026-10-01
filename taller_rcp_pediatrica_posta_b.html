@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Posta B — RCP Básica Pediátrica</title>
+<style>
+    /* ======================================================================
+       POSTA B — material autogestionado para el alumno (OVACE + caso clínico)
+       ----------------------------------------------------------------------
+       Pensada para abrirse desde el celular vía QR durante el taller
+       presencial de RCP. Autocontenida (sin CDN), sin login ni backend:
+       página pública estática, mismo criterio que los talleres autoguiados
+       del repo. No guarda progreso — no hace falta, se resuelve en el
+       momento, en pareja, mientras se espera el turno en la Posta A.
+       ====================================================================== */
+    * { box-sizing: border-box; }
+    body {
+        margin: 0; padding: 0 0 3rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: #f0fdfa;
+        color: #0f2a28;
+        line-height: 1.5;
+    }
+    header {
+        background: linear-gradient(135deg, #0f766e, #0d9488);
+        color: #fff; padding: 1.6rem 1.2rem 1.3rem;
+    }
+    header .kicker { font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; opacity: .85; }
+    header h1 { margin: .25rem 0 .4rem; font-size: 1.5rem; }
+    header p { margin: 0; font-size: .92rem; opacity: .92; }
+
+    main { max-width: 640px; margin: 0 auto; padding: 1.2rem; }
+
+    section { background: #fff; border: 1px solid #ccfbf1; border-radius: 14px; padding: 1.2rem 1.3rem; margin-bottom: 1.1rem; }
+    section h2 { margin: 0 0 .7rem; font-size: 1.15rem; color: #0f766e; }
+    section h3 { margin: 1rem 0 .4rem; font-size: 1rem; color: #0f766e; }
+    p { margin: 0 0 .8rem; }
+    ol, ul { margin: 0 0 .8rem; padding-left: 1.3em; }
+    li { margin-bottom: .45rem; }
+
+    .vineta {
+        background: #ecfeff; border-left: 4px solid #14b8a6; border-radius: 6px;
+        padding: .8rem 1rem; margin-bottom: 1rem; font-style: italic;
+    }
+    .pregunta { font-weight: 700; margin-bottom: .3rem; }
+
+    .reveal-btn {
+        display: inline-block; margin-top: .3rem; padding: 9px 16px; border: none;
+        border-radius: 9px; background: #0f766e; color: #fff; font-weight: 700;
+        font-size: .92rem; cursor: pointer;
+    }
+    .reveal-btn:active { background: #0d5c55; }
+
+    .respuestas { display: none; margin-top: .9rem; padding-top: .9rem; border-top: 1px dashed #99f6e4; }
+    .respuestas.show { display: block; }
+    .respuestas ol { padding-left: 1.3em; }
+    .respuestas li { color: #134e4a; }
+
+    .warn {
+        background: rgba(245,158,11,.12); border: 1px solid rgba(245,158,11,.4);
+        border-radius: 10px; padding: .75rem 1rem; margin: .9rem 0; font-size: .95rem;
+    }
+
+    footer { text-align: center; font-size: .78rem; color: #5f8a84; padding: 1.2rem; }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="kicker">RCP Básica Pediátrica · Taller presencial</div>
+    <h1>Posta B — OVACE y caso clínico</h1>
+    <p>Resolvela en pareja mientras esperás tu turno en la Posta A (el muñeco). No hace falta
+        avisar al docente para avanzar — las respuestas están al final de cada parte, para que te
+        autocorrijas vos mismo.</p>
+</header>
+
+<main>
+
+<section>
+    <h2>Parte 1 — Practicar la maniobra de OVACE en el lactante consciente</h2>
+    <p>En parejas: uno hace de reanimador, el otro simula al lactante (sin golpes reales — sólo
+        marcar la posición y el gesto). Después, roten los roles.</p>
+    <ol>
+        <li>Reconocer que es una obstrucción grave: <strong>tos inefectiva, no puede llorar ni
+            emitir sonidos</strong>.</li>
+        <li>Sostenerlo boca abajo sobre el antebrazo, <strong>cabeza más baja que el
+            tronco</strong>, sosteniendo la mandíbula — simular <strong>5 golpes
+            interescapulares</strong> firmes con el talón de la mano.</li>
+        <li>Girarlo boca arriba sobre el otro antebrazo — simular <strong>5 compresiones
+            torácicas</strong> en el mismo punto que la RCP, pero más fuertes y más lentas.</li>
+        <li>Repetir el ciclo de 5 y 5 "hasta que expulse el objeto o quede inconsciente".</li>
+    </ol>
+
+    <p class="pregunta">Pregunta de repaso: ¿por qué en el lactante no se usa la maniobra de
+        Heimlich (compresiones abdominales)?</p>
+    <button class="reveal-btn" onclick="toggle('resp1')">Ver respuesta</button>
+    <div class="respuestas" id="resp1">
+        <p>En el lactante, el abdomen es proporcionalmente muy chico y los órganos (hígado,
+            bazo) están poco protegidos — las compresiones abdominales tienen alto riesgo de
+            lesión visceral. Por eso se usa la combinación de golpes interescapulares y
+            compresiones torácicas en su lugar.</p>
+    </div>
+</section>
+
+<section>
+    <h2>Parte 2 — Caso clínico guiado</h2>
+    <div class="vineta">
+        Mateo, de 7 meses, está en upa de su mamá en la sala de espera. Mientras comía un trozo
+        de fruta, empezó a toser fuerte y después dejó de toser, está con esfuerzo respiratorio
+        marcado, no llora y se pone cianótico.
+    </div>
+
+    <p class="pregunta">1. ¿Qué es lo primero que hay que reconocer en esta escena?</p>
+    <p class="pregunta">2. ¿Qué maniobra corresponde, y por qué no corresponde esperar a que tosa
+        más?</p>
+    <p class="pregunta">3. Mientras se realiza la maniobra, Mateo queda inconsciente. ¿Qué cambia
+        a partir de ese momento?</p>
+    <p class="pregunta">4. Al abrir la boca antes de ventilar, ¿qué se debe hacer si se ve el
+        objeto? ¿Y si no se ve?</p>
+
+    <button class="reveal-btn" onclick="toggle('resp2')">Ver respuestas</button>
+    <div class="respuestas" id="resp2">
+        <ol>
+            <li>Obstrucción grave de la vía aérea por cuerpo extraño: tos inefectiva,
+                imposibilidad de llorar, cianosis — hay que actuar de inmediato, no observar.</li>
+            <li>Maniobra de golpes interescapulares + compresiones torácicas alternadas (5 y 5),
+                específica del lactante. No corresponde esperar porque la tos ya dejó de ser
+                eficaz.</li>
+            <li>Se lo apoya sobre una superficie firme y se inicia RCP (empezando por
+                compresiones), igual que un paro por cualquier otra causa.</li>
+            <li>Si se ve el objeto, se retira con un dedo. Si no se ve, <strong>no se hace
+                barrido digital a ciegas</strong> — puede empujarlo más profundo en la vía
+                aérea.</li>
+        </ol>
+    </div>
+</section>
+
+<div class="warn">
+    Esta página no guarda tu progreso ni manda nada a ningún lado — es sólo para leer y
+    autocorregirte en el momento. El taller no lleva nota por esta parte.
+</div>
+
+</main>
+
+<footer>Material de elaboración propia, basado en las guías 2025 de RCP básica pediátrica
+    (AHA/AAP).</footer>
+
+<script>
+function toggle(id) {
+    document.getElementById(id).classList.toggle('show');
+}
+</script>
+</body>
+</html>

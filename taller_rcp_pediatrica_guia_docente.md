@@ -4,9 +4,21 @@
 > [`taller_rcp_pediatrica_diapositivas.html`](taller_rcp_pediatrica_diapositivas.html) —
 > abrir ese archivo en el navegador y proyectarlo (botón "⛶ Pantalla completa" o tecla `F`).
 >
-> Contenidos clínicos basados en las guías vigentes de RCP básica pediátrica (AHA / ERC). Si la
-> cátedra sigue un protocolo institucional distinto en algún punto, ajustar antes de dictar el
-> taller.
+> Contenidos clínicos basados en las guías 2025 de RCP básica pediátrica de la American Heart
+> Association y la American Academy of Pediatrics (AHA/AAP) — primera actualización completa
+> desde 2020 ([ahajournals.org/doi/10.1161/CIR.0000000000001370](https://www.ahajournals.org/doi/10.1161/CIR.0000000000001370),
+> resumen navegable en [cpr.heart.org](https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-life-support)).
+> La Sociedad Argentina de Pediatría no tiene un protocolo propio que difiera de esto para RCP
+> básica: certifica estos mismos cursos (PALS) junto con la AHA desde el año 2000, a través de
+> su programa ERA. Si en tu institución se sigue un protocolo distinto en algún punto, ajustar
+> antes de dictar el taller.
+>
+> **Cambio clínico relevante de la guía 2025, ya reflejado en este material:** se eliminó la
+> técnica de **dos dedos** para compresiones en el lactante con un solo reanimador (no lograba
+> profundidad suficiente de forma confiable). Reemplazada por **talón de una mano** (reanimador
+> solo) o **dos pulgares circundantes** (dos reanimadores, o uno solo si el lactante es chico y
+> puede rodear el tórax). Lo demás (frecuencia 100–120/min, profundidad ≈4 cm, relación 30:2 /
+> 15:2, maniobra de OVACE) no cambió respecto a la guía 2020.
 
 ## 1. Datos del taller
 
@@ -21,7 +33,10 @@
 - [ ] Proyector y notebook con `taller_rcp_pediatrica_diapositivas.html` probado de antemano.
 - [ ] Muñeco de lactante armado y en condiciones (válvulas de la bolsa de reanimación probadas).
 - [ ] Al menos 2 bolsas de reanimación con máscara de tamaño lactante.
-- [ ] Impresiones de la **Posta B** (sección 5 de esta guía) — una copia cada 2 alumnos alcanza.
+- [ ] Probar que la última diapositiva del deck (el QR) abre bien
+  `taller_rcp_pediatrica_posta_b.html` desde un celular con datos — es como los alumnos acceden
+  al material de la **Posta B** (sección 4 de esta guía). Si el aula no tiene señal, tener
+  impresa una copia cada 2 alumnos como respaldo (imprimir esa misma página desde el navegador).
 - [ ] Un espacio físico separado para la Posta A (muñeco) de la Posta B (mesas/sillas para
   trabajo en grupo), para que no se interrumpan.
 - [ ] Alcohol en gel / toallitas para limpiar la cara del muñeco entre alumnos, si corresponde
@@ -48,7 +63,7 @@ ventilación con bolsa, la maniobra de OVACE).
 narrando cada paso (evaluación → pedir ayuda → compresiones → apertura de vía aérea → ventilación
 con bolsa → ciclo 30:2), antes de que cualquier alumno toque el muñeco. Conviene pedir a dos
 alumnos que pasen al frente a simular el escenario de "dos reanimadores" mientras el resto mira,
-para que vean la técnica de pulgares circundantes además de la de dos dedos.
+para que vean la técnica de pulgares circundantes además de la de talón de una mano.
 
 ## 4. Práctica en postas (0:55–1:50, 55 minutos)
 
@@ -77,10 +92,11 @@ Guion sugerido para el docente dentro de cada turno de 10 minutos:
 
 1. **(0–1')** Recordar en voz alta el punto de referencia y la relación 30:2.
 2. **(1–4')** Pareja 1 del grupo hace la secuencia completa: evaluación simulada → compresiones
-   (2 dedos) → apertura de vía aérea → 2 ventilaciones con bolsa → repetir 2-3 ciclos.
+   (**talón de una mano**, técnica de reanimador solo) → apertura de vía aérea → 2
+   ventilaciones con bolsa → repetir 2-3 ciclos.
 3. **(4–5')** Corrección rápida y puntual — ver checklist de errores más abajo.
-4. **(5–8')** Pareja 2 repite la secuencia, idealmente probando la técnica de **pulgares
-   circundantes** (dos reanimadores) en vez de la de dos dedos.
+4. **(5–8')** Pareja 2 repite la secuencia, probando la técnica de **dos pulgares
+   circundantes** (la de dos reanimadores, rodeando el tórax entre los dos).
 5. **(8–10')** Corrección final y cambio de grupo.
 
 **Checklist de errores a mirar (y corregir en el momento):**
@@ -95,8 +111,14 @@ Guion sugerido para el docente dentro de cada turno de 10 minutos:
 
 ### Posta B — OVACE + caso clínico con guía escrita
 
-Entregar impreso (una copia cada 2 alumnos alcanza). Los grupos lo resuelven en subgrupos de 2
-mientras esperan su turno en la Posta A. No requiere supervisión constante.
+El material vive en [`taller_rcp_pediatrica_posta_b.html`](taller_rcp_pediatrica_posta_b.html),
+una página aparte, pública y autocontenida (mismo criterio que los talleres autoguiados del
+repo) — **accesible al alumno desde su propio celular escaneando el QR de la anteúltima
+diapositiva** del deck, sin necesidad de imprimir nada. Incluye las respuestas para
+autocorregirse al final de cada parte, igual que en esta guía. Los grupos lo resuelven en
+subgrupos de 2 (alcanza con un celular por subgrupo) mientras esperan su turno en la Posta A. No
+requiere supervisión constante. Si el aula se queda sin señal, la copia impresa de esta misma
+página sirve de respaldo — el contenido es idéntico al de las dos partes de abajo.
 
 ---
 
@@ -154,8 +176,8 @@ interescapulares y compresiones torácicas en su lugar.
   compresiones y ventilación, y el sello de la máscara.
 - Si queda tiempo, elegir a un alumno al azar para que haga la secuencia completa una vez más
   frente al grupo, a modo de cierre.
-- No hay evaluación formal planeada para este taller; si la cátedra quiere agregar una lista de
-  cotejo con nota, se puede derivar del checklist de la Posta A.
+- No hay evaluación formal planeada para este taller; si se quiere agregar una lista de cotejo
+  con nota, se puede derivar del checklist de la Posta A.
 
 ## 6. Notas para quien dicte el taller de nuevo
 
